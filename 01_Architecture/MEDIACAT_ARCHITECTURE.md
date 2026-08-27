@@ -26,7 +26,7 @@ Sections labelled **historical pre-cutover** describe the schema-v2 topology
 captured for `ASTV-25` / `ASTV-26`. They are not current production behavior.
 
 The authoritative current-production visual companion is
-[MediaCat_Architecture.drawio](MediaCat_Architecture.drawio). It shows the
+[MEDIACAT_ARCHITECTURE.drawio](MEDIACAT_ARCHITECTURE.drawio). It shows the
 MediaCat product boundary and deployed Curated Media implementation at one
 logical level, with ASTV and AdvMedia only at their MediaCat-facing caller
 boundaries. This document remains the authoritative prose narrative, and the

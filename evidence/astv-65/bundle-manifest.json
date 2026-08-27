@@ -1,0 +1,153 @@
+{
+  "manifest_version": 1,
+  "issue": "ASTV-65",
+  "created_at_utc": "2026-08-24T18:01:03.046Z",
+  "status": "prepared-inactive",
+  "bundle_path_base": "MediaCat/",
+  "files": [
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/assistive/astv_intent_catalogue.yaml",
+      "size": 1237,
+      "sha256": "a9c3bb87a933847d25e1f06f73b3780ae4e1338d10e5441742c51ff7075ed703",
+      "target_path": "/config/assistive/astv_intent_catalogue.yaml",
+      "source_path": "ASTV/assistive/astv_intent_catalogue.yaml",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/curated_media/catalogue.yaml",
+      "size": 11243,
+      "sha256": "067b2948bba11cbd418f90dc94f39b80f7f530091c3f388bc3e4313de03510c7",
+      "target_path": "/config/curated_media/catalogue.yaml",
+      "source_path": "MediaCat/curated_media/catalogue.yaml",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/__init__.py",
+      "size": 3502,
+      "sha256": "bb70761491f4824636fc98adaf546823f841ba8a9fa32ea9558ad096a0c0dc0d",
+      "target_path": "/config/custom_components/curated_media/__init__.py",
+      "source_path": "MediaCat/custom_components/curated_media/__init__.py",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/catalogue.py",
+      "size": 14514,
+      "sha256": "139dd9bd6dc73798146a0c82d1c009cb0e3ae3cb4b03136940a9f2bcd0540e98",
+      "target_path": "/config/custom_components/curated_media/catalogue.py",
+      "source_path": "MediaCat/custom_components/curated_media/catalogue.py",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/const.py",
+      "size": 371,
+      "sha256": "3e98b96dbf37f330ae1faf58f3f39b22aaab51e3f054033be0aff9cfe5e1c278",
+      "target_path": "/config/custom_components/curated_media/const.py",
+      "source_path": "MediaCat/custom_components/curated_media/const.py",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/manifest.json",
+      "size": 192,
+      "sha256": "a9523e1ee385e6ebac055d82d9b169a92fb9a9b273323f6867f808eb9beca566",
+      "target_path": "/config/custom_components/curated_media/manifest.json",
+      "source_path": "MediaCat/custom_components/curated_media/manifest.json",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/media_source.py",
+      "size": 21433,
+      "sha256": "dfd66c3ce3f879fa3de284f9199df6dc03b25345ce0c5033f465563fcda51c3b",
+      "target_path": "/config/custom_components/curated_media/media_source.py",
+      "source_path": "MediaCat/custom_components/curated_media/media_source.py",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/resolver.py",
+      "size": 3001,
+      "sha256": "f01a6c2071d8fe1d0c8788237ab624625de20c88077351e211b689d13e99c12c",
+      "target_path": "/config/custom_components/curated_media/resolver.py",
+      "source_path": "MediaCat/custom_components/curated_media/resolver.py",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/deployment/config/custom_components/curated_media/services.yaml",
+      "size": 1073,
+      "sha256": "ca9a219975f6ad0da047c85796817714c9f693dbac269381f26843f8f1fe0fe9",
+      "target_path": "/config/custom_components/curated_media/services.yaml",
+      "source_path": "MediaCat/custom_components/curated_media/services.yaml",
+      "bundle": "deployment"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/assistive/astv_intent_catalogue.yaml",
+      "size": 2309,
+      "sha256": "8b99b82a4d2e5c47f787a1393b844486086f726c12b4cefc9eb48b71181ecbd2",
+      "target_path": "/config/assistive/astv_intent_catalogue.yaml",
+      "source_path": "ASTV/ASTV-64_Rollback/starburst/assistive/astv_intent_catalogue.yaml",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/curated_media/catalogue.yaml",
+      "size": 8356,
+      "sha256": "5fd55cd35b89b8d1958954173b49c94e3429130aff9766a767b4a223d28f02a8",
+      "target_path": "/config/curated_media/catalogue.yaml",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/curated_media/catalogue.yaml",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/__init__.py",
+      "size": 2808,
+      "sha256": "a616d8b31da495b266e015efc8af68610cc9213ee373f27a3a653d63bb643c9e",
+      "target_path": "/config/custom_components/curated_media/__init__.py",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/__init__.py",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/catalogue.py",
+      "size": 12333,
+      "sha256": "6eb7ef511483310afea4f9aa53a3546e72a419bd818654cf062dc5eedee5675b",
+      "target_path": "/config/custom_components/curated_media/catalogue.py",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/catalogue.py",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/const.py",
+      "size": 371,
+      "sha256": "3e98b96dbf37f330ae1faf58f3f39b22aaab51e3f054033be0aff9cfe5e1c278",
+      "target_path": "/config/custom_components/curated_media/const.py",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/const.py",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/manifest.json",
+      "size": 192,
+      "sha256": "a9523e1ee385e6ebac055d82d9b169a92fb9a9b273323f6867f808eb9beca566",
+      "target_path": "/config/custom_components/curated_media/manifest.json",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/manifest.json",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/media_source.py",
+      "size": 9636,
+      "sha256": "39c55307ecf7f88ab3efe99d7f85619cb6e89ff6956eabab16250dd7ee8754dd",
+      "target_path": "/config/custom_components/curated_media/media_source.py",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/media_source.py",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/resolver.py",
+      "size": 901,
+      "sha256": "667d2a8fc00e10d292ff235b0bed23f590bb5a9da56086022aef38c20113f0ac",
+      "target_path": "/config/custom_components/curated_media/resolver.py",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/resolver.py",
+      "bundle": "rollback"
+    },
+    {
+      "bundle_path": "evidence/astv-65/rollback/config/custom_components/curated_media/services.yaml",
+      "size": 410,
+      "sha256": "461c093b6bbd82acbffcf5f82bb1cd9462ef9ee0c138891d59850c93cba7e2f4",
+      "target_path": "/config/custom_components/curated_media/services.yaml",
+      "source_path": "MediaCat/evidence/astv-56/rollback/schema-v2/custom_components/curated_media/services.yaml",
+      "bundle": "rollback"
+    }
+  ]
+}

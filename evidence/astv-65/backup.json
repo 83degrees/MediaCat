@@ -1,0 +1,13 @@
+{
+  "issue": "ASTV-65",
+  "name": "Before_ASTV-65_MediaCat_v3_Cutover",
+  "backup_id": "e3398ae8",
+  "created_at": "2026-08-24T19:03:17.067441+01:00",
+  "size_bytes": 185579520,
+  "homeassistant_included": true,
+  "database_included": false,
+  "homeassistant_version": "2026.8.3",
+  "storage_agent": "hassio.local",
+  "create_status": "Backup completed successfully",
+  "verified_by_snapshot_list": true
+}

@@ -1,0 +1,267 @@
+version: 2
+
+items:
+  bbc_radio_1:
+    title: BBC Radio 1
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-1.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_1_2021.svg
+    description: BBC national radio station focused on contemporary music, entertainment and youth culture
+    tags:
+      - bbc
+      - radio
+      - uk
+      - music
+      - pop
+    providers:
+      radio_music:
+        service: bbc_radio_one
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_one.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_1xtra:
+    title: BBC Radio 1Xtra
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-1Xtra.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_1Xtra_2021.svg
+    description: BBC radio station specialising in urban music, hip hop, R&B and new artists
+    tags:
+      - bbc
+      - radio
+      - uk
+      - music
+      - urban
+      - hiphop
+    providers:
+      radio_music:
+        service: bbc_radio_one_xtra
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_1xtra.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_2:
+    title: BBC Radio 2
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-2.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_2_2022.png
+    description: BBC national radio station featuring popular music, live performances and entertainment
+    tags:
+      - bbc
+      - radio
+      - uk
+      - music
+      - entertainment
+      - pop
+    providers:
+      radio_music:
+        service: bbc_radio_two
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_two.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_3:
+    title: BBC Radio 3
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-3.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_3_2022.svg
+    description: BBC national radio station featuring classical music, jazz, arts and culture
+    tags:
+      - bbc
+      - radio
+      - uk
+      - classical
+      - jazz
+      - culture
+    providers:
+      radio_music:
+        service: bbc_radio_three
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_three.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_4:
+    title: BBC Radio 4
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-4.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_2_2022.png
+    description: BBC national radio station featuring news, documentaries, drama and spoken-word programmes
+    tags:
+      - bbc
+      - radio
+      - uk
+      - news
+      - spoken-word
+      - drama
+    providers:
+      radio_music:
+        service: bbc_radio_fourfm
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_fourfm.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_4_extra:
+    title: BBC Radio 4 Extra
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-4Extra.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_4Xtra_2022.png
+    description: BBC radio station featuring archive comedy, drama and spoken-word programmes
+    tags:
+      - bbc
+      - radio
+      - uk
+      - comedy
+      - drama
+      - archive
+    providers:
+      radio_music:
+        service: bbc_radio_four_extra
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_four_extra.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_5_live:
+    title: BBC Radio 5 Live
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-Radio-5-Live.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_5_Live_2022.png
+    description: BBC national radio station covering live sport, news and current affairs
+    tags:
+      - bbc
+      - radio
+      - uk
+      - sport
+      - news
+      - live
+    providers:
+      radio_music:
+        service: bbc_radio_five_live
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_five_live.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_5_sports_extra:
+    title: BBC Radio 5 Sports Extra
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-R5SportExtra.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_5_Sports_Extra_2022.svg
+    description: BBC radio station providing additional live sports coverage and commentary
+    tags:
+      - bbc
+      - radio
+      - uk
+      - sport
+      - live
+    providers:
+      radio_music:
+        service: bbc_radio_five_sports_extra
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_five_sports_extra.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_6_music:
+    title: BBC Radio 6 Music
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-6-Music.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_6_Music_2022.png
+    description: BBC radio station featuring alternative music, indie, classic tracks and live sessions
+    tags:
+      - bbc
+      - radio
+      - uk
+      - music
+      - alternative
+      - indie
+    providers:
+      radio_music:
+        service: bbc_6music
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_6music.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_world_service:
+    title: BBC World Service
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-WorldService.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_World_Service_2022_(Boxed).svg
+    description: BBC international radio service providing global news, documentaries and programmes
+    tags:
+      - bbc
+      - radio
+      - international
+      - news
+      - world
+    providers:
+      radio_music:
+        service: bbc_world_service
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_world_service.m3u8
+      format: hls
+      mime_type: audio/aac
+
+  bbc_radio_scotland:
+    title: BBC Radio Scotland
+    type: radio
+    artwork:
+      local: /local/curated_media/artwork/radio/BBC-R-Scotland.png
+      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_Scotland_2022.svg
+    description: BBC national radio station serving Scotland with music, news and Scottish programming
+    tags:
+      - bbc
+      - radio
+      - uk
+      - scotland
+      - music
+      - news
+    providers:
+      radio_music:
+        service: bbc_radio_scotland_fm
+    source:
+      type: stream
+      url: https://a.files.bbci.co.uk/ms6/live/3441A116-B12E-4D2F-ACA8-C1984642FA4B/audio/simulcast/hls/uk/cellular_main_sd_abr_v2/cfs/bbc_radio_scotland_fm.m3u8
+      format: hls
+
+categories:
+  radio:
+    title: Radio
+    items:
+      - bbc_radio_1
+      - bbc_radio_1xtra
+      - bbc_radio_2
+      - bbc_radio_3
+      - bbc_radio_4
+      - bbc_radio_4_extra
+      - bbc_radio_5_live
+      - bbc_radio_5_sports_extra
+      - bbc_radio_6_music
+      - bbc_world_service
+      - bbc_radio_scotland

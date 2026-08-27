@@ -1,0 +1,13 @@
+resolve_item:
+  name: Resolve item
+  description: Look up a Curated Media item by its canonical ID and return its complete catalogue record directly as the action response.
+  fields:
+    item_id:
+      name: Item ID
+      description: Stable canonical item identifier matching ^[a-z0-9][a-z0-9_-]*$.
+      required: true
+      example: bbc_radio_2
+      selector:
+        text:
+  response:
+    optional: false

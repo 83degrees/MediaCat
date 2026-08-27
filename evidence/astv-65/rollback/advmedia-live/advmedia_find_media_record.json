@@ -1,0 +1,64 @@
+{
+  "captured_at_utc": "2026-08-24T18:11:51.826Z",
+  "entity_id": "script.advmedia_find_media_record",
+  "script_id": "advmedia_find_media_record",
+  "config_hash": "328847f70ddb6b0e",
+  "category": "01KZ91FV841C11XBAHGKVPV5N1",
+  "config": {
+    "alias": "AdvMedia - Fn: Find Media Record",
+    "description": "Finds a media record in the selected media catalogue and returns the catalogue response unchanged.",
+    "mode": "parallel",
+    "max": 10,
+    "fields": {
+      "media_item_id": {
+        "name": "Media Item ID",
+        "description": "Identifier of the media item within the selected catalogue.",
+        "required": true,
+        "selector": {
+          "text": {}
+        }
+      },
+      "media_catalogue": {
+        "name": "Media Catalogue",
+        "description": "Catalogue containing the requested media item.",
+        "required": true,
+        "selector": {
+          "text": {}
+        }
+      }
+    },
+    "sequence": [
+      {
+        "choose": [
+          {
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ media_catalogue == 'curated_media' }}"
+              }
+            ],
+            "sequence": [
+              {
+                "action": "curated_media.resolve_item",
+                "data": {
+                  "item_id": "{{ media_item_id }}"
+                },
+                "response_variable": "catalogue_response"
+              },
+              {
+                "stop": "Media record found",
+                "response_variable": "catalogue_response"
+              }
+            ]
+          }
+        ],
+        "default": [
+          {
+            "stop": "Unsupported media catalogue: {{ media_catalogue }}",
+            "error": true
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "captured_at_utc": "2026-08-24T18:11:51.826Z",
+  "entity_id": "script.advmedia_prepare_playback",
+  "script_id": "advmedia_prepare_playback",
+  "config_hash": "792fec2e08d41ded",
+  "category": "01KZ91FV841C11XBAHGKVPV5N1",
+  "config": {
+    "alias": "AdvMedia - Fn: Prepare Playback",
+    "description": "Finds a media record, resolves the media profile, and returns the target media player with the profile-specific playback payload.",
+    "mode": "parallel",
+    "max": 10,
+    "fields": {
+      "media_item_id": {
+        "name": "Media Item ID",
+        "description": "Identifier of the media item within the selected catalogue.",
+        "required": true,
+        "selector": {
+          "text": {}
+        }
+      },
+      "media_catalogue": {
+        "name": "Media Catalogue",
+        "description": "Catalogue containing the requested media item.",
+        "required": true,
+        "selector": {
+          "text": {}
+        }
+      },
+      "media_player": {
+        "name": "Media Player",
+        "description": "Target media player entity.",
+        "required": true,
+        "selector": {
+          "entity": {
+            "domain": "media_player"
+          }
+        }
+      },
+      "media_profile": {
+        "name": "Media Profile",
+        "description": "Optional explicit mediaprofile_* override. When omitted, the profile is resolved from the media player.",
+        "required": false,
+        "selector": {
+          "text": {}
+        }
+      }
+    },
+    "sequence": [
+      {
+        "action": "script.advmedia_find_media_record",
+        "data": {
+          "media_item_id": "{{ media_item_id }}",
+          "media_catalogue": "{{ media_catalogue }}"
+        },
+        "response_variable": "media_record_response"
+      },
+      {
+        "variables": {
+          "resolved_profile": "{{\n  media_profile\n  if media_profile is defined and media_profile | trim != ''\n  else none\n}}"
+        }
+      },
+      {
+        "choose": [
+          {
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ resolved_profile == none }}"
+              }
+            ],
+            "sequence": [
+              {
+                "action": "script.advmedia_resolve_player_mediaprofile",
+                "data": {
+                  "media_player": "{{ media_player }}"
+                },
+                "response_variable": "profile_response"
+              },
+              {
+                "variables": {
+                  "resolved_profile": "{{ profile_response.media_profile }}"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "action": "script.advmedia_mediaprofile_handler",
+        "data": {
+          "media_record": "{{ media_record_response }}",
+          "media_profile": "{{ resolved_profile }}"
+        },
+        "response_variable": "playback_payload_response"
+      },
+      {
+        "variables": {
+          "response": {
+            "media_player": "{{ media_player }}",
+            "media_profile": "{{ resolved_profile }}",
+            "playback_payload": "{{ playback_payload_response }}"
+          }
+        }
+      },
+      {
+        "stop": "Playback preparation completed",
+        "response_variable": "response"
+      }
+    ]
+  }
+}

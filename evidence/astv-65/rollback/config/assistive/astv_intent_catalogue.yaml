@@ -1,0 +1,102 @@
+classic_fm:
+  intent: media.play_source
+  title: Play Classic FM
+  params:
+    output:
+      domain: audio
+    sources:
+      ha_mplayer:
+        provider: radio_browser
+        data:
+          title: Classic FM
+          content_type: station
+          content_id: media-source://radio_browser/bd1c441c-132a-4d48-a3f3-bdb386f4b09a
+          icon_url: /local/radio-logos/Classic-FM.png
+
+lbc_news:
+  intent: media.play_source
+  title: Play LBC News
+  params:
+    output:
+      domain: audio
+    sources:
+      ha_mplayer:
+        provider: radio_browser
+        data:
+          title: LBC News
+          content_type: station
+          content_id: media-source://radio_browser/8e32c763-b926-4e57-9b8f-d60f1c5b48e3
+          icon_url: /local/radio-logos/LBC-News.png
+
+gold_radio:
+  intent: media.play_source
+  title: Play Gold Radio
+  params:
+    output:
+      domain: audio
+    sources:
+      ha_mplayer:
+        provider: radio_browser
+        data:
+          title: Gold Radio
+          content_type: station
+          content_id: media-source://radio_browser/9b3a5084-91ba-4d90-ac06-3e0ba8c50d67
+          icon_url: /local/radio-logos/Gold-Radio.png
+
+bbc_radio_2:
+  intent: media.play_source
+  title: Play BBC Radio 2
+  params:
+    output:
+      domain: audio
+    sources:
+      ha_mplayer:
+        provider: advmedia
+        data:
+          media_catalogue: curated_media
+          media_item_id: bbc_radio_2
+
+smooth_radio:
+  intent: media.play_source
+  title: Smooth Radio
+  params:
+    output:
+      domain: audio
+    sources:
+      g_home_device:
+        provider: g_assist
+        data:
+          phrase: "Play Smooth Radio on Global Player"
+          append_target: true
+
+lbc_radio:
+  intent: media.play_source
+  title: LBC
+  params:
+    output:
+      domain: audio
+    sources:
+      g_home_device:
+        provider: g_assist
+        data:
+          phrase: "play LBC Radio on Global Player on Kitchen Speaker"
+          append_target: false
+
+news_briefing:
+  intent: media.play_source
+  title: News Briefing
+  params:
+    output:
+      domain: audio
+    sources:
+      g_home_device:
+        provider: g_assist
+        data:
+          phrase: "Play my news briefing"
+          append_target: true
+
+morning_routine:
+  intent: routine.run
+  routine: morning
+  title: Good Morning Routine
+  params: {}

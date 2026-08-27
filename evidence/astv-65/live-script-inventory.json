@@ -1,0 +1,83 @@
+{
+  "captured_at_utc": "2026-08-24T18:01:03.046Z",
+  "home_assistant_version": "2026.8.3",
+  "configuration_check": "valid",
+  "astv": {
+    "script.astv_intent_engine_media": {
+      "status": "present",
+      "config_hash": "883e77ec37747186",
+      "expected_hash": "883e77ec37747186",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_select_intent_engine": {
+      "status": "present",
+      "config_hash": "bda1d825cd330779",
+      "expected_hash": "bda1d825cd330779",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_select_execution_engine": {
+      "status": "present",
+      "config_hash": "9d2eedaeba1f5b86",
+      "expected_hash": "9d2eedaeba1f5b86",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_ha_mplayer_engine": {
+      "status": "present",
+      "config_hash": "7f2e5588e9a9cedb",
+      "expected_hash": "7f2e5588e9a9cedb",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_adapter_advmedia": {
+      "status": "present",
+      "config_hash": "fe00d0cea795cc06",
+      "expected_hash": "fe00d0cea795cc06",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_g_home_device_engine": {
+      "status": "present",
+      "config_hash": "a51304a3b2c88287",
+      "expected_hash": "a51304a3b2c88287",
+      "matches_accepted_baseline": true
+    },
+    "script.astv_provider_g_assist": {
+      "status": "present",
+      "config_hash": "052ce3c242fe4e93",
+      "expected_hash": "052ce3c242fe4e93",
+      "matches_accepted_baseline": true
+    }
+  },
+  "advmedia": {
+    "script.advmedia_prepare_playback": {
+      "status": "present",
+      "config_hash": "792fec2e08d41ded"
+    },
+    "script.advmedia_find_media_record": {
+      "status": "present",
+      "config_hash": "328847f70ddb6b0e"
+    },
+    "script.advmedia_process_media_record": {
+      "status": "absent",
+      "error": "Script not found: advmedia_process_media_record"
+    },
+    "script.advmedia_translate_media_source": {
+      "status": "absent",
+      "error": "Script not found: advmedia_translate_media_source"
+    },
+    "script.advmedia_resolve_player_mediaprofile": {
+      "status": "present",
+      "config_hash": "74c54bdc7f341ce0"
+    },
+    "script.advmedia_mediaprofile_handler": {
+      "status": "present",
+      "config_hash": "2494f48b1867ba36"
+    },
+    "script.advmedia_mediaprofile_generic": {
+      "status": "present",
+      "config_hash": "6c148bf41844b7b9"
+    },
+    "script.advmedia_mediaprofile_googlecast": {
+      "status": "present",
+      "config_hash": "2c490c894dd2a466"
+    }
+  }
+}

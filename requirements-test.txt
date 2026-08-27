@@ -1,0 +1,3 @@
+-c https://raw.githubusercontent.com/home-assistant/core/2024.12.5/homeassistant/package_constraints.txt
+homeassistant==2024.12.5
+pytest==9.1.1

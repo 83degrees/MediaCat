@@ -1,0 +1,68 @@
+classic_fm:
+  intent: media.play_source
+  title: Play Classic FM
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: classic_fm
+
+lbc_news:
+  intent: media.play_source
+  title: Play LBC News
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: lbc_news
+
+gold_radio:
+  intent: media.play_source
+  title: Play Gold Radio
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: gold_radio
+
+bbc_radio_2:
+  intent: media.play_source
+  title: Play BBC Radio 2
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: bbc_radio_2
+
+smooth_radio:
+  intent: media.play_source
+  title: Smooth Radio
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: smooth_radio
+
+lbc_radio:
+  intent: media.play_source
+  title: LBC
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: lbc_radio
+
+news_briefing:
+  intent: media.play_source
+  title: News Briefing
+  params:
+    output:
+      domain: audio
+    catalogue_id: curated_media
+    item_id: news_briefing
+
+morning_routine:
+  intent: routine.run
+  routine: morning
+  title: Good Morning Routine
+  params: {}

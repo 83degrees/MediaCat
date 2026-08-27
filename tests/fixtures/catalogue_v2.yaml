@@ -1,0 +1,46 @@
+version: 2
+items:
+  station_alpha:
+    title: Station Alpha
+    type: radio
+    artwork:
+      local: /local/curated_media/station_alpha.png
+      external: https://images.example.test/station_alpha.png
+    description: First representative station
+    tags:
+      - news
+      - local
+    source:
+      type: stream
+      url: https://streams.example.test/alpha.m3u8
+      format: hls
+      mime_type: application/vnd.apple.mpegurl
+      headers:
+        User-Agent: MediaCat test
+    providers:
+      radio_music:
+        service:
+          domain: media_player
+          data:
+            features:
+              - live
+              - regional
+  station_beta:
+    title: Station Beta
+    type: radio
+    source:
+      type: stream
+      url: https://streams.example.test/beta.mp3
+      format: mp3
+categories:
+  favourites:
+    title: Favourites
+    items:
+      - station_beta
+      - station_alpha
+  all_stations:
+    title: All stations
+    items:
+      - station_alpha
+      - station_beta
+

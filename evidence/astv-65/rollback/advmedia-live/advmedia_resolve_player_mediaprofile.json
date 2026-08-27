@@ -1,0 +1,93 @@
+{
+  "captured_at_utc": "2026-08-24T18:11:51.826Z",
+  "entity_id": "script.advmedia_resolve_player_mediaprofile",
+  "script_id": "advmedia_resolve_player_mediaprofile",
+  "config_hash": "74c54bdc7f341ce0",
+  "category": "01KZ91FV841C11XBAHGKVPV5N1",
+  "config": {
+    "alias": "AdvMedia - Fn: Resolve Player Media Profile",
+    "description": "Resolves the mediaprofile_* label assigned to a media player entity and defaults to mediaprofile_generic.",
+    "mode": "parallel",
+    "max": 10,
+    "fields": {
+      "media_player": {
+        "name": "Media Player",
+        "description": "Target media player entity.",
+        "required": true,
+        "selector": {
+          "entity": {
+            "domain": "media_player"
+          }
+        }
+      }
+    },
+    "sequence": [
+      {
+        "variables": {
+          "all_labels": "{{ labels(media_player) | list }}\n"
+        }
+      },
+      {
+        "variables": {
+          "media_profile_labels": "{{\n  all_labels\n  | select('match', '^mediaprofile_')\n  | list\n}}\n"
+        }
+      },
+      {
+        "variables": {
+          "media_profile_count": "{{ media_profile_labels | count }}\n"
+        }
+      },
+      {
+        "choose": [
+          {
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ media_profile_count == 1 }}"
+              }
+            ],
+            "sequence": [
+              {
+                "variables": {
+                  "resolved_profile": "{{ media_profile_labels[0] }}"
+                }
+              }
+            ]
+          },
+          {
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ media_profile_count > 1 }}"
+              }
+            ],
+            "sequence": [
+              {
+                "stop": "Multiple mediaprofile_* labels found: {{ media_profile_labels | join(', ') }}\n",
+                "error": true
+              }
+            ]
+          }
+        ],
+        "default": [
+          {
+            "variables": {
+              "resolved_profile": "mediaprofile_generic"
+            }
+          }
+        ]
+      },
+      {
+        "variables": {
+          "response": {
+            "media_profile": "{{ resolved_profile }}"
+          }
+        }
+      },
+      {
+        "stop": "Media Profile Resolved",
+        "response_variable": "response"
+      }
+    ]
+  }
+}

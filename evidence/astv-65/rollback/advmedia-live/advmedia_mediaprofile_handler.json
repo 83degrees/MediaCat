@@ -1,0 +1,128 @@
+{
+  "captured_at_utc": "2026-08-24T18:11:51.826Z",
+  "entity_id": "script.advmedia_mediaprofile_handler",
+  "script_id": "advmedia_mediaprofile_handler",
+  "config_hash": "2494f48b1867ba36",
+  "category": "01KZ91FV841C11XBAHGKVPV5N1",
+  "config": {
+    "alias": "AdvMedia - Fn: MediaProfile Handler",
+    "description": "Builds a playback payload from a supplied media record using the appropriate mediaprofile provider.",
+    "mode": "parallel",
+    "max": 10,
+    "fields": {
+      "media_record": {
+        "name": "Media Record",
+        "description": "Resolved media record to pass to the selected mediaprofile provider.",
+        "required": true,
+        "selector": {
+          "object": {}
+        }
+      },
+      "media_player": {
+        "name": "Media Player",
+        "description": "Target media player entity used to resolve its mediaprofile_* label.",
+        "required": false,
+        "selector": {
+          "entity": {
+            "domain": "media_player"
+          }
+        }
+      },
+      "media_profile": {
+        "name": "Media Profile",
+        "description": "Explicit mediaprofile_* override. Takes priority over media player resolution.",
+        "required": false,
+        "selector": {
+          "text": {}
+        }
+      }
+    },
+    "sequence": [
+      {
+        "variables": {
+          "resolved_profile": "{{ media_profile if media_profile is defined else none }}"
+        }
+      },
+      {
+        "choose": [
+          {
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{\n  resolved_profile == none\n  and media_player is defined\n}}\n"
+              }
+            ],
+            "sequence": [
+              {
+                "action": "script.advmedia_resolve_player_mediaprofile",
+                "data": {
+                  "media_player": "{{ media_player }}"
+                },
+                "response_variable": "profile_response"
+              },
+              {
+                "variables": {
+                  "resolved_profile": "{{ profile_response.media_profile }}"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "choose": [
+          {
+            "alias": "Generic",
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ resolved_profile == 'mediaprofile_generic' }}"
+              }
+            ],
+            "sequence": [
+              {
+                "action": "script.advmedia_mediaprofile_generic",
+                "data": {
+                  "media_record": "{{ media_record }}"
+                },
+                "response_variable": "profile_payload_response"
+              },
+              {
+                "stop": "AdvMedia response returned",
+                "response_variable": "profile_payload_response"
+              }
+            ]
+          },
+          {
+            "alias": "Google Cast",
+            "conditions": [
+              {
+                "condition": "template",
+                "value_template": "{{ resolved_profile == 'mediaprofile_googlecast' }}"
+              }
+            ],
+            "sequence": [
+              {
+                "action": "script.advmedia_mediaprofile_googlecast",
+                "data": {
+                  "media_record": "{{ media_record }}"
+                },
+                "response_variable": "profile_payload_response"
+              },
+              {
+                "stop": "AdvMedia response returned",
+                "response_variable": "profile_payload_response"
+              }
+            ]
+          }
+        ],
+        "default": [
+          {
+            "stop": "No AdvMedia profile provider found: {{ resolved_profile }}",
+            "error": true
+          }
+        ]
+      }
+    ]
+  }
+}

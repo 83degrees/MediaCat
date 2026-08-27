@@ -1,0 +1,37 @@
+{
+  "captured_at_utc": "2026-08-24T18:11:51.826Z",
+  "entity_id": "script.advmedia_mediaprofile_generic",
+  "script_id": "advmedia_mediaprofile_generic",
+  "config_hash": "6c148bf41844b7b9",
+  "category": "01KZ93E631708ZJBCJ7YZR6AD1",
+  "config": {
+    "alias": "AdvMedia - Fn: Media Profile Generic",
+    "description": "Builds a standard Home Assistant media payload from a media record.",
+    "mode": "parallel",
+    "max": 10,
+    "fields": {
+      "media_record": {
+        "name": "Media Record",
+        "description": "The resolved media record.",
+        "required": true,
+        "selector": {
+          "object": {}
+        }
+      }
+    },
+    "sequence": [
+      {
+        "variables": {
+          "payload_response": {
+            "media_content_id": "{{ media_record.source.url }}",
+            "media_content_type": "{{ media_record.source.mime_type }}"
+          }
+        }
+      },
+      {
+        "stop": "Payload built",
+        "response_variable": "payload_response"
+      }
+    ]
+  }
+}

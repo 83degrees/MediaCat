@@ -1,0 +1,113 @@
+{
+  "captured_at_utc": "2026-08-24T18:02:16.154Z",
+  "lookup_script": "script.astv_find_intent_record",
+  "side_effect_boundary": "side-effect-free lookup only; no dispatcher or execution action invoked",
+  "records": [
+    {
+      "intent_id": "classic_fm",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "Play Classic FM",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "ha_mplayer"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "lbc_news",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "Play LBC News",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "ha_mplayer"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "gold_radio",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "Play Gold Radio",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "ha_mplayer"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "bbc_radio_2",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "Play BBC Radio 2",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "ha_mplayer"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "smooth_radio",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "Smooth Radio",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "g_home_device"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "lbc_radio",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "LBC",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "g_home_device"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    },
+    {
+      "intent_id": "news_briefing",
+      "status": "resolved",
+      "intent": "media.play_source",
+      "title": "News Briefing",
+      "params_keys": [
+        "output",
+        "sources"
+      ],
+      "method_keys": [
+        "g_home_device"
+      ],
+      "catalogue_id_present": false,
+      "item_id_present": false
+    }
+  ],
+  "all_legacy_shape": true
+}

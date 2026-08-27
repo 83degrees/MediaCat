@@ -1,0 +1,19 @@
+{
+  "checked_at_utc": "2026-08-24T18:03:58Z",
+  "source": "Home Assistant structured system log",
+  "searches": {
+    "advmedia": {
+      "entries": 0
+    },
+    "curated_media": {
+      "entries": 0
+    },
+    "astv": {
+      "entries": 1,
+      "first_occurred_utc": "2026-08-24T14:43:32Z",
+      "last_occurred_utc": "2026-08-24T14:49:14Z",
+      "count": 5,
+      "classification": "Known ASTV-63 failed-attempt evidence recorded before restoration and corrected installation; no later matching entry was returned."
+    }
+  }
+}

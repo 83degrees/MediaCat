@@ -1,13 +1,18 @@
 <!-- GENERATED FILE - DO NOT EDIT DIRECTLY.
-Governance framework: 1.1.0
+Governance framework: 1.2.0
 Model: baseline-design@1.0.0
 Manifest: 00_Governance/projects/mediacat/manifest.json
-Rendered payload SHA-256: dd4d477bf7998530dc50a5befed9db1015f0a0f99fd2b1c8a4d7669837365f1e
+Rendered payload SHA-256: 545fb720f1075db566da27af027136ba3f626d8686900925c2391b76b0fbd614
 Regenerate with: 00_Governance/tooling/Render-Governance.ps1
 -->
 
 
 # MediaCat Project Governance
+
+This generated payload is self-contained for the central Governance rules
+rendered into it. Read every more-specific applicable nested `AGENTS.md` for the
+actual work scope; nested instructions may add stricter controls but must not
+silently weaken applicable central rules.
 
 <!-- BEGIN GOVERNANCE SOURCE: 00_Governance/core/governance.md -->
 ## Shared governance
@@ -40,6 +45,13 @@ governance sources, or Linear as appropriate.
 A task is complete only when implementation is in scope, relevant validation
 passes, evidence and limitations are recorded, and no unrelated files or system
 state changed.
+
+For Git-managed product files, commit history is the technical change history
+and diff is the normal comparison. Do not duplicate it with revision logs,
+source backups, or equivalent recovery copies. Governed baselines, evidence,
+contracts, CR records, and DDRs serve distinct purposes. Linear remains the sole
+product work tracker; apply the Git capability only to repositories actually
+changed.
 
 ## Governance change requests
 
@@ -76,6 +88,21 @@ evidence when freshness matters and access is authorized.
 Current, approved target, proposed, exploratory, historical, and unresolved
 states must be labelled distinctly. Never describe a proposed design as current
 production behavior.
+
+Subject authority refines, but does not replace, the precedence above:
+
+- production evidence establishes what is actually deployed;
+- explicit contracts define precise interfaces;
+- the approved product `*_ARCHITECTURE.md` is the semantic architecture record;
+- the approved product `*_ARCHITECTURE.drawio` is the visual structure and
+  layout record;
+- applicable generated governance instructions define agent and governance
+  rules in their scope; and
+- Git records tracked repository state and technical change history.
+
+For each Git-managed product repository, `main` is the current integrated state
+accepted into `main` under the governed workflow. Presence on `main` alone does
+not prove final validation, Linear `Done`, or deployed production state.
 <!-- END GOVERNANCE SOURCE: 00_Governance/core/source-of-truth.md -->
 
 <!-- BEGIN GOVERNANCE SOURCE: 00_Governance/models/baseline-design/1.0.0.md -->
@@ -97,11 +124,13 @@ The user retains final acceptance. Codex must not move a task to `Done` without
 explicit user instruction.
 <!-- END GOVERNANCE SOURCE: 00_Governance/models/baseline-design/1.0.0.md -->
 
-<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/contracts/1.0.0.md -->
-## Contract capability 1.0.0
+<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/contracts/1.1.0.md -->
+## Contract capability 1.1.0
 
 Cross-product interfaces are explicit contracts. A consumer must not depend on
-another product's undocumented internals.
+another product's undocumented internals. Authoritative shared contracts live
+once under `contracts/`; do not copy them into product repositories or create
+parallel contract authorities.
 
 Do not rename, add, remove, normalize, reinterpret, or change the requiredness of
 fields without reviewing the authoritative contract and every known producer and
@@ -110,20 +139,26 @@ different concepts and must not be made identical merely for consistency.
 
 If a boundary change is required:
 
-1. identify ownership and all known consumers;
+1. identify ownership and all known producers and consumers;
 2. update the shared contract first or as one coordinated change;
 3. keep each product's implementation work separately authorized; and
 4. validate compatibility and failure behavior.
 
 Use the central contract registry to record ownership, producers, consumers,
 status, version, and relative source path. Architecture may explain a boundary,
-but the contract remains authoritative for its precise interface.
-<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/contracts/1.0.0.md -->
+but the contract remains authoritative for its precise interface. A
+contract-affecting issue cannot reach `Done` until the authoritative shared
+contract is current. Product Git gates apply independently only to product
+repositories actually changed; changing only shared contract material does not
+create an artificial product-repository commit or push.
+<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/contracts/1.1.0.md -->
 
-<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/linear-workflow/1.0.0.md -->
-## Linear workflow capability 1.0.0
+<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/linear-workflow/1.1.0.md -->
+## Linear workflow capability 1.1.0
 
-All three products use the shared Linear team `astv` and the intentional shared
+Linear is the sole product work tracker and work-control record. GitHub Issues
+must not be introduced as a parallel ASTV, AdvMedia, or MediaCat backlog. All
+three products use the shared Linear team `astv` and the intentional shared
 `ASTV-...` issue namespace.
 
 Durable roles are separate:
@@ -148,15 +183,20 @@ Use the shared status meanings:
 
 Conversational phrases such as “agreed”, “continue”, “go ahead”, or “approved”
 approve design or work definition only. They never bypass the Linear boundary.
-<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/linear-workflow/1.0.0.md -->
 
-<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/production-evidence/1.0.0.md -->
-## Production evidence capability 1.0.0
+When product repositories change, `Done` also requires every affected
+repository's committed-`main`, validation, evidence, and push gate. A required
+DDR adds its gate. Shared-only work gains no artificial product Git gate. Commit
+and DDR references add traceability without replacing Linear.
+<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/linear-workflow/1.1.0.md -->
+
+<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/production-evidence/1.1.0.md -->
+## Production evidence capability 1.1.0
 
 Production evidence is held outside product repositories under
 `Production_ReadOnly/` and must remain read-only. Never modify, rename, delete,
-reformat, regenerate, or use it as a working directory. Never sync local changes
-back to production.
+reformat, regenerate, copy it into a product repository, or use it as a working
+directory. Never sync local changes back to production.
 
 Before relying on evidence, check its capture timestamp, source, procedure,
 included and excluded areas, freshness, and hashes. If evidence is missing,
@@ -170,8 +210,99 @@ large rollback payloads remain outside future version-controlled governance.
 
 Use the production-capture manifest and evidence-index schemas for new captures.
 Record exactly what was inspected, what was verified, what remains unverified,
-and whether any live read-only evidence supplemented the snapshot.
-<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/production-evidence/1.0.0.md -->
+and whether authorized live read-only evidence supplemented the snapshot.
+
+Production evidence, Git state, and validation evidence are distinct.
+Validation evidence remains outside individual product repositories and records
+the governing Linear issue plus every affected repository and committed SHA.
+Final validation must address the committed result; pre-commit checks are not a
+substitute. A push proves only remote presence, not validation, approval,
+completion, or deployed production state.
+<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/production-evidence/1.1.0.md -->
+
+<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/git-workflow/1.0.0.md -->
+## Git workflow capability 1.0.0
+
+Git commit history is the authoritative technical change history for ASTV,
+AdvMedia, and MediaCat repository files; Git diff is the normal comparison.
+`main` is the integrated state accepted under the governed workflow, not proof
+of final validation, Linear `Done`, or deployment.
+
+Do not create per-file change logs, before/after copies, dated backups, `.old`,
+`.bak`, `.backup`, copied source baselines, or equivalent artefacts whose sole
+purpose duplicates Git history. Governance baselines, evidence, contracts, CR
+records, and DDRs are distinct exceptions.
+
+Apply this gate independently to every affected product repository. Its
+authoritative `main` commit should normally reference the Linear issue; where a
+DDR applies it must reference both IDs. Do not split one issue merely because it
+affects several repositories.
+
+Use direct work on `main` when there is no meaningful approval gap:
+
+1. edit on `main` and perform pre-commit diff, syntax, and static checks;
+2. commit the scoped result to `main`;
+3. perform final governed validation against that committed SHA;
+4. record validation evidence outside the product repository, identifying the
+   repository, SHA, and governing Linear issue; and
+5. push the successfully validated `main` commit to the configured remote.
+
+When work precedes merge acceptance, use a temporary branch containing the issue
+ID. Preserve commits and use a merge commit, which is the authoritative
+traceability commit. Then validate, evidence, and push the resulting `main` SHA.
+
+Linear `Done` is prohibited until every affected product repository and every
+other applicable completion gate passes. Repositories may use different
+workflow styles. Push does not prove validation, approval, completion, or
+deployment.
+
+Delete a temporary branch only after merge, validation, push, and overall issue
+completion. Mandatory pull requests, tags, and branch protection are not
+introduced. Work that changes no Git-managed product repository follows existing
+controls without an artificial SHA or push.
+<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/git-workflow/1.0.0.md -->
+
+<!-- BEGIN GOVERNANCE SOURCE: 00_Governance/capabilities/ddr/1.0.0.md -->
+## DDR capability 1.0.0
+
+A DDR is required only for a significant design decision whose rationale must
+outlive immediate Linear and implementation history: material boundary,
+interface, architectural-alternative, constraint, dependency, routing,
+cross-product, capability, or approved-architecture departure decisions. Routine
+implementation, refactoring, bug fixes, wording, diagram layout, and recording
+an already-approved design do not normally require one.
+
+If a future maintainer could reasonably ask why this approach was chosen over a
+plausible alternative, preserve the answer. Do not create DDRs automatically or
+retroactively merely because the capability exists.
+
+Use the approved template at
+`01_Governance_Stabilisation/03_DDRs/DDR_Template.md`. There is one global
+sequence: `DDR-001`, `DDR-002`, and so on. Filenames contain only the identifier,
+for example `DDR-004.md`. Product-specific DDRs normally live under
+`<Product>/00_Decisions/`; cross-product DDRs temporarily live in the approved
+Governance Stabilisation DDR area.
+
+The registry at `01_Governance_Stabilisation/03_DDRs/DDR_Registry.xlsx` contains
+exactly `DDR Number` and `Authoritative File Location`. Reserve the next number
+before creating the DDR with location `RESERVED`; never reuse it. Abandoned
+reservations become `ABANDONED`. A moved DDR keeps its number and changes only
+its location.
+
+Where required, exactly one DDR maps to exactly one Linear issue and conversely;
+most issues need none. Split independent significant decisions, not a single
+decision affecting several repositories. The Linear issue ID is mandatory.
+
+Every DDR has a mandatory `Supersedes` field containing either the previous DDR
+number or `None`. Do not modify an approved DDR to add `Superseded By`. A later
+decision uses a new DDR whose `Supersedes` field references the earlier record.
+
+A DDR is editable while its issue is in progress. `Done` requires the completed
+record at its registered path, mandatory issue and supersession fields, and its
+applicable committed product state. Reserved, abandoned, missing, incomplete, or
+applicable uncommitted DDRs fail the gate. It becomes immutable only after
+validation, affected-repository Git gates, and Linear `Done`.
+<!-- END GOVERNANCE SOURCE: 00_Governance/capabilities/ddr/1.0.0.md -->
 
 <!-- BEGIN GOVERNANCE SOURCE: 00_Governance/projects/mediacat/root-overlay.md -->
 ## MediaCat product overlay

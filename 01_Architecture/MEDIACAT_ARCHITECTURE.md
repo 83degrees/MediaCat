@@ -161,6 +161,10 @@ reference. Current migrated media requests take the normalized branch. None of
 these retained compatibility paths reclassifies `resolve_item` or schema v2 as
 the current MediaCat architecture.
 
+The rationale for excluding the legacy schema-v2 top-level `providers` mapping
+from schema v3 while preserving a complete schema-v2 rollback package is
+recorded in [DDR-001](../00_Decisions/DDR-001.md).
+
 #### Home Assistant Media Source
 
 The `curated_media` Media Source is a separate Home Assistant browse/search/play

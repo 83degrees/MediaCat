@@ -2,9 +2,10 @@
 
 ## Status and purpose
 
-This is the approved Governance 2.0 target representation standard for shared
-architecture-diagram construction and presentation. It is not product
-architecture authority and does not make Governance 2.0 operational.
+This is the current operational Governance 2.0 Architecture Diagram Standard
+for shared architecture-diagram construction and presentation. It is not
+product architecture authority and does not independently activate or
+supersede Governance 2.0 authority.
 
 The approved product `*_ARCHITECTURE.md` defines semantic architecture. A
 diagram represents that authority and must not introduce architecture,

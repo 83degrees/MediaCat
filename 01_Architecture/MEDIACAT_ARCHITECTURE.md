@@ -15,18 +15,24 @@ consumer definitions and recent completed traces. No Home Assistant action or
 service was invoked, and no reload, restart, configuration change, catalogue
 change, playback request or other production mutation occurred.
 
-The precise cross-product interfaces are authoritative only in:
+During transition, the precise cross-product interfaces remain current
+operational authorities in the shared Governance 1.2 copies under
+`Home_Assistant/contracts/`. Their approved Governance 2.0 target provider
+locations are:
 
-- `../../contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`;
-- `../../contracts/ASTV_EXECUTION_DISPATCH_INTERFACE.md`;
-- `../../contracts/ASTV_ADVMEDIA_INTERFACE.md`; and
-- `../../contracts/ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`.
+- `MediaCat/03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`;
+- `ASTV/03_Contracts/ASTV_EXECUTION_DISPATCH_INTERFACE.md`;
+- `AdvMedia/03_Contracts/ASTV_ADVMEDIA_INTERFACE.md`; and
+- `AdvMedia/03_Contracts/ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`.
+
+The target provider locations do not activate themselves before the T7/T8
+coordinated cutover.
 
 Sections labelled **historical pre-cutover** describe the schema-v2 topology
 captured for `ASTV-25` / `ASTV-26`. They are not current production behavior.
 
 The authoritative current-production visual companion is
-[MEDIACAT_ARCHITECTURE.drawio](MEDIACAT_ARCHITECTURE.drawio). It shows the
+[MEDIACAT_ARCHITECTURE.drawio](Diagrams/MEDIACAT_ARCHITECTURE.drawio). It shows the
 MediaCat product boundary and deployed Curated Media implementation at one
 logical level, with ASTV and AdvMedia only at their MediaCat-facing caller
 boundaries. This document remains the authoritative prose narrative, and the
@@ -163,7 +169,7 @@ the current MediaCat architecture.
 
 The rationale for excluding the legacy schema-v2 top-level `providers` mapping
 from schema v3 while preserving a complete schema-v2 rollback package is
-recorded in [DDR-001](../00_Decisions/DDR-001.md).
+recorded in [DDR-001](../02_Decisions/DDR-001.md).
 
 #### Home Assistant Media Source
 
@@ -295,9 +301,11 @@ the live cutover proof that made schema v3 current.
 The former embedded Mermaid visual showed the retired pre-cutover
 `resolve_item` / AdvMedia lookup-wrapper topology. It was removed from the active
 narrative under `ASTV-80` so it cannot drift beside the authoritative current
-Draw.io map. Its exact source remains preserved in
-`Archive/MEDIACAT_ARCHITECTURE_pre_ASTV-80_2026-08-25.md`, whose SHA-256 is
-recorded in `Archive/README.md`.
+Draw.io map. Its exact source remains preserved in Git history at the T1
+baseline `c1d5f5c7a895456b1f81f7a48d3ca2c8a65c407d`, path
+`01_Architecture/Archive/MEDIACAT_ARCHITECTURE_pre_ASTV-80_2026-08-25.md`, Git
+blob `17f5faedc2ff36ac6f035d32a80b82e20dc1e00f`, and recorded SHA-256
+`3ec2bd5bb3ab29dd6d7d48df6bbc665fdd8d4252b0f7c2552f3b6143313c3d20`.
 
 Historical schema-v2 field tables, provider-placement questions and compatibility
 risks remain available in the `ASTV-26` Linear record and the immutable
@@ -309,7 +317,7 @@ pre-cutover evidence. They are not duplicated as current architecture here.
 
 The MediaCat-owned item-lookup contract agrees with the current producer, live
 registered input schema, current normalized traces and architecture above. The
-three consumed contracts were reviewed for consistency:
+three external consumer-owned contracts were reviewed for consistency:
 
 - the ASTV execution-dispatch contract owns current lookup-before-selection,
   complete-record transport and the ASTV assistant path;
@@ -341,9 +349,9 @@ by this architecture audit.
 4. Retained traces are finite historical runtime evidence, not continuous
    monitoring. The fresh Media Source reads verified current browse, search and
    non-playing resolution behavior during the recorded window.
-5. The generated MediaCat governance overlays retain stale pre-contract wording.
-   That separate governance defect is recorded as `ASTV-85`; no generated or
-   authored governance file is changed by this document.
+5. The Governance 2.0 target migration removes the generated MediaCat
+   Governance 1.2 loaders and deploys the approved central rulebook and minimal
+   product loader. Governance 1.2 remains operational until coordinated cutover.
 
 ---
 
@@ -357,5 +365,5 @@ second direct lookup consumer with its own contract.
 
 `curated_media.resolve_item` and schema-v2 loader/Media Source support are
 retained compatibility or historical material. The retired Mermaid source is
-preserved only in the verified `ASTV-80` architecture archive. None of these is
+preserved only in the T1 Git history and the `ASTV-80` record. None of these is
 the current normalized cross-product boundary.

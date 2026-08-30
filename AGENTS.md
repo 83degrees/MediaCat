@@ -1,8 +1,8 @@
 # MediaCat Governance Loader
 
-Governance 2.0 content in this repository is an approved target deployment. It
-does not activate Governance 2.0; Governance 1.2 remains operational until the
-separately governed coordinated cutover.
+Governance 2.0 is the operational governance authority for this repository.
+Governance 1.2 is retired as active authority; retained Governance 1.2 material
+is historical or dependency-bound only and must not govern current work.
 
 Before work, read and follow `CENTRAL_GOVERNANCE.md` and `PROJECT_PROFILE.md`,
 then the applicable subject authority. For architecture or diagram work, also

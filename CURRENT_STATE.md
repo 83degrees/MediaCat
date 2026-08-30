@@ -1,4 +1,11 @@
-# MediaCat Current State
+# MediaCat Current State — Historical Governance 1.2 Restart Index
+
+> Historical and non-authoritative: retained for migration, validation,
+> rollback, and knowledge-recovery context. Current authority is defined by
+> `CENTRAL_GOVERNANCE.md`, `PROJECT_PROFILE.md`, the current architecture,
+> provider-owned contracts, product-owned DDRs, Linear, and Git/GitHub as
+> applicable. Statements below record the pre-Governance-2.0-cutover view and
+> must not govern current work.
 
 ## Metadata
 

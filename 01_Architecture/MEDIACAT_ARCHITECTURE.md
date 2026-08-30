@@ -15,18 +15,16 @@ consumer definitions and recent completed traces. No Home Assistant action or
 service was invoked, and no reload, restart, configuration change, catalogue
 change, playback request or other production mutation occurred.
 
-During transition, the precise cross-product interfaces remain current
-operational authorities in the shared Governance 1.2 copies under
-`Home_Assistant/contracts/`. Their approved Governance 2.0 target provider
-locations are:
+The precise cross-product interfaces have these sole operational,
+provider-owned locations:
 
 - `MediaCat/03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`;
 - `ASTV/03_Contracts/ASTV_EXECUTION_DISPATCH_INTERFACE.md`;
 - `AdvMedia/03_Contracts/ASTV_ADVMEDIA_INTERFACE.md`; and
 - `AdvMedia/03_Contracts/ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`.
 
-The target provider locations do not activate themselves before the T7/T8
-coordinated cutover.
+Former shared Governance 1.2 copies under `Home_Assistant/contracts/` are
+retired and non-authoritative.
 
 Sections labelled **historical pre-cutover** describe the schema-v2 topology
 captured for `ASTV-25` / `ASTV-26`. They are not current production behavior.
@@ -349,9 +347,8 @@ by this architecture audit.
 4. Retained traces are finite historical runtime evidence, not continuous
    monitoring. The fresh Media Source reads verified current browse, search and
    non-playing resolution behavior during the recorded window.
-5. The Governance 2.0 target migration removes the generated MediaCat
-   Governance 1.2 loaders and deploys the approved central rulebook and minimal
-   product loader. Governance 1.2 remains operational until coordinated cutover.
+5. Governance 2.0 is the operational governance authority. Retained Governance
+   1.2 loaders or migration material are historical and non-authoritative.
 
 ---
 

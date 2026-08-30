@@ -1,18 +1,22 @@
 # Central Governance 2.0
 
-## Status and transition boundary
+## Status and authority boundary
 
-This document defines the approved Governance 2.0 target rulebook. Governance
-1.2 remains operational until the separately governed coordinated cutover.
-Creating, reviewing, merging, tagging, or deploying files from this repository
-does not by itself activate Governance 2.0 or retire any Governance 1.2
-artefact.
+This document defines the operational Governance 2.0 rulebook. Governance 2.0
+is the sole operational governance authority; Governance 1.2 is retired as
+active authority and is historical/recovery material only.
 
-During transition, Governance 1.2 material is read-only migration evidence.
-Durable knowledge is translated into the Governance 2.0 authority model;
-generated instructions, previews, fixtures, baselines, release tooling,
-schemas, validation reports, overlays, and release metadata are not inherited
-merely because they existed.
+Retained Governance 1.2 material has no operational authority. It may support
+audit, history, dependency-bound recovery, or Git-based recovery, but it must
+not compete with this rulebook, provider-owned contracts, product-owned DDRs,
+or other Governance 2.0 subject authorities. A later problem is handled under
+Governance 2.0 through corrective branches, PRs, validation, Git revert, and
+release controls; it does not automatically reactivate Governance 1.2.
+
+Durable knowledge was translated into the Governance 2.0 authority model.
+Governance 1.2 generated instructions, previews, fixtures, baselines, release
+tooling, schemas, validation reports, overlays, and release metadata are not
+operational merely because they remain recoverable.
 
 ## Scope
 
@@ -299,6 +303,7 @@ complete, relevant validation has passed against the exact candidate state,
 changed files and limitations are recorded, and no unrelated repository or
 system state changed.
 
-Governance 2.0 remains an approved target until the separately authorized T7/T8
-coordinated cutover. No artefact in this repository may claim otherwise before
-that cutover.
+Governance 2.0 is the sole operational governance authority. Governance 1.2,
+its shared-contract authority, and its Excel DDR reservation/registry process
+are retired. Retained historical or dependency-bound material must not route
+current work back to those retired authorities.

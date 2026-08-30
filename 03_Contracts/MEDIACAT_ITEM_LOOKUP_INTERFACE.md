@@ -12,20 +12,14 @@
 | Status | Current deployed normalized lookup contract; standalone gateway consumer active after ASTV-67 proof |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
-Under Governance 2.0 after coordinated cutover, this provider-owned document is
-the single authoritative definition of the MediaCat item-lookup inputs and
-normalized returned-record v1. Other contracts must reference this document
-rather than copy or redefine the record schema.
+Under Governance 2.0, this provider-owned document is the single authoritative
+definition of the MediaCat item-lookup inputs and normalized returned-record
+v1. Other contracts must reference this document rather than copy or redefine
+the record schema. The former shared Governance 1.2 copy under
+`Home_Assistant/contracts/` is retired and non-authoritative.
 
-During transition, Governance 1.2 remains operational and the shared copy at
-`Home_Assistant/contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` remains the current
-operational authority until the T7/T8 coordinated cutover. This provider-owned
-copy is the approved Governance 2.0 target authority and does not activate
-itself.
-
-External contract references below resolve operationally to the shared
-Governance 1.2 copies under `Home_Assistant/contracts/` until cutover. Their
-Governance 2.0 target provider locations are:
+External contract references resolve to these operational provider-owned
+locations:
 
 - `AdvMedia/03_Contracts/ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`;
 - `AdvMedia/03_Contracts/ASTV_ADVMEDIA_INTERFACE.md`; and

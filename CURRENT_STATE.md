@@ -60,17 +60,18 @@ The user separately confirmed the Media Browser UI smoke test.
 
 ## Source-of-truth references
 
-- Generated governance: `MediaCat/AGENTS.md` and
-  `MediaCat/01_Architecture/AGENTS.md`, rendered from
-  `baseline-design@1.0.0`.
+- Governance 2.0 approved target deployment: `MediaCat/CENTRAL_GOVERNANCE.md`,
+  `MediaCat/AGENTS.md`, and `MediaCat/PROJECT_PROFILE.md`. Governance 1.2 remains
+  operational from `Home_Assistant/00_Governance/` until coordinated cutover.
 - Current architecture: `MediaCat/01_Architecture/MEDIACAT_ARCHITECTURE.md`.
-- Current ASTV-AdvMedia boundary: `contracts/ASTV_ADVMEDIA_INTERFACE.md`.
-- Current ASTV execution-dispatch boundary:
-  `contracts/ASTV_EXECUTION_DISPATCH_INTERFACE.md`.
-- Current MediaCat item-lookup boundary:
-  `contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`.
-- Current AdvMedia standalone gateway boundary:
-  `contracts/ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`.
+- Governed diagram: `MediaCat/01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`.
+- Material rationale: `MediaCat/02_Decisions/DDR-001.md`.
+- Current operational contracts: shared Governance 1.2 copies under
+  `Home_Assistant/contracts/`.
+- Governance 2.0 target provider contract: `MediaCat/03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`.
+- Governance 2.0 external target references: the ASTV execution-dispatch
+  contract under `ASTV/03_Contracts/` and the ASTV-AdvMedia and standalone
+  gateway contracts under `AdvMedia/03_Contracts/`.
 - Historical context: `MediaCat/00_PreProject_History/CONTEXT_HANDOVER.md`.
 - Read-only evidence root: `Production_ReadOnly/starburst/`.
 
@@ -133,8 +134,7 @@ Relevant Home Assistant logs were clean.
 
 ## Next authorized step
 
-Review and test the ASTV-67 standalone-gateway contract promotion and recorded
-runtime proof. Any further architecture, contract, schema, catalogue, or runtime
-change requires its own approved Linear work instruction and proportionate
-validation. The user retains final acceptance and is the only person who may
-move work to `Done`.
+Review and validate the Governance 2.0 target migration under `ASTV-102` before
+merge or coordinated cutover. Any further architecture, contract, schema,
+catalogue, or runtime change requires its own approved Linear work instruction
+and proportionate validation. The user retains final acceptance.

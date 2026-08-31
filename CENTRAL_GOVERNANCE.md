@@ -314,6 +314,14 @@ branch, and one linked pull request in each changed repository. Substantive
 governance, documentation, architecture, contract, and DDR changes normally use
 PR review. Squash merge is the required normal merge method.
 
+Issue branches are temporary work branches. After a pull request is merged, its
+head branch is deleted automatically unless a specific governed retention
+requirement was documented in the Linear issue and pull request before merge.
+A retained branch must identify its deliberately long-lived purpose, owner,
+scope, and review or expiry condition, such as an authorized migration, release,
+or rollback branch. Retention "just in case" is not sufficient. Delete the branch
+when its documented retention purpose ends.
+
 Direct changes to `main` require explicit human-approved exception. At least one
 human approval is required before merge, and agents must not merge their own
 PRs. Force-push or deletion of `main` is prohibited. Record the accepted merge

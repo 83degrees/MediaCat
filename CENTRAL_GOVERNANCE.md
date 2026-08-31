@@ -222,13 +222,86 @@ The non-code workflow is:
 
 `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Done`
 
-Code work adds `Beta` before `Done`. `Blocked` and `Changes Requested` are also
-available. `Done` represents final human acceptance after all cumulative gates
-pass; an agent must not declare or perform that acceptance on the user's behalf.
+Code work adds `Beta` between `Ready for Validation` and `Done`. `Blocked` and
+`Changes Requested` are also available. The arrows define mandatory gate order,
+not merely a preferred display order. A merge, implementation completion, or
+successful candidate check must never be represented as `Done`.
 
 An issue authorizes only its stated scope. Design agreement, conversational
 approval, tool availability, an existing working context, or a status change
 does not silently authorize additional implementation or production mutation.
+
+### Lifecycle gates and closure
+
+ASTV-111 exposed a lifecycle defect in the original Governance 2.0 controls. Its
+Governance PR merged while the new-drive Governance clone still required an
+update and revalidation, yet Linear moved the issue directly from
+`Ready for Review` to `Done`. The issue status changed three seconds after the
+merge commit. The ASTV team's `On PR merge` automation was configured to move
+issues to `Done`, while the original rulebook described the intended lifecycle
+and human authority but did not define an auditable closure record, evidence
+freshness rule, or response to a false `Done` status. A status automation could
+therefore bypass descriptive gates.
+
+The corrected control separates implementation, integration, validation,
+acceptance, and closure:
+
+1. `Ready for Review` means the authorized candidate implementation is complete,
+   relevant candidate validation has passed against its exact state, and changed
+   files and limitations are recorded. It does not mean merged, post-merge
+   validated, deployed, accepted, or closed.
+2. `Ready for Validation` means review has passed and the exact state requiring
+   validation is identifiable. A PR merge may advance work to this state but no
+   further.
+3. Every acceptance criterion is a mandatory closure gate. Before closure, each
+   criterion must be recorded as `PASS`, `FAIL`, or `N/A` with rationale against
+   the final implemented state. Any `FAIL` or unjustified `N/A` prohibits
+   closure.
+4. A merge, deployment, synchronization, environment update, configuration
+   change, data migration, or other state-changing action after validation
+   invalidates validation evidence for every acceptance criterion it could
+   affect. Those criteria must be revalidated against the resulting state.
+5. Unresolved review findings, validation failures, dependencies, follow-up work
+   required by the issue, or evidence limitations that prevent an acceptance
+   decision prohibit closure.
+6. `Done` represents verified closure after all cumulative gates and final human
+   acceptance. The human approver owns that acceptance. An agent must not infer,
+   declare, or perform acceptance on the human's behalf and must not move an
+   issue to `Done` unless the human has recorded approval and explicitly
+   authorized that exact transition.
+
+The Linear issue must contain a final closure-evidence record before `Done` that
+identifies:
+
+- the final implemented state, including exact repository SHA and applicable
+  release, deployment, synchronization, configuration, data, or environment
+  state;
+- every acceptance criterion and its `PASS`, `FAIL`, or justified `N/A` result;
+- review outcome and confirmation that no unresolved finding remains;
+- validation procedure, result, evidence location, and the exact state tested;
+- every state-changing action after validation and the resulting targeted
+  revalidation, or an explicit statement that none occurred;
+- unresolved work, dependencies, and material evidence limitations, explicitly
+  stating `None` where there are none; and
+- attributable final human acceptance and, when an agent is to update the
+  status, explicit authorization for that exact `Done` transition.
+
+Linear status is an assertion, not proof of completion. Before relying on
+`Done`, agents must retrieve the issue and its closure evidence and verify the
+record above. If the evidence is absent, stale, or contradictory, the issue is
+not governed-complete regardless of its displayed status. The agent must record
+the inconsistency and move it to the applicable non-completed state when that
+correction is within the authorized work; otherwise it must report the defect
+and request the human owner to correct the status.
+
+Linear's ordered status list and Git integration do not enforce these semantic
+gates. All Git, release, parent/sub-issue, or other automations for governed work
+must stop at an applicable non-completed state such as `Ready for Validation` or
+`Beta`; they must never set `Done`. Closing magic words must not be used where
+they would trigger `Done` on merge. Where Linear cannot enforce evidence-based
+transition conditions, the mandatory closure record, pre-transition evidence
+check, human authority rule, and false-`Done` correction above are the
+compensating control.
 
 ## Git, PR, and repository protection
 
@@ -268,9 +341,15 @@ governed approval point.
 
 ## Central governance change and deployment
 
-Central governance changes follow:
+Central governance changes follow these ordered gates:
 
-`Linear issue → governance branch → PR → human review → validation → squash merge → appropriate tag`
+1. Linear issue and governance branch;
+2. PR and human review;
+3. candidate validation;
+4. squash merge;
+5. post-merge revalidation against the accepted state;
+6. final human acceptance; and
+7. appropriate tag and `Done` closure.
 
 Every intentionally preserved durable rule must have a clear Governance 2.0
 home. If a significant rule does not fit the approved authority model and would
@@ -302,6 +381,12 @@ Work is ready for human review only when the authorized implementation is
 complete, relevant validation has passed against the exact candidate state,
 changed files and limitations are recorded, and no unrelated repository or
 system state changed.
+
+Work is eligible for `Done` only when the lifecycle closure record is complete,
+all acceptance criteria pass against the final implemented state, required
+post-change revalidation passes, no unresolved finding or required work remains,
+and final human acceptance plus transition authority are recorded. Repository,
+PR, merge, deployment, release, or Linear status alone never proves completion.
 
 Governance 2.0 is the sole operational governance authority. Governance 1.2,
 its shared-contract authority, and its Excel DDR reservation/registry process

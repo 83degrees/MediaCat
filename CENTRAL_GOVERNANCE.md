@@ -315,12 +315,17 @@ governance, documentation, architecture, contract, and DDR changes normally use
 PR review. Squash merge is the required normal merge method.
 
 Issue branches are temporary work branches. After a pull request is merged, its
-head branch is deleted automatically unless a specific governed retention
-requirement was documented in the Linear issue and pull request before merge.
-A retained branch must identify its deliberately long-lived purpose, owner,
-scope, and review or expiry condition, such as an authorized migration, release,
-or rollback branch. Retention "just in case" is not sufficient. Delete the branch
-when its documented retention purpose ends.
+head branch is deleted automatically.
+
+The governed repositories are currently private and use GitHub Free. Under that
+repository and plan combination, protected branches and rulesets are not
+available as an operational mechanism for preserving a merged branch from
+automatic deletion. Post-merge branch retention is therefore outside the normal
+Governance 2.0 operating model. If a future migration, release, rollback, or
+other use case requires a branch to survive merge, raise separate governed work
+before merge. The exception must first establish and verify an implementable
+technical control for the repository and GitHub plan then in force. Do not rely
+on Linear or pull-request documentation alone to preserve the branch.
 
 Direct changes to `main` require explicit human-approved exception. At least one
 human approval is required before merge, and agents must not merge their own

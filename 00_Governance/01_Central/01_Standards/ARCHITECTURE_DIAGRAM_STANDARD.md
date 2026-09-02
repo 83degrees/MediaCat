@@ -3,8 +3,7 @@
 **Standard:** Architecture Diagram Standard  
 **Version:** v1.0.1  
 **Status:** Approved  
-**Approval tag:** `diagram-standard-v1.0.1`  
-**Approval date:** 2026-09-01
+**Approval date:** 01/09/2026
 
 ## Contents
 

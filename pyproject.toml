@@ -1,4 +1,5 @@
 [tool.pytest.ini_options]
 addopts = "-ra"
-testpaths = ["tests"]
+testpaths = ["05_Tests"]
+pythonpath = ["04_Source"]
 

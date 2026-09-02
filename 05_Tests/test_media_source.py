@@ -65,7 +65,12 @@ from custom_components.curated_media.const import DATA_CATALOGUE, DOMAIN
 from custom_components.curated_media.media_source import CuratedMediaSource
 
 V2_FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
-V3_CATALOGUE = Path(__file__).parents[1] / "curated_media" / "catalogue.yaml"
+V3_CATALOGUE = (
+    Path(__file__).parents[1]
+    / "04_Source"
+    / "curated_media"
+    / "catalogue.yaml"
+)
 
 PLAYABLE_V3_ITEM_IDS = [
     "bbc_radio_1",

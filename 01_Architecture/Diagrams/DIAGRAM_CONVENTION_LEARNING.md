@@ -28,4 +28,5 @@ Architecture Diagram Standard.
   diagram; historical and future topology is excluded.
 
 Shared connector, variable-label, gateway, boundary, editing, and review rules
-remain defined only by `Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`.
+remain defined only by
+`00_Governance/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`.

@@ -16,6 +16,10 @@ Home Assistant 2024.12.5 is deliberately a pinned test dependency compatible
 with the available Python 3.12 runtime. The production Home Assistant version
 is unknown, so passing results establish source-baseline behaviour only.
 
+Pytest discovers the suite from `05_Tests/` and imports the maintained
+implementation from `04_Source/` using the repository's `pyproject.toml`
+configuration.
+
 From the MediaCat repository root, create an isolated environment and run:
 
 ```powershell

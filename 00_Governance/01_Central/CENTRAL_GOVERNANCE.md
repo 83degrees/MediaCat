@@ -1,8 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** v2.0.4  
+**Governance version:** 2.1.0  
 **Status:** Approved  
-**Approval date:** 01/09/2026
+**Approval tag:** `governance-v2.1.0`  
+**Approval date:** 2026-09-02
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -57,11 +58,12 @@ All appendices form an integral part of this governance book and carry the same 
 
 ## Appendices
 
-- Appendix A — Authoritative Gate Matrix
-- Appendix B — Governance Change Approval Checklist
-- Appendix C — DDR Standard
-- Appendix D — Audit Reference
-- Appendix E — Monitoring Register
+- Appendix A — Authoritative Workflow Gate Matrix
+- Appendix B — Authoritative Change-Class Control Matrix
+- Appendix C — Governance Change Approval Checklist
+- Appendix D — DDR Standard
+- Appendix E — Audit Reference
+- Appendix F — Monitoring Register
 
 ---
 
@@ -103,7 +105,7 @@ There is one authoritative central governance book:
 
 The central governance repository owns and approves this artefact.
 
-Once approved, the exact approved file is distributed unchanged into each product repository.
+Once approved, the exact approved file is deployed unchanged into each product repository as part of the centrally managed governance projection defined in Section 3.1.
 
 Product repositories must not locally modify the deployed central governance book.
 
@@ -120,10 +122,27 @@ There shall be:
 
 The central governance model is maintained in its own independent Git/GitHub repository.
 
-Its authoritative central artefacts are:
+Its authoritative central artefacts include:
 
 - `/CENTRAL_GOVERNANCE.md`
 - `/DDR_REGISTRY.md`
+- `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+- `/Templates/PROJECT_PROFILE.template.md`
+- `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
+
+`DDR_REGISTRY.md` is a central-only governance artefact and is not deployed into product repositories.
+
+Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Section 3.1.
+
+The repository's `main` branch represents the accepted integrated governance state.
+
+The central governance repository is not required to use the standard product-repository folder structure.
+
+GitHub hosts the repository and may technically enforce branch, pull-request and merge controls.
+
+`CENTRAL_GOVERNANCE.md` remains authoritative for what those controls mean and when they apply.
+
+GitHub configuration does not replace or independently redefine central governance.
 
 #### Centrally Governed Standards
 
@@ -148,31 +167,9 @@ Its authoritative central-repository path is:
 
 Its deployed product path is:
 
-`00_Governance/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
-
-The Architecture Diagram Standard applies to every governed product repository and is therefore deployed universally at that fixed path, whether or not the product currently contains a governed architecture diagram.
-
-The authoritative central Governance repository therefore contains, at minimum:
-
-```text
-/
-├── CENTRAL_GOVERNANCE.md
-├── DDR_REGISTRY.md
-└── Standards/
-    └── ARCHITECTURE_DIAGRAM_STANDARD.md
-```
+`00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
 
 Where `CENTRAL_GOVERNANCE.md` and a centrally governed standard conflict, `CENTRAL_GOVERNANCE.md` prevails and the conflict must be surfaced for resolution.
-
-The repository's `main` branch represents the accepted integrated governance state.
-
-The central governance repository is not required to use the standard product-repository folder structure.
-
-GitHub hosts the repository and may technically enforce branch, pull-request and merge controls.
-
-`CENTRAL_GOVERNANCE.md` remains authoritative for what those controls mean and when they apply.
-
-GitHub configuration does not replace or independently redefine central governance.
 
 #### 2.3 Root `AGENTS.md`
 
@@ -184,21 +181,21 @@ Its purpose is to direct the agent to applicable governance and project context.
 
 It should principally instruct the agent to:
 
-1. read `00_Governance/CENTRAL_GOVERNANCE.md`;
+1. read `00_Governance/01_Central/CENTRAL_GOVERNANCE.md`;
 2. read `00_Governance/PROJECT_PROFILE.md`;
 3. apply both sources and the standard repository conventions when working in the repository.
 
 When creating, editing or reviewing a governed architecture diagram, an agent must also read:
 
-- `00_Governance/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
+- `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
 - the applicable approved architecture documentation; and
 - where present, `01_Architecture/Diagrams/DIAGRAM_CONVENTION_LEARNING.md`.
 
-The fixed standard path identifies the active deployed central standard.
+The deployed central paths identify the active centrally managed artefacts.
 
-Agents must not select between historical or alternative standard files.
+Agents must not select between historical or alternative central copies.
 
-`DIAGRAM_CONVENTION_LEARNING.md` contains provisional product-local observations and working defaults. It is not governance, approved architecture or a product-specific override of the central standard.
+`DIAGRAM_CONVENTION_LEARNING.md` in `01_Architecture/Diagrams/` contains provisional product-local observations and working defaults. It is not governance, approved architecture or a product-specific override of the central standard.
 
 The root `AGENTS.md` must not become an additional governance rulebook or a location for project-specific operating rules.
 
@@ -436,28 +433,50 @@ Top-level folders should use meaningful subfolders where this improves organisat
 
 Large flat collections of unrelated files should be avoided.
 
-A standard folder may remain empty where the product does not yet require that artefact class.
+A standard structural location need not physically exist in Git until it contains required content.
+
+Empty standard folders must not be materialised solely through placeholder files such as `.gitkeep` or dummy `README.md` files unless a specific operational requirement requires the physical directory to exist.
 
 #### 3.1 `00_Governance/`
 
-Contains project governance/context artefacts only.
+Contains centrally deployed governance artefacts and product-owned governance/context artefacts.
 
-At minimum:
+The standard structure is:
 
 ```text
 00_Governance/
-├── CENTRAL_GOVERNANCE.md
-├── Standards/
-│   └── ARCHITECTURE_DIAGRAM_STANDARD.md
+├── 01_Central/
+│   ├── CENTRAL_GOVERNANCE.md
+│   ├── 01_Standards/
+│   │   └── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   └── 02_Templates/
+│       ├── PROJECT_PROFILE.template.md
+│       └── DIAGRAM_CONVENTION_LEARNING.md
 ├── PROJECT_PROFILE.md
 └── AAR_REGISTER.md
 ```
+
+Everything under:
+
+`00_Governance/01_Central/**`
+
+is centrally managed content.
+
+Product-local work must not create, edit, rename, move or delete anything within that subtree.
+
+The central governance repository remains the source of truth for all content deployed into that subtree.
+
+`PROJECT_PROFILE.md` and `AAR_REGISTER.md` are product-owned artefacts and remain outside the centrally managed subtree.
+
+`DDR_REGISTRY.md` remains central-only and is not deployed into product repositories.
+
+Templates within `01_Central/02_Templates/` are centrally managed implementation aids. Their presence in a product repository does not make them independent governance authorities.
 
 `ARCHITECTURE_DIAGRAM_STANDARD.md` is an exact deployed copy of the centrally approved standard and must not contain product-specific amendments.
 
 Product-specific architectural meaning belongs in the applicable approved architecture documentation.
 
-Routine architecture, validation output, audit evidence or product work must not accumulate here.
+Routine architecture, validation output, audit evidence or product work must not accumulate in `00_Governance/01_Central/`.
 
 #### 3.2 `01_Architecture/`
 
@@ -644,13 +663,28 @@ The workflow is actor-neutral.
 
 Appendix A is authoritative for the gates that permit movement between workflow states.
 
-#### 4.1 Code and Non-Code Lifecycles
+#### 4.1 Workflow Profiles
 
-| Work type | Normal Linear lifecycle |
-|---|---|
-| Non-code | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Done` |
-| Code | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Beta → Done` |
-| Multi-class issue | Follow the applicable lifecycle and satisfy the gates required by all relevant change classes |
+A workflow profile defines the Linear workflow that an issue must follow.
+
+Each governed change class has a default workflow profile defined in Section 5.1.
+
+Two workflow profiles are currently defined:
+
+| Workflow profile | Definition | Linear workflow |
+|---|---|---|
+| `WF-01` | Code workflow profile. Applies to issues whose selected workflow requires controlled progression through Beta before completion. | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Beta → Done` |
+| `WF-02` | Non-Code workflow profile. Applies to issues whose selected workflow does not require a Beta stage before completion. | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Done` |
+
+Two workflow profiles are currently defined because code changes require a Beta stage before completion, while non-code changes do not.
+
+The workflow-profile model is intentionally structured so that profile definitions, change-class mappings and precedence can be changed or extended later without redesigning the underlying change-class model.
+
+Where a governed operational work item has no applicable change class, it follows workflow profile `WF-02`.
+
+If an applicable change class is subsequently assigned, the workflow-profile selection rules in Section 5 apply from that point.
+
+Appendix A is authoritative for the gates applicable to each workflow profile and the transitions those gates control.
 
 #### 4.2 Backlog
 
@@ -687,14 +721,14 @@ Manual and delegated work use the same state.
 
 `Ready for Validation` means:
 
-- human review is complete;
-- the change is accepted in principle;
-- no further design/content review is expected;
+- applicable human acceptance has been obtained and remains valid;
+- accepted substance is ready for applicable validation;
+- no further design/content review is expected unless the accepted substance changes;
 - only applicable technical, runtime, integrity or evidence validation remains.
 
 #### 4.7 Beta
 
-`Beta` applies to code only.
+`Beta` applies where the selected workflow profile requires a Beta stage.
 
 It means:
 
@@ -711,19 +745,9 @@ It means:
 
 `Done` means all completion requirements applicable to the issue have been satisfied against the final implemented state.
 
-For non-code this normally means:
+The applicable completion gate is defined in Appendix A.
 
-`accepted → applicable validation → merge → final closure check → Done`
-
-For code this additionally requires successful beta operation and the applicable final closure check.
-
-Before `Done`:
-
-- every acceptance criterion must be explicitly checked against the final implemented state;
-- required review and validation must remain valid for that final state;
-- unresolved findings that prevent closure must be resolved or separately governed and traceable;
-- required human acceptance must be recorded;
-- required Git, deployment, synchronization, environment-update and knowledge-retention work must be complete.
+Applicable change-class-specific completion controls are defined in Appendix B.
 
 `Done` must not be treated as an implementation-complete, merge-complete or deployment-complete shortcut.
 
@@ -755,7 +779,7 @@ Linear status must reflect the real operational state.
 
 Comments and narrative updates do not substitute for required state transitions.
 
-GitHub may hold detailed implementation/review discussion, but Linear remains lifecycle authority.
+GitHub may hold detailed implementation/review discussion, but Linear remains workflow authority.
 
 A displayed `Done` state is not sufficient evidence of valid closure where the required closure evidence is absent or contradictory.
 
@@ -771,9 +795,9 @@ A state-changing action must not be treated as administrative merely because the
 
 #### 4.12 Sole Work Tracker
 
-Linear is the sole product and governance work tracker and lifecycle authority.
+Linear is the sole product and governance work tracker and workflow authority.
 
-GitHub Issues or other repository issue trackers must not be introduced as a parallel backlog, work queue or lifecycle record.
+GitHub Issues or other repository issue trackers must not be introduced as a parallel backlog, work queue or workflow record.
 
 This applies to:
 
@@ -793,25 +817,29 @@ GitHub Releases and pull requests are not alternative product work trackers.
 
 Every governed change issue identifies the type or types of change using controlled Linear labels.
 
-Change classes determine which review, validation, evidence and completion gates apply.
+Change classes determine applicable change-class-specific controls and each change class defines a default workflow profile.
 
-They do not replace workflow state.
+The selected workflow profile determines the workflow and applicable transition gates.
+
+Change classes do not replace workflow state.
 
 Operational activities such as a release or formal audit that do not themselves change governed product content are not required to invent an artificial change class.
 
-Appendix A defines applicable gate requirements.
+Appendix A defines workflow transition gates and workflow-profile gate applicability.
+
+Appendix B defines change-class-specific controls.
 
 #### 5.1 Standard Change Classes
 
-| Change class | Definition |
-|---|---|
-| `Change: Code` | Changes executable or deployable implementation, including runtime-controlling configuration. |
-| `Change: Architecture` | Changes approved structure, responsibilities, boundaries, components, interactions or architectural behaviour. |
-| `Change: Contract` | Creates or changes an authoritative product-provided interface/contract, including inputs, outputs, schemas, guarantees or compatibility expectations. |
-| `Change: Governance` | Changes rules, controls, authority, repository conventions, workflow or governance process. |
-| `Change: DDR` | Creates, updates or supersedes a Design Decision Record. |
-| `Change: Documentation` | Changes durable explanatory or operational documentation not governed as architecture, contract, governance, DDR or diagram. |
-| `Change: Diagram` | Creates or changes a governed diagram or visual architecture artefact. |
+| Change class | Definition | Default workflow profile |
+|---|---|---|
+| `Change: Code` | Changes executable or deployable implementation, including runtime-controlling configuration. | `WF-01` |
+| `Change: Architecture` | Changes approved structure, responsibilities, boundaries, components, interactions or architectural behaviour. | `WF-02` |
+| `Change: Contract` | Creates or changes an authoritative product-provided interface/contract, including inputs, outputs, schemas, guarantees or compatibility expectations. | `WF-02` |
+| `Change: Governance` | Changes rules, controls, authority, repository conventions, workflow or governance process. | `WF-02` |
+| `Change: DDR` | Creates, updates or supersedes a Design Decision Record. | `WF-02` |
+| `Change: Documentation` | Changes durable explanatory or operational documentation not governed as architecture, contract, governance, DDR or diagram. | `WF-02` |
+| `Change: Diagram` | Creates or changes a governed diagram or visual architecture artefact. | `WF-02` |
 
 A single issue or file may require multiple classes.
 
@@ -821,7 +849,9 @@ There is no generic `Mixed` class.
 
 Applicable controls are cumulative.
 
-The issue satisfies gates required by every relevant class unless a gate is explicitly incompatible or inapplicable.
+The issue satisfies controls required by every relevant change class unless a control is explicitly incompatible or inapplicable.
+
+**Where any change class assigned to an issue has a default workflow profile of `WF-01`, then this workflow profile takes precedence over all other default workflow profiles, with the result that the issue must follow workflow profile `WF-01`.**
 
 #### 5.3 Assignment
 
@@ -913,7 +943,11 @@ Governed work may be performed manually or delegated.
 
 Invocation determines how work starts, not how it is governed afterward.
 
-All routes converge on the same lifecycle, gates, evidence and completion rules.
+All routes converge on the same applicable workflow, gates, evidence and completion rules.
+
+`Ready` means eligible for execution; it is not itself an execution trigger.
+
+Work starts only through an explicit user/manual instruction, an explicitly invoked supported delegation route, or an automatic delegation rule previously enabled by explicit user decision.
 
 #### 7.1 Manual User Execution
 
@@ -979,7 +1013,7 @@ The table below shows which Git concepts normally become relevant at each Linear
 | `Changes Requested` — pre-merge | Continue same branch/PR; commit and push corrections | 8.2–8.6 |
 | `Changes Requested` — after failed beta | Same Linear issue; create corrective branch/PR from appropriate `main` state | 8.1, 8.2, 8.5, 8.6 |
 | `Ready for Validation` | Reviewed PR represents accepted proposed change; merge has not yet occurred | 8.5 Pull Request, 8.7 Merge |
-| `Beta` | Code PR has been squash-merged; resulting `main` SHA is deployed to `ha-starburst` | 8.1 `main`, 8.7 Merge |
+| `Beta` | Applicable PR has been squash-merged; resulting `main` SHA is deployed to `ha-starburst` | 8.1 `main`, 8.7 Merge |
 | `Done` | Required issue-level Git actions complete | 8.7 Merge |
 | `Blocked` | Preserve current Git state for later resumption | 8.2 Branch, 8.3 Commit, 8.5 Pull Request |
 
@@ -1040,15 +1074,9 @@ Opening a PR does not mean the change has been accepted or merged.
 
 #### 8.6 Review Changes
 
-Before merge, requested changes normally use:
+Before merge, requested changes normally use the applicable Appendix A rework and review gates while continuing on the existing branch and PR.
 
-`feedback → Changes Requested → In Progress → commit → push → Ready for Review`
-
-on the existing branch and PR.
-
-After a merged beta candidate fails:
-
-`Beta → Changes Requested → In Progress → new corrective branch/PR → Ready for Review`
+After a merged beta candidate fails, the same Linear issue continues through the applicable Appendix A rework gates using a new corrective branch/PR.
 
 The Linear issue remains the same unless the correction has become an independently governable piece of work requiring issue decomposition under Section 6.
 
@@ -1060,11 +1088,11 @@ The standard merge method is:
 
 The commits in an issue PR are incorporated into `main` as one resulting issue-level commit.
 
-For code, squash merge occurs after review and applicable pre-beta validation and before beta deployment.
+Where the applicable workflow profile requires Beta, squash merge occurs after review and applicable pre-Beta validation and before Beta deployment.
 
 The resulting `main` SHA becomes the beta candidate.
 
-For non-code, merge normally occurs after review and applicable validation, immediately before `Done`.
+Where the applicable workflow profile does not require Beta, merge normally occurs after review and applicable validation, immediately before `Done`.
 
 #### 8.8 Tag and Release
 
@@ -1179,11 +1207,11 @@ Squash-merge commit identity differences are not, by themselves, evidence that s
 
 ### 10. Code Review
 
-Code requires human review before moving from `Ready for Review` to `Ready for Validation`.
+Code requires human review at the applicable Appendix A human-acceptance gate before validation may proceed.
 
 GitHub is the detailed code-review surface.
 
-Linear remains lifecycle authority.
+Linear remains workflow authority.
 
 #### 10.1 Entry
 
@@ -1209,17 +1237,13 @@ Detailed review feedback remains attached to the PR rather than duplicated into 
 
 #### 10.3 Accepted Review
 
-Acceptance allows:
+Acceptance satisfies the substantive human-review requirement for the applicable Appendix A gate.
 
-`Ready for Review → Ready for Validation`
-
-It does not mean validation, beta or stable release has completed.
+It does not mean validation, Beta or stable release has completed.
 
 #### 10.4 Changes Requested
 
-Required changes cause:
-
-`Ready for Review → Changes Requested`
+Required changes proceed through the applicable Appendix A rework gate.
 
 Before merge, the same issue/branch/PR normally continue.
 
@@ -1321,7 +1345,9 @@ It is proportionate to:
 
 The default is not to run every available validator.
 
-Appendix A is authoritative for lifecycle and class-specific gate requirements.
+Appendix A is authoritative for workflow transition gates and workflow-profile gate applicability.
+
+Appendix B is authoritative for change-class-specific controls.
 
 #### 12.1 Universal Integrity and Selection
 
@@ -1427,72 +1453,23 @@ For artefacts requiring final-state validation, including visually accepted diag
 
 Validation failure is assessed according to what failed and what correction is required.
 
-#### 13.1 Failure Requiring Re-Review
+Rework follows the applicable Appendix A rework gate.
 
-If correction changes previously accepted content or behaviour:
+Whether repeated human review is required depends on whether the accepted substance has changed, as defined by Appendix A and the applicable change-class controls in Appendix B.
 
-`Ready for Validation → Changes Requested → In Progress → Ready for Review`
-
-Examples include changed:
-
-- code behaviour;
-- architecture;
-- contract meaning;
-- governance content;
-- DDR substance;
-- substantive documentation.
-
-#### 13.2 Technical Failure Without Re-Review
-
-If correction leaves accepted substance unchanged, human re-review is not required solely because validation failed.
-
-The work may return directly to validation where Appendix A permits.
-
-Examples include:
-
-- correcting metadata;
-- repairing provenance reference;
-- regenerating evidence against unchanged bytes;
-- non-substantive packaging correction;
-- validator repair that does not alter the governed artefact.
-
-#### 13.3 Beta Failure
-
-Beta failure causes:
-
-`Beta → Changes Requested`
-
-Because the original candidate PR has already been merged, corrective code normally uses a new branch and PR under the same Linear issue.
-
-Corrected behaviour must pass applicable review and validation before another beta candidate is deployed.
-
-#### 13.4 Validation-Tool Failure
+#### 13.1 Validation-Tool Failure
 
 A broken validator or tool failure must be distinguished from an artefact/product failure.
 
 Expected negative search results, no-match outcomes and runtime/tool errors are not automatically governed-change failures.
 
----
-
 ### 14. Non-Code Completion
 
-Normal path:
+Non-code completion follows the applicable workflow profile and transition gates defined in Appendix A.
 
-`Ready for Review → Ready for Validation → Done`
+Applicable change-class-specific completion controls are defined in Appendix B.
 
-`Done` normally requires:
-
-- required human acceptance;
-- applicable validation;
-- final accepted artefact established;
-- required Git actions completed;
-- knowledge-retention obligations completed;
-- accepted repository state updated;
-- every acceptance criterion explicitly checked against the final implemented state;
-- required post-merge, deployment, synchronization or environment-update work completed;
-- affected acceptance criteria revalidated after any post-validation state-changing action;
-- unresolved findings status established;
-- final closure evidence recorded.
+Sections 14.1–14.5 describe the operating model and evidence expectations for non-code completion; they do not independently authorise workflow transitions.
 
 #### 14.1 Merge Timing
 
@@ -1528,32 +1505,29 @@ Before a governed issue enters `Done`, closure evidence must record enough infor
 - required human acceptance;
 - completion of required post-merge, deployment, synchronization or environment-update work.
 
-Where human acceptance is required, an agent must not independently perform the final transition to `Done` without explicit human approval.
+The authoritative issue closure record is maintained in Linear.
 
-If Linear cannot technically prevent an invalid transition, this governance rule remains binding as the compensating control.
+Supporting review, validation, Git, deployment or other evidence may remain in its authoritative native location and must be linked or referenced from the Linear closure record where required to establish closure.
 
----
+Human acceptance and transition authority are governed by Appendix A.
+
+Any separately required action-specific authorisation remains mandatory.
 
 ### 15. Code Completion and Beta
 
-A code issue reaches `Done` only after review, applicable validation and successful beta operation.
+Code completion follows the applicable workflow profile and transition gates defined in Appendix A.
 
-Normal path:
-
-`Ready for Review → Ready for Validation → Beta → Done`
+Where the selected workflow profile requires Beta, the code issue reaches `Done` only after applicable review, validation and successful Beta operation.
 
 Stable release is separate.
 
+Applicable change-class-specific controls are defined in Appendix B.
+
 #### 15.1 Entry to Beta
 
-After review acceptance and applicable pre-beta validation:
+Entry to `Beta` occurs only when the applicable Appendix A Beta-entry gate and Appendix B code controls have been satisfied.
 
-1. the PR is squash-merged to `main`;
-2. the resulting exact `main` SHA becomes the beta candidate;
-3. the user explicitly authorises beta deployment;
-4. an agent deploys that exact SHA to `ha-starburst`;
-5. deployed state is verified;
-6. the issue moves to `Beta`.
+The resulting deployed candidate state is the state against which Beta operation is assessed.
 
 #### 15.2 Beta Candidate Integrity
 
@@ -1569,17 +1543,15 @@ Duration and depth are proportionate to risk.
 
 #### 15.4 Successful Beta
 
-Successful beta permits:
+Successful Beta satisfies the Beta-operation requirement for completion.
 
-`Beta → Done`
+Transition from `Beta` to `Done` is governed by the applicable Appendix A gate.
 
-The implementation issue is complete but no stable product release is automatically created.
+The implementation issue is complete when that gate is satisfied, but no stable product release is automatically created.
 
 #### 15.5 Failed Beta
 
-Failure causes:
-
-`Beta → Changes Requested`
+A failed Beta requires rework through the applicable Appendix A rework gate.
 
 The failed candidate remains part of Git history.
 
@@ -1875,11 +1847,11 @@ The allocation authority is the central:
 
 held in the central governance repository.
 
-Allocation and concurrent-update rules are defined in Appendix C.
+Allocation and concurrent-update rules are defined in Appendix D.
 
 #### 19.4 DDR Standard
 
-Mandatory DDR content, statuses, registry fields, numbering and supersession mechanics are defined in Appendix C.
+Mandatory DDR content, statuses, registry fields, numbering and supersession mechanics are defined in Appendix D.
 
 #### 19.5 Recovered Decisions
 
@@ -1982,7 +1954,7 @@ It must:
 
 Audit completeness is determined from the Review Log, not agent memory or scattered comments.
 
-Required Review Log fields are defined in Appendix D.
+Required Review Log fields are defined in Appendix E.
 
 #### 21.4 Reviewed Versus Archive Ready
 
@@ -1992,11 +1964,11 @@ It does not mean the issue is archive-ready.
 
 `Reviewed` and `Archive Ready` are distinct concepts.
 
-Archive readiness is determined under Appendix D.
+Archive readiness is determined under Appendix E.
 
 #### 21.5 Findings
 
-Audits use the findings taxonomy in Appendix D.
+Audits use the findings taxonomy in Appendix E.
 
 Substantive governed fixes proceed through normal Linear/Git workflow rather than invisibly inside the audit.
 
@@ -2010,25 +1982,41 @@ An audit completes when:
 - final audit state is recorded;
 - required engagement labels/checkpoints are applied.
 
-Detailed audit reference requirements are defined in Appendix D.
+Detailed audit reference requirements are defined in Appendix E.
 
 ---
 
 ### 22. Governance Deployment
 
-Approved central governance is maintained in the central governance Git/GitHub repository and distributed to product repositories as an unchanged artefact.
+Approved central governance is maintained in the central governance Git/GitHub repository.
+
+Central governance artefacts required locally by product agents are distributed to product repositories through the centrally managed governance projection:
+
+`00_Governance/01_Central/`
+
+Content deployed into that subtree remains centrally owned and must not be locally altered.
 
 #### 22.1 Source
 
-The authoritative governance source is:
+The authoritative source of every centrally deployed governance artefact is its approved location in the central governance repository.
 
-`/CENTRAL_GOVERNANCE.md`
+The deployed product projection contains:
 
-in the central governance repository.
+```text
+00_Governance/01_Central/
+├── CENTRAL_GOVERNANCE.md
+├── 01_Standards/
+│   └── ARCHITECTURE_DIAGRAM_STANDARD.md
+└── 02_Templates/
+    ├── PROJECT_PROFILE.template.md
+    └── DIAGRAM_CONVENTION_LEARNING.md
+```
 
-The authoritative global DDR allocation registry is:
+The authoritative global DDR allocation registry remains:
 
 `/DDR_REGISTRY.md`
+
+in the central governance repository and is not part of the deployed product projection.
 
 #### 22.2 Governance Identity
 
@@ -2055,9 +2043,9 @@ The file therefore does not attempt to contain the SHA of the commit that contai
 
 A permanent change to the central governance model must originate from and remain governed by a Linear work item.
 
-The normal central governance change route is:
+A central governance change follows the workflow profile selected under Sections 4.1 and 5 and the applicable gates and controls in Appendices A and B.
 
-`Linear issue → Ready → In Progress → governance repository branch → pull request → Ready for Review → human approval → Ready for Validation → applicable validation → squash merge to main → governance approval tag → Done`
+Governance-book-specific approval requirements for changes to `CENTRAL_GOVERNANCE.md` are additionally defined in Appendix C.
 
 The Linear issue carries:
 
@@ -2067,7 +2055,7 @@ and any additional applicable change classes.
 
 GitHub provides the detailed change and review surface.
 
-Linear remains the lifecycle authority.
+Linear remains the workflow authority.
 
 A permanent governance change must not be made solely through an untracked GitHub branch, pull request, direct commit or repository edit.
 
@@ -2096,7 +2084,7 @@ It must not recreate former generated-governance release machinery where the cha
 
 #### 22.6 Pre-Merge Governance Approval
 
-Before central governance content is merged, the applicable pre-merge requirements in Appendix B must be satisfied.
+Before central governance content is merged, the applicable pre-merge requirements in Appendix C must be satisfied.
 
 Human approval applies to the substantive proposed governance content.
 
@@ -2108,33 +2096,34 @@ After substantive approval and applicable validation:
 2. identify the resulting exact commit;
 3. create the intended governance approval tag against that commit;
 4. verify tag, version and approval metadata;
-5. complete the post-merge requirements in Appendix B.
+5. complete the post-merge requirements in Appendix C.
 
 The governance version is then approved and available for distribution.
 
 #### 22.8 Distribution Is Not Re-Approval
 
-Copying the exact already-approved `CENTRAL_GOVERNANCE.md` into a product repository is governance deployment, not a new governance-content decision.
+Copying an exact already-approved central governance artefact into its defined location within `00_Governance/01_Central/` is governance deployment, not a new substantive governance decision.
 
-Distribution does not require repeated substantive governance review merely because the product copy changes.
+Distribution does not require repeated substantive review merely because the deployed product copy changes.
 
 It requires:
 
 - Git traceability;
-- correct target repository;
-- byte/integrity verification;
-- approval-tag/source traceability;
+- correct approved source;
+- correct target repository and path;
+- exact content/integrity verification;
+- applicable approval-version/tag traceability;
 - rollout-state recording.
 
-Any local alteration of the content is a new governance-content change and is not permitted through the distribution route.
+Any local alteration of centrally managed content is not permitted through the distribution route.
 
 #### 22.9 Staged Distribution and Partial Failure
 
-Each product continues under the exact approved governance version currently deployed there until a later approved version is successfully installed.
+Each product continues under the exact approved central artefact versions currently deployed there until later approved versions are successfully installed.
 
 A rollout remains incomplete until every targeted product has either:
 
-- received and integrity-verified the new approved version; or
+- received and integrity-verified the intended approved central content; or
 - been explicitly deferred or excluded.
 
 A failed rollout must not be represented as complete.
@@ -2145,22 +2134,22 @@ If a distribution step fails:
 
 - record the affected product and failure;
 - stop further rollout where continuing could create material inconsistency or risk;
-- retain or restore the affected product's previous approved governance version where required.
+- retain or restore the affected product's previous approved central content where required.
 
 #### 22.10 Governance Rollout Tracking
 
 Governance distribution may remain within the governing central governance-change issue where rollout is straightforward and explicitly within that issue's scope.
 
-Where distribution becomes independently sequenced, deferred, multi-stage, operationally significant or otherwise requires separate lifecycle control, create a separate Linear rollout issue.
+Where distribution becomes independently sequenced, deferred, multi-stage, operationally significant or otherwise requires separate workflow control, create a separate Linear rollout issue.
 
 A governance rollout issue:
 
 - tracks deployment of already-approved governance;
-- does not require `Change: Governance` solely because it distributes the unchanged approved artefact;
+- does not require `Change: Governance` solely because it distributes unchanged approved artefacts;
 - must identify the governance version being distributed;
 - must identify the targeted products;
 - must record successful, deferred, excluded and failed targets;
-- follows the applicable non-code operational lifecycle.
+- follows the applicable workflow profile and gates.
 
 The rollout issue does not reopen substantive approval of the governance content.
 
@@ -2179,11 +2168,9 @@ Otherwise, distribution is a separate operational activity under Section 22.10.
 
 Creation of an approved governance version and deployment of that version are distinct lifecycle concepts.
 
-#### 22.12 Change Flow
+#### 22.12 Permanent Governance Change and Distribution
 
-The normal permanent governance-change flow is:
-
-`identify issue → create/prepare Linear governance issue → Ready → In Progress → governance branch → PR → human review → Ready for Validation → applicable validation → squash merge to main → create governance approval tag → verify approved state → Done → distribute approved version`
+Permanent governance changes follow the applicable workflow profile, Appendix A transition gates, Appendix B change-class controls and, for changes to `CENTRAL_GOVERNANCE.md`, Appendix C approval requirements.
 
 Where distribution itself is simple and explicitly scoped in the same issue, it may follow directly.
 
@@ -2191,25 +2178,23 @@ Where rollout is independently sequenced, deferred, multi-stage or otherwise ope
 
 #### 22.13 Drift
 
-A locally altered, mismatched or untraceable central governance copy is a governance-integrity issue.
+A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/` is a governance-integrity issue.
 
-Restore the approved artefact rather than preserve local divergence.
+Restore the applicable approved central artefact rather than preserve local divergence.
+
+Product-local work must not resolve such drift by editing centrally managed content.
 
 #### 22.14 Centrally Governed Standard Lifecycle
 
 A centrally governed standard may be changed without changing or releasing a new version of `CENTRAL_GOVERNANCE.md`, provided the change does not require alteration of the rule book itself.
 
-A permanent change to a centrally governed standard must use Linear and the central Governance repository.
-
-Normal approval flow:
-
-`Linear issue → Ready → In Progress → branch → PR → Ready for Review → human approval → Ready for Validation → validation → squash merge → standard approval tag → approved standard state`
+Changes to the Architecture Diagram Standard follow the applicable workflow profile, Appendix A transition gates and Appendix B change-class controls.
 
 The issue must identify the standard being changed and use the applicable change classes.
 
 A change to the Architecture Diagram Standard must include `Change: Governance`; `Change: Documentation` may also apply where appropriate, and other applicable change classes may also be used.
 
-The Architecture Diagram Standard has its own version metadata and approval tag.
+The standard retains its own independent version, approval tag and approval lifecycle.
 
 Standard tags use:
 
@@ -2217,9 +2202,9 @@ Standard tags use:
 
 Approval of a new diagram-standard version does not change the version of `CENTRAL_GOVERNANCE.md`.
 
-For the Architecture Diagram Standard, the approved standard is distributed to every governed product repository at:
+An approved standard may be distributed independently of a `CENTRAL_GOVERNANCE.md` release and is deployed unchanged to:
 
-`00_Governance/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+`00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
 
 Distribution is deployment of an already-approved standard, not reapproval of that standard.
 
@@ -2230,55 +2215,6 @@ Deployment validation is limited to:
 - exact content/integrity;
 - successful distribution to the intended products; and
 - traceable rollout state.
-
-Product-specific substantive validation is not required merely because the central standard has been updated.
-
-##### 22.14.1 Standard-Change Completion Boundary
-
-The standard content-change issue reaches `Done` when:
-
-1. the accepted standard content has been merged;
-2. the standard approval tag has been created against the exact accepted commit;
-3. the tag and standard version metadata have been verified; and
-4. all applicable post-merge approval requirements for the standard have passed.
-
-Distribution is included in that same issue only where it was explicitly part of the approved issue scope.
-
-Where distribution is included in the same issue, that issue must not enter `Done` until the scoped rollout has completed or every unresolved target has been explicitly deferred or excluded.
-
-Where distribution is not part of the content-change issue, the approved standard may exist before rollout is complete.
-
-##### 22.14.2 Standard Rollout Tracking
-
-A straightforward standard rollout may remain within the governing standard-change issue where rollout was explicitly included in that issue's scope.
-
-Where distribution is independently sequenced, deferred, multi-stage, operationally significant or otherwise requires separate lifecycle control, create a separate Linear rollout issue.
-
-A standard rollout issue:
-
-- identifies the exact approved standard version and approval tag;
-- identifies all intended target products;
-- records successful, deferred, excluded and failed targets;
-- tracks deployment of already-approved standard content and does not reopen substantive approval;
-- follows the applicable non-code operational lifecycle.
-
-##### 22.14.3 Partial Failure and Mixed Versions
-
-Each product continues under the exact approved standard version currently deployed there until a later approved version is successfully installed.
-
-A rollout remains incomplete until every intended target has either:
-
-- received and integrity-verified the new approved standard version; or
-- been explicitly deferred or excluded.
-
-Temporary mixed standard versions across products are permitted only as an explicit, traceable rollout state.
-
-If a distribution step fails:
-
-- record the affected product and failure;
-- stop further rollout where continuing could create material inconsistency or risk;
-- retain or restore the affected product's previous approved standard version where required;
-- do not represent the rollout as complete.
 
 #### 22.15 Existing Diagram Conformance
 
@@ -2512,7 +2448,7 @@ Governance 2.0 maintains a monitoring register for operating-model hypotheses, r
 
 Monitoring items are not controls and must not be treated as mandatory requirements.
 
-Their detailed contents, evidence sources and dispositions are defined in Appendix E.
+Their detailed contents, evidence sources and dispositions are defined in Appendix F.
 
 A monitoring item only alters governance if it is formally promoted through the governance-improvement process and approved centrally.
 
@@ -2543,39 +2479,51 @@ Periodic review of learning files is intended to improve central standards over 
 
 ## Appendices
 
-### Appendix A — Authoritative Gate Matrix
+### Appendix A — Authoritative Workflow Gate Matrix
 
-This appendix is the **single authoritative source for lifecycle transition gates and change-class-specific controls**.
+This appendix is the **single authoritative source for workflow transition gates and workflow-profile gate applicability**.
 
-For multi-class issues, applicable requirements are cumulative unless explicitly incompatible.
+The workflow profile applicable to an issue is determined under Sections 4.1 and 5.
 
-The actor performing the work does not change the gate.
+The applicable change-class-specific controls for each gate or workflow point are defined in **Appendix B — Authoritative Change-Class Control Matrix**.
+
+The actor performing the work does not change the applicable workflow profile or gate.
 
 #### A.1 Preparation and Review Gates
 
-| Gate | Transition | Universal requirement | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|---|---|
-| **G0 — Ready Gate** | `Backlog → Ready` | Objective, acceptance criteria, repository, applicable change classes and material dependencies sufficiently defined; no unresolved prerequisite decision | Code scope/runtime objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
-| **G1 — Start Gate** | `Ready → In Progress` | Work authorised to start; execution route selected; normal Git route established where applicable | — | — | — | — | — | — | — |
-| **G2 — Review-Readiness Gate** | `In Progress → Ready for Review` | Proposed change complete and reviewable; applicable PR/review surface available; substantive execution paused | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix B preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | DDR and registry change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
-| **G3 — Human Acceptance Gate** | `Ready for Review → Ready for Validation` | Required human review completed and accepted | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human acceptance of durable decision record | Human review where substantive/risk requires it | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where Section 22.15 makes the standard applicable |
+| Gate | Transition / point | `WF-01` | `WF-02` | Universal requirement |
+|---|---|---:|---:|---|
+| **G0 — Ready Gate** | `Backlog → Ready` | Yes | Yes | Objective, acceptance criteria, repository, applicable change classes and material dependencies sufficiently defined; no unresolved prerequisite decision |
+| **G1 — Start Gate** | `Ready → In Progress` | Yes | Yes | An authorised execution trigger has occurred; execution route selected; normal Git route established where applicable |
+| **G2 — Review-Readiness Gate** | `In Progress → Ready for Review` | Yes | Yes | Proposed change complete and reviewable; applicable PR/review surface available; substantive execution paused |
+| **G3 — Human Acceptance Gate** | Human acceptance while in `Ready for Review` | Yes | Yes | Required human review completed and accepted |
+| **G4 — Validation Entry Gate** | `Ready for Review → Ready for Validation` | Yes | Yes | Applicable human acceptance has been obtained and remains valid; accepted substance is ready for applicable validation |
+
+Human acceptance obtained at **G3** remains valid through validation and completion while the accepted substance remains unchanged.
+
+Fresh human acceptance is required where:
+
+- the previously accepted substance changes; or
+- a separate action-specific authorisation is expressly required by Governance.
+
+Action-specific authorisation, including beta deployment or stable release/deployment authorisation where applicable, does not constitute a second acceptance of unchanged substantive content.
 
 #### A.2 Validation and Completion Gates
 
-| Gate | Transition / point | Universal requirement | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|---|---|
-| **G4 — Validation Gate** | During `Ready for Validation` | Universal integrity/selection completed; only applicable class/risk/dependency checks selected; valid reusable evidence considered | Applicable tests/technical checks pass; candidate suitable for merge/beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix B requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Identifier, registry and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where Section 22.15 makes the standard applicable |
-| **G5-NC — Non-Code Completion Gate** | `Ready for Validation → Done` | Applicable validation passed; every acceptance criterion checked against final implemented state; affected criteria revalidated after any post-validation state-changing action; unresolved findings status established; required human acceptance recorded; final closure evidence complete; knowledge-retention obligations satisfied; accepted state incorporated into repository | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix B post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | DDR and registry state merged | Accepted durable documentation merged | Exact visually accepted content merged |
-| **G5-C — Code Beta Entry Gate** | `Ready for Validation → Beta` | Applicable pre-beta validation passed | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before beta | If part of same issue, compatibility obligations already satisfied | If part of same issue, governance obligations already satisfied | If part of same issue, DDR obligations already satisfied | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
-| **G6 — Beta Completion Gate** | `Beta → Done` | Issue completion obligations satisfied against final implemented state; acceptance criteria reconciled; unresolved findings status established; required human acceptance and final closure evidence recorded | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — |
+| Gate / point | Transition / point | `WF-01` | `WF-02` | Universal requirement |
+|---|---|---:|---:|---|
+| **Validation activity** | During `Ready for Validation` | Yes | Yes | Applicable validation is performed against the accepted substance and current relevant state; valid reusable evidence is considered; affected requirements are revalidated following relevant state-changing actions |
+| **G5 — Beta Entry Gate** | `Ready for Validation → Beta` | Yes | No | Applicable validation passed and all requirements for entry to Beta are satisfied |
+| **G6 — Beta Completion Gate** | `Beta → Done` | Yes | No | Completion obligations satisfied against the final implemented and beta-validated state |
+| **G7 — Completion Gate** | `Ready for Validation → Done` | No | Yes | Applicable validation passed and completion obligations satisfied against the final implemented state |
 
 #### A.3 Rework and Exception Gates
 
-| Gate | Transition | Universal requirement | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|---|---|
-| **G7 — Rework Gate** | Review/validation/beta → `Changes Requested` | Required correction identified and recorded | Pre-merge correction normally continues same branch/PR. Failed beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
-| **G8 — Technical Correction Return** | `Changes Requested → Ready for Validation` without repeated review | Permitted only where accepted substance has not changed | Technical-only correction may bypass repeated review only where code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Registry/metadata-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
-| **G9 — Blocker Exit Gate** | `Blocked → prior active state` | Genuine blocker resolved or required user guidance/override supplied and recorded; resume the preserved work state through the applicable execution/Git route | — | — | — | — | — | — | — |
+| Gate | Transition | Universal requirement |
+|---|---|---|
+| **G8 — Rework Gate** | Review/validation/Beta → `Changes Requested` | Required correction identified and recorded |
+| **G9 — Technical Correction Return** | `Changes Requested → Ready for Validation` without repeated review | Permitted only where accepted substance has not changed |
+| **G10 — Blocker Exit Gate** | `Blocked → prior active state` | Genuine blocker resolved or required user guidance/override supplied and recorded; resume the preserved work state through the applicable execution/Git route |
 
 #### A.4 Lightweight Non-Code Exception
 
@@ -2609,15 +2557,52 @@ Section 12.8 additionally governs preservation of pre-merge validation evidence 
 
 ---
 
-### Appendix B — Governance Change Approval Checklist
+### Appendix B — Authoritative Change-Class Control Matrix
+
+This appendix is the **single authoritative source for change-class-specific controls**.
+
+Where an issue has multiple change classes, applicable controls are cumulative unless explicitly incompatible or inapplicable.
+
+The workflow profile determines which workflow gates apply. The assigned change classes determine the additional controls that must be satisfied at those gates or workflow points.
+
+#### B.1 Preparation and Review Controls
+
+| Gate | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|
+| **G0** | Code scope/runtime objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
+| **G1** | — | — | — | — | — | — | — |
+| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | DDR and registry change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
+| **G3** | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human acceptance of durable decision record | Human acceptance of the final intended documentation state | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where applicable |
+| **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Identifier, registry and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
+
+#### B.2 Validation and Completion Controls
+
+| Gate / point | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|
+| **Validation activity** | Applicable tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Identifier, registry and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
+| **G5** | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
+| **G6** | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — |
+| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | DDR and registry state merged | Accepted durable documentation merged | Exact visually accepted content merged |
+
+#### B.3 Rework and Exception Controls
+
+| Gate | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|
+| **G8** | Pre-merge correction normally continues same branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
+| **G9** | Technical-only correction may bypass repeated review only where code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Registry/metadata-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
+| **G10** | — | — | — | — | — | — | — |
+
+---
+
+### Appendix C — Governance Change Approval Checklist
 
 This appendix is mandatory whenever `CENTRAL_GOVERNANCE.md` is changed.
 
-For the `Change: Governance` class, Appendix B requirements apply only where `CENTRAL_GOVERNANCE.md` itself is being changed.
+For the `Change: Governance` class, Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` itself is being changed.
 
-A change confined to a separately governed standard follows the centrally governed standard lifecycle in Section 22.14 and does not, by itself, trigger Appendix B or a new `CENTRAL_GOVERNANCE.md` release.
+A change confined to a separately governed standard follows the centrally governed standard lifecycle in Section 22.14 and does not, by itself, trigger Appendix C or a new `CENTRAL_GOVERNANCE.md` release.
 
-#### B.1 Governance Semantic Versioning
+#### C.1 Governance Semantic Versioning
 
 Governance versions use:
 
@@ -2633,7 +2618,7 @@ Classify the change by its effect rather than by the file or section changed.
 
 Urgency does not determine the version increment.
 
-#### B.2 Linear and GitHub Preconditions
+#### C.2 Linear and GitHub Preconditions
 
 Before a permanent central governance change may be approved:
 
@@ -2644,11 +2629,11 @@ Before a permanent central governance change may be approved:
 - [ ] the change has been made through the central governance repository;
 - [ ] the normal dedicated branch and linked pull-request route has been used unless a specific authorised exception applies;
 - [ ] substantive human review has been completed;
-- [ ] Linear accurately reflects the current lifecycle state.
+- [ ] Linear accurately reflects the current workflow state.
 
 A GitHub pull request without a governing Linear work item is not sufficient authority for a permanent central governance change.
 
-#### B.3 Governance Impact Assessment
+#### C.3 Governance Impact Assessment
 
 Before governance content may be merged:
 
@@ -2659,7 +2644,7 @@ Before governance content may be merged:
 - [ ] temporary mixed-version risk has been considered;
 - [ ] rollback/restoration implications have been considered.
 
-#### B.4 Pre-Merge Approval Requirements
+#### C.4 Pre-Merge Approval Requirements
 
 Before governance content may be merged:
 
@@ -2672,7 +2657,7 @@ Before governance content may be merged:
 - [ ] intended approval date is defined;
 - [ ] applicable Appendix A pre-merge gates have passed.
 
-#### B.5 Post-Merge Approval-Release Requirements
+#### C.5 Post-Merge Approval-Release Requirements
 
 After merge and before the governance version is available for distribution:
 
@@ -2687,15 +2672,15 @@ Product distribution performs integrity validation only and does not repeat subs
 
 ---
 
-### Appendix C — DDR Standard
+### Appendix D — DDR Standard
 
-#### C.1 Purpose
+#### D.1 Purpose
 
 A DDR records a significant durable design decision and why it was made.
 
 It is not a task log or general implementation journal.
 
-#### C.2 Global Numbering
+#### D.2 Global Numbering
 
 DDRs use:
 
@@ -2712,7 +2697,7 @@ The registry contains at minimum:
 | DDR | Product | Title | Status |
 |---|---|---|---|
 
-#### C.3 Allocation
+#### D.3 Allocation
 
 When a new DDR is required:
 
@@ -2732,7 +2717,7 @@ A separate reservation spreadsheet or reservation ceremony is not required.
 
 Git conflict/merge control provides the normal concurrency safeguard.
 
-#### C.4 Required DDR Content
+#### D.4 Required DDR Content
 
 Each DDR contains at minimum:
 
@@ -2746,7 +2731,7 @@ Each DDR contains at minimum:
 - source Linear issue;
 - superseded DDR where applicable.
 
-#### C.5 Status
+#### D.5 Status
 
 Allowed DDR statuses are:
 
@@ -2756,7 +2741,7 @@ Allowed DDR statuses are:
 
 When a replacement DDR becomes accepted, the superseded DDR and central registry must be updated accordingly.
 
-#### C.6 Supersession
+#### D.6 Supersession
 
 When superseded:
 
@@ -2766,7 +2751,7 @@ When superseded:
 
 Historical decisions are not deleted merely because they are no longer current.
 
-#### C.7 Approved DDR Immutability
+#### D.7 Approved DDR Immutability
 
 Once accepted, a DDR must not be substantively rewritten.
 
@@ -2774,7 +2759,7 @@ A changed durable decision requires a new DDR that supersedes the earlier record
 
 Only traceable non-substantive corrections that leave the decision, rationale, alternatives and consequences unchanged may be made to an accepted DDR.
 
-#### C.8 Architecture Relationship
+#### D.8 Architecture Relationship
 
 Architecture must describe the current approved design without requiring agents to reconstruct it from DDR history.
 
@@ -2782,9 +2767,9 @@ DDRs preserve significant rationale, not the complete current architecture.
 
 ---
 
-### Appendix D — Audit Reference
+### Appendix E — Audit Reference
 
-#### D.1 Review Log
+#### E.1 Review Log
 
 The Review Log is the authoritative audit population/progress record.
 
@@ -2804,7 +2789,7 @@ It contains at minimum:
 - finding reference where applicable;
 - completion/checkpoint state.
 
-#### D.2 Findings Taxonomy
+#### E.2 Findings Taxonomy
 
 Use:
 
@@ -2815,7 +2800,7 @@ Use:
 
 The taxonomy may be refined centrally if operating evidence shows a need.
 
-#### D.3 Reviewed Versus Archive Ready
+#### E.3 Reviewed Versus Archive Ready
 
 `Reviewed` means the item was examined within the defined audit scope.
 
@@ -2837,7 +2822,7 @@ Archiving does not:
 - alter Git history;
 - replace required durable documentation.
 
-#### D.4 Audit Batch and Checkpoint Controls
+#### E.4 Audit Batch and Checkpoint Controls
 
 An audit may define bounded execution controls appropriate to the engagement.
 
@@ -2854,13 +2839,13 @@ Central governance deliberately does not prescribe a universal batch size.
 
 Where a batch/checkpoint control is defined, the agent must follow it and must not silently continue beyond the authorised boundary.
 
-#### D.5 Findings Resolution
+#### E.5 Findings Resolution
 
 Substantive findings are resolved through normal governed Linear/Git work.
 
 The audit itself records the finding and its disposition; it does not silently make untracked substantive fixes.
 
-#### D.6 Audit Completion
+#### E.6 Audit Completion
 
 An engagement completes only when:
 
@@ -2874,11 +2859,11 @@ Audit completion does not trigger unrelated broad revalidation.
 
 ---
 
-### Appendix E — Monitoring Register
+### Appendix F — Monitoring Register
 
 Monitoring items are hypotheses or operating-model questions, not mandatory controls.
 
-#### E.1 Initial Monitoring Areas
+#### F.1 Initial Monitoring Areas
 
 Monitor:
 
@@ -2901,7 +2886,7 @@ Monitor:
 - governance distribution/drift;
 - AAR register usefulness.
 
-#### E.2 Evidence Sources
+#### F.2 Evidence Sources
 
 Prefer evidence already produced through normal operation:
 
@@ -2916,7 +2901,7 @@ Prefer evidence already produced through normal operation:
 
 A separate heavyweight telemetry system must not be introduced without evidence of need.
 
-#### E.3 Disposition
+#### F.3 Disposition
 
 Monitoring items may be:
 

@@ -96,15 +96,16 @@ bundle manifest:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `custom_components/curated_media/__init__.py` | `bb70761491f4824636fc98adaf546823f841ba8a9fa32ea9558ad096a0c0dc0d` |
-| `custom_components/curated_media/catalogue.py` | `139dd9bd6dc73798146a0c82d1c009cb0e3ae3cb4b03136940a9f2bcd0540e98` |
-| `custom_components/curated_media/media_source.py` | `dfd66c3ce3f879fa3de284f9199df6dc03b25345ce0c5033f465563fcda51c3b` |
-| `custom_components/curated_media/resolver.py` | `f01a6c2071d8fe1d0c8788237ab624625de20c88077351e211b689d13e99c12c` |
-| `custom_components/curated_media/services.yaml` | `ca9a219975f6ad0da047c85796817714c9f693dbac269381f26843f8f1fe0fe9` |
-| `curated_media/catalogue.yaml` | `067b2948bba11cbd418f90dc94f39b80f7f530091c3f388bc3e4313de03510c7` |
+| `04_Source/custom_components/curated_media/__init__.py` | `bb70761491f4824636fc98adaf546823f841ba8a9fa32ea9558ad096a0c0dc0d` |
+| `04_Source/custom_components/curated_media/catalogue.py` | `139dd9bd6dc73798146a0c82d1c009cb0e3ae3cb4b03136940a9f2bcd0540e98` |
+| `04_Source/custom_components/curated_media/media_source.py` | `dfd66c3ce3f879fa3de284f9199df6dc03b25345ce0c5033f465563fcda51c3b` |
+| `04_Source/custom_components/curated_media/resolver.py` | `f01a6c2071d8fe1d0c8788237ab624625de20c88077351e211b689d13e99c12c` |
+| `04_Source/custom_components/curated_media/services.yaml` | `ca9a219975f6ad0da047c85796817714c9f693dbac269381f26843f8f1fe0fe9` |
+| `04_Source/curated_media/catalogue.yaml` | `067b2948bba11cbd418f90dc94f39b80f7f530091c3f388bc3e4313de03510c7` |
 
 The deployment bundle and successful cutover evidence are under
-`../evidence/astv-65/`. The historical `Production_ReadOnly/starburst` snapshot
+`../0A_Historic/Issue_Evidence/ASTV-65/`. The historical
+`Production_ReadOnly/starburst` snapshot
 remains read-only evidence for the pre-cutover schema-v2 baseline only.
 
 ---

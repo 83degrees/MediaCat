@@ -16,8 +16,15 @@ from custom_components.curated_media.resolver import CatalogueResolver
 
 
 ROOT = Path(__file__).parents[1]
-TARGET = ROOT / "curated_media" / "catalogue.yaml"
-ROLLBACK_ROOT = ROOT / "evidence" / "astv-56" / "rollback" / "schema-v2"
+TARGET = ROOT / "04_Source" / "curated_media" / "catalogue.yaml"
+ROLLBACK_ROOT = (
+    ROOT
+    / "0A_Historic"
+    / "Issue_Evidence"
+    / "ASTV-56"
+    / "rollback"
+    / "schema-v2"
+)
 ROLLBACK_CATALOGUE = ROLLBACK_ROOT / "curated_media" / "catalogue.yaml"
 
 EXISTING_ITEM_IDS = [

@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 2.1.0  
+**Governance version:** 2.2.0  
 **Status:** Approved  
-**Approval tag:** `governance-v2.1.0`  
+**Approval tag:** `governance-v2.2.0`  
 **Approval date:** 2026-09-02
 
 **Authority of appendices:**  
@@ -64,6 +64,7 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix D — DDR Standard
 - Appendix E — Audit Reference
 - Appendix F — Monitoring Register
+- Appendix G — Central Governance Distribution Control Model
 
 ---
 
@@ -1988,17 +1989,25 @@ Detailed audit reference requirements are defined in Appendix E.
 
 ### 22. Governance Deployment
 
-Approved central governance is maintained in the central governance Git/GitHub repository.
+Approved central governance is maintained in the central Governance Git/GitHub repository.
 
-Central governance artefacts required locally by product agents are distributed to product repositories through the centrally managed governance projection:
+Central governance artefacts required locally by product agents are distributed into the centrally managed product subtree:
 
-`00_Governance/01_Central/`
+`00_Governance/01_Central/**`
 
-Content deployed into that subtree remains centrally owned and must not be locally altered.
+Content within that subtree remains centrally owned and must not be locally altered by product work.
+
+Governance distribution is deployment of already-approved central content, not a new substantive governance decision and not a second approval step.
+
+The central Governance repository owns the authoritative recipient population, deployment projection and distribution-control artefacts used to perform automated central-governance distribution.
+
+Each distribution event is governed operationally through Linear.
+
+The detailed control model for automated distribution, including recipient selection, projection semantics, version provenance, pre-flight validation, downstream PR handling, idempotency, rollout-state handling and completion rules, is defined in **Appendix G — Central Governance Distribution Control Model**.
 
 #### 22.1 Source
 
-The authoritative source of every centrally deployed governance artefact is its approved location in the central governance repository.
+The authoritative source of every centrally deployed governance artefact is its approved location in the central Governance repository.
 
 The deployed product projection contains:
 
@@ -2016,7 +2025,7 @@ The authoritative global DDR allocation registry remains:
 
 `/DDR_REGISTRY.md`
 
-in the central governance repository and is not part of the deployed product projection.
+in the central Governance repository and is not part of the deployed product projection.
 
 #### 22.2 Governance Identity
 
@@ -2025,15 +2034,6 @@ An approved governance book identifies:
 - governance version;
 - approval tag;
 - approval date.
-
-Example:
-
-```text
-Governance version: v2.0.0
-Status: Approved
-Approval tag: governance-v2.0.0
-Approval date: 2026-08-28
-```
 
 The approval tag resolves through Git to the exact approved commit SHA.
 
@@ -2080,8 +2080,6 @@ Before approval, a central governance change must assess:
 
 The assessment must be proportionate to the change.
 
-It must not recreate former generated-governance release machinery where the change does not require it.
-
 #### 22.6 Pre-Merge Governance Approval
 
 Before central governance content is merged, the applicable pre-merge requirements in Appendix C must be satisfied.
@@ -2102,20 +2100,20 @@ The governance version is then approved and available for distribution.
 
 #### 22.8 Distribution Is Not Re-Approval
 
-Copying an exact already-approved central governance artefact into its defined location within `00_Governance/01_Central/` is governance deployment, not a new substantive governance decision.
+Copying exact already-approved central governance artefacts into their defined locations within `00_Governance/01_Central/**` is governance deployment, not a new substantive governance decision.
 
-Distribution does not require repeated substantive review merely because the deployed product copy changes.
+Distribution does not require repeated substantive review merely because a deployed product copy changes.
 
-It requires:
+Distribution requires:
 
 - Git traceability;
 - correct approved source;
 - correct target repository and path;
 - exact content/integrity verification;
-- applicable approval-version/tag traceability;
+- applicable version/tag traceability;
 - rollout-state recording.
 
-Any local alteration of centrally managed content is not permitted through the distribution route.
+Detailed automated-distribution controls are defined in Appendix G.
 
 #### 22.9 Staged Distribution and Partial Failure
 
@@ -2146,7 +2144,7 @@ A governance rollout issue:
 
 - tracks deployment of already-approved governance;
 - does not require `Change: Governance` solely because it distributes unchanged approved artefacts;
-- must identify the governance version being distributed;
+- must identify the approved artefact versions being distributed;
 - must identify the targeted products;
 - must record successful, deferred, excluded and failed targets;
 - follows the applicable workflow profile and gates.
@@ -2172,13 +2170,13 @@ Creation of an approved governance version and deployment of that version are di
 
 Permanent governance changes follow the applicable workflow profile, Appendix A transition gates, Appendix B change-class controls and, for changes to `CENTRAL_GOVERNANCE.md`, Appendix C approval requirements.
 
-Where distribution itself is simple and explicitly scoped in the same issue, it may follow directly.
+Where distribution itself is simple and explicitly scoped in the same issue, it may follow directly after the approved version/tag exists.
 
 Where rollout is independently sequenced, deferred, multi-stage or otherwise operationally significant, it uses a separate Linear rollout issue.
 
 #### 22.13 Drift
 
-A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/` is a governance-integrity issue.
+A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/**` is a governance-integrity issue.
 
 Restore the applicable approved central artefact rather than preserve local divergence.
 
@@ -2911,3 +2909,221 @@ Monitoring items may be:
 - `Superseded`
 
 Only a `Promoted` item that then follows normal central governance review and approval becomes a governance rule.
+
+---
+
+### Appendix G — Central Governance Distribution Control Model
+
+#### G.1 Purpose and Authority
+
+This appendix defines the authoritative operational control model for automated distribution of approved central governance artefacts from the central Governance repository into governed product repositories.
+
+It governs deployment mechanics only.
+
+`CENTRAL_GOVERNANCE.md` remains the higher authority for governance meaning, ownership boundaries, approval requirements and lifecycle rules.
+
+The deployment-control artefacts and executor must implement this appendix and must not redefine it.
+
+#### G.2 Deployment-Control Artefacts
+
+Automated distribution is controlled by:
+
+`push_deploy/GOVERNED_PRODUCTS.yaml`
+
+and:
+
+`push_deploy/GOVERNANCE_PROJECTION.yaml`
+
+These are authoritative operational artefacts within their defined scope.
+
+They are maintained in the central Governance repository.
+
+They are not deployed into product repositories.
+
+They do not independently create substantive governance rules.
+
+#### G.3 Governed Product Registry
+
+`GOVERNED_PRODUCTS.yaml` defines the known product population for automated central-governance distribution.
+
+Each product entry contains:
+
+- `name`
+- `repository`
+- `central_governance`
+
+Semantics are:
+
+- present with `central_governance: true` — normal automated distribution target;
+- present with `central_governance: false` — known product intentionally excluded from normal automated distribution;
+- absent — not part of the governed product register for automated distribution.
+
+The registry records recipient intent only.
+
+Transient rollout state, deployment success/failure state and product-local governance content must not be recorded in the registry.
+
+#### G.4 Governance Projection Manifest
+
+`GOVERNANCE_PROJECTION.yaml` defines the centrally managed product projection.
+
+Each entry contains:
+
+- `source`
+- `destination`
+- `version_tag`
+
+`source` identifies the authoritative central-repository artefact.
+
+`destination` identifies the exact product-repository path.
+
+`version_tag` identifies the immutable approved Git source state for that artefact.
+
+The projection manifest defines the complete desired state of:
+
+`00_Governance/01_Central/**`
+
+for automated deployment.
+
+#### G.5 Replacement Boundary
+
+The deployment executor may add, replace or remove content within that subtree as necessary to make the product copy exactly equal to the defined projection.
+
+It must not create, edit, move or delete content outside `00_Governance/01_Central/**`.
+
+Content comparison, not version metadata alone, determines whether deployment is required.
+
+#### G.6 Artefact Version Provenance
+
+Each projected artefact carries its own `version_tag`.
+
+A single rollout may therefore contain centrally managed artefacts approved at different independent versions.
+
+The underlying Git tag provides exact immutable source provenance.
+
+A deployment event is therefore not identified by any single artefact version.
+
+#### G.7 Deployment-Event Authority
+
+Every automated central-governance distribution event is governed by one Linear issue identified to the executor as:
+
+`linear_deployment_issue`
+
+That Linear issue is the operational authority and rollout record for the deployment event.
+
+The deployment issue governs the rollout as a whole rather than any individual projected artefact.
+
+#### G.8 Global Pre-Flight
+
+Before modifying any product repository, the deployment executor must validate the complete intended rollout.
+
+Pre-flight must establish at minimum that:
+
+- `linear_deployment_issue` exists;
+- the issue belongs to the Governance project;
+- `GOVERNED_PRODUCTS.yaml` is valid;
+- `GOVERNANCE_PROJECTION.yaml` is valid;
+- every projected source exists;
+- every `version_tag` exists in Git and contains the projected source artefact;
+- every destination is beneath `00_Governance/01_Central/**`;
+- every selected target repository exists and is accessible.
+
+If any global pre-flight check fails, the rollout must abort before any targeted product repository is modified.
+
+#### G.9 Product Deployment Behaviour
+
+For each registered product with `central_governance: true`, the executor compares the complete desired projection against the product repository's current default branch.
+
+If the managed subtree already exactly matches the projection, the result is:
+
+`no_change`
+
+and no deployment PR is required.
+
+Where deployment is required, the deployment branch is:
+
+`governance/<linear_deployment_issue>`
+
+The branch is based on the product's current default branch.
+
+Existing unrelated product feature branches must not be modified.
+
+The resulting managed subtree must exactly match the projection.
+
+#### G.10 Idempotency and Concurrency
+
+Re-running the same `linear_deployment_issue` must reuse or update the existing deployment branch and PR rather than creating duplicates.
+
+At most one open central-governance deployment PR may exist in a product repository under the normal automated route.
+
+If a governance deployment PR for a different `linear_deployment_issue` is already open, the new deployment is blocked for that product.
+
+The existing deployment PR must not be overwritten, combined with or repurposed for the new rollout.
+
+#### G.11 Downstream Pull Request
+
+Where deployment is required, the executor creates or updates a downstream PR identified by the governing Linear deployment issue.
+
+The PR records at minimum:
+
+- the governing Linear deployment issue;
+- the source Governance repository;
+- the managed target subtree;
+- each projected artefact;
+- the corresponding `version_tag`.
+
+The downstream PR is a deployment record for already-approved content, not a new substantive governance approval surface.
+
+#### G.12 Validation and Automatic Merge
+
+Before automatic merge, validation must prove that:
+
+- no path outside `00_Governance/01_Central/**` is modified;
+- the resulting managed subtree exactly matches the declared projection;
+- projected source and `version_tag` identities remain valid;
+- no unrelated product content is included.
+
+A valid deployment PR may then be merged automatically.
+
+If validation fails, the PR must not auto-merge.
+
+A failed or unresolved merge is not a successful rollout state.
+
+#### G.13 Rollout Results and Linear Completion
+
+The deployment executor records a concise per-product result against `linear_deployment_issue`.
+
+Normal result states include:
+
+- `no_change`
+- `pr_created`
+- `pr_updated`
+- `merged`
+- `blocked_existing_deployment`
+- `failed`
+- explicitly `deferred`
+- explicitly `excluded`
+
+The governing deployment issue may move automatically to `Done` only when every targeted product has reached an acceptable terminal state:
+
+- `merged`
+- `no_change`
+- explicitly `deferred`
+- explicitly `excluded`
+
+Any blocked, failed or still-open deployment keeps the rollout incomplete.
+
+#### G.14 Trigger Routes
+
+The currently authorised Phase 1 route is manual invocation of the central GitHub deployment workflow with an explicit:
+
+`linear_deployment_issue`
+
+For that route, the deliberate workflow invocation constitutes deployment authorisation provided the supplied issue exists and belongs to the Governance project.
+
+A future automatic route may use an approved model such as:
+
+`Linear event → validated relay/integration → GitHub repository dispatch → same deployment executor`
+
+Automatic triggering must not be enabled merely because the technical endpoint exists.
+
+Its trigger and authorisation policy requires explicit approval before activation.

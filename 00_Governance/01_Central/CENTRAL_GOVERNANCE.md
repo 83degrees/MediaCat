@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 6.0.0
+**Governance version:** 6.1.0
 **Status:** Approved
-**Approval tag:** `governance-v6.0.0`
+**Approval tag:** `governance-v6.1.0`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -709,7 +709,7 @@ Two workflow profiles are currently defined:
 | `WF-01` | Code workflow profile. Applies to issues whose selected workflow requires controlled progression through Beta before completion. | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Beta → Done` |
 | `WF-02` | Non-Code workflow profile. Applies to issues whose selected workflow does not require a Beta stage before completion. | `Backlog → Ready → In Progress → Ready for Review → Ready for Validation → Done` |
 
-Two workflow profiles are currently defined because code changes require a Beta stage before completion, while non-code changes do not.
+Two workflow profiles are currently defined because genuine product runtime implementation changes require a Beta stage before completion, while non-runtime and central Governance tooling changes do not solely by virtue of being executable.
 
 The workflow-profile model is intentionally structured so that profile definitions, change-class mappings and precedence can be changed or extended later without redesigning the underlying change-class model.
 
@@ -866,10 +866,11 @@ Appendix B defines change-class-specific controls.
 
 | Change class | Definition | Default workflow profile |
 |---|---|---|
-| `Change: Code` | Changes executable or deployable implementation, including runtime-controlling configuration. | `WF-01` |
+| `Change: Code` | Changes executable or deployable product implementation, including runtime-controlling configuration. | `WF-01` |
 | `Change: Architecture` | Changes approved structure, responsibilities, boundaries, components, interactions or architectural behaviour. | `WF-02` |
 | `Change: Contract` | Creates or changes an authoritative product-provided interface/contract, including inputs, outputs, schemas, guarantees or compatibility expectations. | `WF-02` |
 | `Change: Governance` | Changes rules, controls, authority, repository conventions, workflow or governance process. | `WF-02` |
+| `Change: Governance Tooling` | Changes executable automation, release/deployment tooling, validation tooling or workflow implementation whose governed purpose is to operate or assure the central Governance system and which is not deployable product runtime implementation. | `WF-02` |
 | `Change: DDR` | Creates, updates or supersedes a Design Decision Record. | `WF-02` |
 | `Change: Documentation` | Changes durable explanatory or operational documentation not governed as architecture, contract, governance, DDR or diagram. | `WF-02` |
 | `Change: Diagram` | Creates or changes a governed diagram or visual architecture artefact. | `WF-02` |
@@ -877,6 +878,8 @@ Appendix B defines change-class-specific controls.
 A single issue or file may require multiple classes.
 
 There is no generic `Mixed` class.
+
+Executable central Governance tooling is not assigned `Change: Code` solely because it is executable. Where the same issue also changes genuine deployable product runtime implementation, both `Change: Governance Tooling` and `Change: Code` apply and Section 5.2 selects `WF-01`.
 
 #### 5.2 Multiple Change Classes
 
@@ -2087,15 +2090,15 @@ Content within that subtree remains centrally owned and must not be locally alte
 
 Governance distribution is deployment of already-approved central content, not a new substantive governance decision and not a second approval step.
 
-The central Governance repository owns the authoritative recipient population, deployment projection and distribution-control artefacts used to perform automated central-governance distribution.
+The central Governance repository owns the authoritative recipient population, deployment projection and release-control artefacts used to perform automated central-governance release and distribution.
 
-Each distribution event is governed operationally through Linear.
+Each release/distribution event is governed operationally through Linear.
 
-The specialised authoritative release/distribution protocol is defined in the central-only:
+The specialised authoritative downstream distribution protocol is defined in the central-only:
 
 `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
 
-That Standard applies to central Governance release/distribution operations and the executor. It is not a product-local working authority and is not part of the product projection.
+That Standard applies to central Governance downstream distribution operations and the executor. It is not a product-local working authority and is not part of the product projection. Independent central-only Standard approval/release lifecycle requirements are defined by Section 22.14 rather than by product distribution.
 
 #### 22.1 Source
 
@@ -2180,20 +2183,23 @@ Human approval applies to the substantive proposed governance content.
 
 #### 22.7 Merge and Approval Release
 
-After substantive approval and applicable validation, squash merge of the accepted Governance pull request to `main` is the substantive approval boundary and automatically initiates the governed post-approval release and distribution process.
+After substantive approval and applicable validation, squash merge of the accepted Governance pull request to `main` is the substantive approval boundary and automatically initiates the governed post-approval release process and, where projected artefacts changed, downstream distribution.
 
-The automatic process must apply the active Governance Distribution Standard and preserve at minimum:
+The automatic process must preserve at minimum:
 
 - source-event identity from the Governance pull request and exact merge commit;
 - independent verification that the pull request was merged to `main` at that exact commit;
 - immutable create/reuse/verification semantics for required changed projected-artefact approval tags;
-- verification of projected artefact release metadata and approved content;
-- derivation of the complete projected release set from all projected artefacts at the merge commit; and
-- automatic continuation into governed downstream distribution.
+- immutable create/reuse/verification semantics for required changed independently released central-only Standard approval tags under Section 22.14;
+- verification of applicable release metadata and exact approved content;
+- derivation and Linear recording of applicable release provenance; and
+- automatic continuation into governed downstream distribution only where one or more projected artefacts changed.
 
-Multiple independently versioned projected artefacts changed by one pull request may legitimately have different approval tags resolving to the same merge commit.
+Multiple independently versioned artefacts changed by one pull request may legitimately have different approval tags resolving to the same merge commit.
 
-The deterministic post-approval release and distribution process does not require a second substantive governance approval.
+Where no projected artefact changed, downstream product distribution is not required and must not be performed solely to produce `no_change` rollout results.
+
+The deterministic post-approval release process does not require a second substantive governance approval.
 
 #### 22.8 Distribution Is Not Re-Approval
 
@@ -2233,18 +2239,19 @@ If a distribution step fails:
 
 #### 22.10 Governance Rollout Tracking
 
-Under the normal automated route, the Linear issue declared in the source Governance pull request remains the operational authority for the complete post-approval release and distribution event.
+Under the normal automated route, the Linear issue declared in the source Governance pull request remains the operational authority for the complete post-approval release event and any applicable downstream distribution.
 
 That issue governs:
 
 - the approved Governance change;
 - the source Governance pull request and exact merge commit;
-- the complete projected artefact-to-approval-tag release set;
-- downstream distribution to the governed product population;
-- per-product rollout results; and
-- completion of the automatic rollout.
+- independently released central-only Standard approval tags/provenance changed by the source event, where applicable;
+- the complete projected artefact-to-approval-tag release set, where projected artefacts changed;
+- downstream distribution to the governed product population, where projected artefacts changed;
+- per-product rollout results, where distribution occurs; and
+- completion of the automatic release/rollout.
 
-A separate Linear rollout issue is not required for the normal automatic distribution path.
+A separate Linear rollout issue is not required for the normal automatic route.
 
 Where a deferred, staged, exceptional or otherwise independently governable follow-up requires work beyond the automatic release event, a separate Linear issue may be created for that follow-up.
 
@@ -2260,33 +2267,34 @@ Such a follow-up issue:
 Under the normal automated route, the governing central-governance issue reaches `Done` only when:
 
 1. the accepted governance content has been merged;
-2. every required changed projected-artefact approval tag has been created or validly reused and verified;
-3. the complete projected release set has been derived and recorded against the governing Linear issue;
-4. automatic downstream distribution has been executed for the governed product population; and
-5. every targeted product has reached an acceptable terminal rollout state under the active Governance Distribution Standard.
+2. every required changed independently released central-only Standard approval tag has been created or validly reused and verified under Section 22.14;
+3. where projected artefacts changed, every required changed projected-artefact approval tag has been created or validly reused and verified;
+4. where projected artefacts changed, the complete projected release set has been derived and recorded against the governing Linear issue;
+5. where projected artefacts changed, automatic downstream distribution has been executed for the governed product population; and
+6. where distribution occurs, every targeted product has reached an acceptable terminal rollout state under the active Governance Distribution Standard.
 
-The acceptable terminal states are:
+The acceptable terminal rollout states are:
 
 - `merged`;
 - `no_change`;
 - explicitly `deferred`; or
 - explicitly `excluded`.
 
-A blocked, failed or still-open deployment keeps the governing issue incomplete.
+A blocked, failed or still-open required release/provenance/deployment step keeps the governing issue incomplete.
 
-Where the release changes a central-only Standard using the transitional Governance-coupled lifecycle in Section 22.14, that Standard's exact accepted bytes must be present in the same merge commit to which the enclosing Governance approval tag resolves. No separate Standard approval tag is required or implied by the transitional lifecycle.
+Where the release changes a central-only Standard using the pre-existing transitional Governance-coupled lifecycle permitted by Section 22.14, that Standard's exact accepted bytes must be present in the same merge commit to which the enclosing Governance approval tag resolves. No separate Standard approval tag is required or implied by that historical transitional lifecycle.
 
-Creation of an approved governance version and deployment of that version remain distinct lifecycle concepts, but under the normal automated route they form one continuous governed release event before the governing issue reaches `Done`.
+Creation of approved governance artefact versions and product deployment remain distinct lifecycle concepts, but under the normal automated route all applicable release/provenance and distribution steps form one continuous governed event before the governing issue reaches `Done`.
 
 #### 22.12 Permanent Governance Change and Distribution
 
 Permanent governance changes follow the applicable workflow profile, Appendix A transition gates, Appendix B change-class controls and, for changes to `CENTRAL_GOVERNANCE.md`, Appendix C approval requirements.
 
-Following human acceptance, applicable validation and merge to `main`, the normal governed route automatically performs projected-artefact approval-tag creation or verification, complete projected release-set derivation and downstream distribution under the active Governance Distribution Standard.
+Following human acceptance, applicable validation and merge to `main`, the normal governed route automatically performs required central-only Standard approval-tag creation/verification under Section 22.14, projected-artefact approval-tag creation/verification where applicable, and downstream distribution only where projected artefacts changed.
 
 A separate rollout issue is required only where subsequent deployment or remediation has become an independently governable piece of work under Section 22.10.
 
-Automatic post-merge distribution must not bypass or replace substantive human approval of the Governance change itself.
+Automatic post-merge release/distribution must not bypass or replace substantive human approval of the Governance change itself.
 
 #### 22.13 Drift
 
@@ -2314,23 +2322,81 @@ Central-only Standards are maintained beneath:
 
 They are not part of `GOVERNANCE_PROJECTION.yaml` and are not deployed to product repositories while they remain central-only.
 
-The long-term model is for central-only Standards to retain their own independent version, approval tag and approval lifecycle without product projection. Until independent central-only Standard release support is implemented through separately governed work, a central-only Standard may use a **Governance-coupled transitional lifecycle** only where the user explicitly approves that lifecycle for the introducing Governance change.
+##### 22.14.1 Directory-Based Standard Discovery
 
-Under the Governance-coupled transitional lifecycle:
+For centrally governed Standards, repository structure is the normal machine-readable discovery and applicability mechanism:
+
+- a Standard beneath `/Standards/Product/` is product-applicable;
+- a Standard beneath `/Standards/Central/` is central-only.
+
+The release mechanism must discover Standards from those governed directories rather than require a second registry that repeats Standard paths and applicability.
+
+Each Standard remains authoritative for its own release metadata, including its version, approval status, approval tag and approval date. The executor must validate that metadata and preserve the Standard's established approval-tag namespace across releases.
+
+A deliberately governed authoritative source-path migration between folders changes applicability only where the Governance change explicitly says so. A relocation within the same applicability category must not silently change Standard identity or approval-tag namespace. Historical approval tags remain immutable and continue to prove the historical path/content they originally approved; they are not moved or reinterpreted when the current authoritative path changes.
+
+`GOVERNANCE_PROJECTION.yaml` remains the operational source-to-destination population for artefacts deployed to products. It does not define whether a Standard exists or whether a central-only Standard participates in the independent release lifecycle.
+
+Until ASTV-148 deliberately migrates the two existing product-applicable Standards into `/Standards/Product/`, the following legacy authoritative paths remain explicitly recognised as product-applicable discovery exceptions:
+
+- `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
+- `/Standards/DDR_STANDARD.md`.
+
+Those compatibility exceptions must be removed when the governed ASTV-148 migration completes. No additional root-level Standard may be introduced as a new exception.
+
+##### 22.14.2 Independent Standard Release
+
+An independently released centrally governed Standard identifies its own:
+
+- version;
+- approved status;
+- approval tag; and
+- approval date.
+
+The Standard's approval-tag namespace is part of its durable release identity and must remain stable across ordinary version changes and governed source-path relocations unless an explicit Governance change deliberately changes that identity.
+
+For each changed independently released Standard, the post-approval release mechanism must:
+
+1. bind to the source Governance pull request and exact merge commit;
+2. verify the Standard was changed in that source event;
+3. read the exact accepted Standard bytes from that merge commit at its discovered authoritative source path;
+4. validate declared release metadata and established tag namespace;
+5. create or validly reuse the immutable approval tag at the exact merge commit;
+6. verify the tag resolves to that commit and contains the exact accepted Standard bytes at the discovered source path;
+7. record the release/provenance against the governing Linear issue;
+8. remain idempotent and bound to the original source event on rerun; and
+9. prevent issue completion while required release/provenance evidence is incomplete or contradictory.
+
+Approval of a new independently released Standard version does not change the version of `CENTRAL_GOVERNANCE.md` unless the rule book itself also changes.
+
+For an independently released central-only Standard, completion of the approval/tag/provenance lifecycle does not trigger product distribution. Product rollout occurs only if the same source event also changes one or more projected artefacts.
+
+##### 22.14.3 Transitional Historical Lifecycle
+
+Independent central-only Standard release support is the required lifecycle model for new central-only Standards from Governance 6.1.0 onward.
+
+Governance 6.1.0 establishes this lifecycle contract. It becomes operational only when the required release support defined by this section has been implemented and validated. Until then, no central-only Standard may newly enter or use the independent lifecycle and no new central-only Standard may be introduced. The existing Governance Distribution Standard may continue only under its already-approved transitional lifecycle.
+
+A central-only Standard that was explicitly approved under the Governance-coupled transitional lifecycle before Governance 6.1.0 may retain that historical lifecycle temporarily until separately governed migration moves it to the independent lifecycle.
+
+No newly introduced central-only Standard may enter the transitional lifecycle after Governance 6.1.0.
+
+While a pre-existing transitional lifecycle remains active:
 
 - the Standard declares its own Standard version and approved status;
 - it does not claim a separate approval tag;
 - its approval provenance is the enclosing `CENTRAL_GOVERNANCE.md` approval version/tag;
 - its exact approved bytes are those present in the same merge commit identified by that Governance approval tag;
-- it cannot be changed independently of `CENTRAL_GOVERNANCE.md` while the transitional lifecycle applies; and
+- it cannot be changed independently of `CENTRAL_GOVERNANCE.md`; and
 - later migration to an independent lifecycle must not rewrite or move its historical transitional provenance.
+
+`GOVERNANCE_DISTRIBUTION_STANDARD.md` v1.0.0 remains the currently approved transitional case until the separately governed migration tracked after implementation of the independent mechanism is completed. Governance 6.1.0 does not create or imply an independent v1.0.0 tag for that historical release.
 
 Current Standard tag namespaces include:
 
 - Architecture Diagram Standard: `diagram-standard-vX.Y.Z`
 - DDR Standard: `ddr-standard-vX.Y.Z`
-
-Approval of a new independently released Standard version does not change the version of `CENTRAL_GOVERNANCE.md` unless the rule book itself also changes.
+- Governance Distribution Standard: `governance-distribution-standard-vX.Y.Z` for its future independent lifecycle; no such tag is implied for transitional v1.0.0.
 
 For a product-applicable Standard, deployment validation is limited to:
 
@@ -2339,6 +2405,8 @@ For a product-applicable Standard, deployment validation is limited to:
 - exact content/integrity;
 - successful distribution to the intended products; and
 - traceable rollout state.
+
+For a central-only independently released Standard, validation is limited to its required release/provenance controls and any substantive checks applicable to the Standard change itself; product deployment validation does not apply.
 
 #### 22.15 Existing Diagram Conformance
 
@@ -2386,6 +2454,8 @@ Define:
 Changes to validation tooling are assessed separately from the product state they validate.
 
 Tool changes do not automatically trigger broad product revalidation.
+
+Executable validation/release/deployment/workflow tooling whose governed purpose is to operate or assure the central Governance system uses `Change: Governance Tooling` rather than `Change: Code` solely because it is executable. It requires the Appendix B Governance Tooling controls and does not require Home Assistant Beta unless the same issue also contains genuine deployable product runtime implementation.
 
 #### 23.4 Superseded Validators
 
@@ -2617,6 +2687,8 @@ The workflow profile applicable to an issue is determined under Sections 4.1 and
 
 The applicable change-class-specific controls for each gate or workflow point are defined in **Appendix B — Authoritative Change-Class Control Matrix**.
 
+`Change: Governance Tooling` uses `WF-02` unless the same issue also carries a `WF-01` class such as genuine product `Change: Code`, in which case Section 5.2 precedence applies.
+
 The actor performing the work does not change the applicable workflow profile or gate.
 
 #### A.1 Preparation and Review Gates
@@ -2697,30 +2769,30 @@ The workflow profile determines which workflow gates apply. The assigned change 
 
 #### B.1 Preparation and Review Controls
 
-| Gate | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|
-| **G0** | Code scope/runtime objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
-| **G1** | — | — | — | — | — | — | — |
-| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | DDR change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
-| **G3** | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human acceptance of durable decision record | Human acceptance of the final intended documentation state | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where applicable |
-| **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Identifier, ownership and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
+| Gate | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|---|
+| **G0** | Product runtime code scope/objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | Central Governance tooling purpose/control objective and non-product-runtime boundary identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
+| **G1** | — | — | — | — | — | — | — | — |
+| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | Linked PR pushed; tooling implementation and affected Governance control/release behaviour reviewable | DDR change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
+| **G3** | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human technical acceptance of tooling behaviour and fit with the governing control objective | Human acceptance of durable decision record | Human acceptance of the final intended documentation state | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where applicable |
+| **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Applicable unit/integration/fixture and release/provenance checks identified | Identifier, ownership and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
 
 #### B.2 Validation and Completion Controls
 
-| Gate / point | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|
-| **Validation activity** | Applicable tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Identifier, ownership and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
-| **G5** | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
-| **G6** | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — |
-| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | DDR state merged | Accepted durable documentation merged | Exact visually accepted content merged |
+| Gate / point | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|---|
+| **Validation activity** | Applicable product tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Applicable unit/integration/fixture checks pass; governing control objective, failure behaviour, release/provenance integrity and rerun behaviour validated where relevant; Home Assistant Beta is not required solely for Governance Tooling | Identifier, ownership and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
+| **G5** | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | Applies only where the same issue also selects WF-01 through another class; Governance Tooling obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
+| **G6** | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — | — |
+| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | Accepted tooling implementation merged; required technical checks pass; any affected post-merge release/provenance state is validated; no Home Assistant Beta is required unless another applicable class selected WF-01 | DDR state merged | Accepted durable documentation merged | Exact visually accepted content merged |
 
 #### B.3 Rework and Exception Controls
 
-| Gate | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
-|---|---|---|---|---|---|---|---|
-| **G8** | Pre-merge correction normally continues same branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
-| **G9** | Technical-only correction may bypass repeated review only where code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Metadata/provenance-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
-| **G10** | — | — | — | — | — | — | — |
+| Gate | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
+|---|---|---|---|---|---|---|---|---|
+| **G8** | Pre-merge correction normally continues same branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Tooling behaviour/control-semantics correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
+| **G9** | Technical-only correction may bypass repeated review only where product code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Technical-only correction may bypass repeated review only where accepted tooling behaviour and governing control semantics remain unchanged | Metadata/provenance-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
+| **G10** | — | — | — | — | — | — | — | — |
 
 ---
 

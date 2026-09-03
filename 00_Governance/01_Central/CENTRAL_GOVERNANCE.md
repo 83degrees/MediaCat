@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 7.0.0
+**Governance version:** 7.1.0
 **Status:** Approved
-**Approval tag:** `governance-v7.0.0`
+**Approval tag:** `governance-v7.1.0`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -2280,8 +2280,6 @@ The acceptable terminal rollout states are:
 
 A blocked, failed or still-open required release/provenance/deployment step keeps the governing issue incomplete.
 
-Where the release changes a central-only Standard using the pre-existing transitional Governance-coupled lifecycle permitted by Section 22.14, that Standard's exact accepted bytes must be present in the same merge commit to which the enclosing Governance approval tag resolves. No separate Standard approval tag is required or implied by that historical transitional lifecycle.
-
 Creation of approved governance artefact versions and product deployment remain distinct lifecycle concepts, but under the normal automated route all applicable release/provenance and distribution steps form one continuous governed event before the governing issue reaches `Done`.
 
 #### 22.12 Permanent Governance Change and Distribution
@@ -2364,32 +2362,17 @@ Approval of a new independently released Standard version does not change the ve
 
 For an independently released central-only Standard, completion of the approval/tag/provenance lifecycle does not trigger product distribution. Product rollout occurs only if the same source event also changes one or more projected artefacts.
 
-##### 22.14.3 Transitional Historical Lifecycle
+##### 22.14.3 Historical Transitional Provenance
 
-Independent central-only Standard release support is the required lifecycle model for new central-only Standards from Governance 6.1.0 onward.
+The independent central-only Standard lifecycle established in Governance 6.1.0 is now the active lifecycle for central-only Standards.
 
-Governance 6.1.0 establishes this lifecycle contract. It becomes operational only when the required release support defined by this section has been implemented and validated. Until then, no central-only Standard may newly enter or use the independent lifecycle and no new central-only Standard may be introduced. The existing Governance Distribution Standard may continue only under its already-approved transitional lifecycle.
-
-A central-only Standard that was explicitly approved under the Governance-coupled transitional lifecycle before Governance 6.1.0 may retain that historical lifecycle temporarily until separately governed migration moves it to the independent lifecycle.
-
-No newly introduced central-only Standard may enter the transitional lifecycle after Governance 6.1.0.
-
-While a pre-existing transitional lifecycle remains active:
-
-- the Standard declares its own Standard version and approved status;
-- it does not claim a separate approval tag;
-- its approval provenance is the enclosing `CENTRAL_GOVERNANCE.md` approval version/tag;
-- its exact approved bytes are those present in the same merge commit identified by that Governance approval tag;
-- it cannot be changed independently of `CENTRAL_GOVERNANCE.md`; and
-- later migration to an independent lifecycle must not rewrite or move its historical transitional provenance.
-
-`GOVERNANCE_DISTRIBUTION_STANDARD.md` v1.0.0 remains the currently approved transitional case until the separately governed migration tracked after implementation of the independent mechanism is completed. Governance 6.1.0 does not create or imply an independent v1.0.0 tag for that historical release.
+`GOVERNANCE_DISTRIBUTION_STANDARD.md` v1.0.0 remains historical evidence of the earlier Governance-coupled transitional lifecycle. Its approved bytes are those contained in the Governance 6.0.0 merge commit identified by `governance-v6.0.0`. No independent v1.0.0 Standard tag exists or is implied, and that historical provenance must not be rewritten or reinterpreted.
 
 Current Standard tag namespaces include:
 
 - Architecture Diagram Standard: `diagram-standard-vX.Y.Z`
 - DDR Standard: `ddr-standard-vX.Y.Z`
-- Governance Distribution Standard: `governance-distribution-standard-vX.Y.Z` for its future independent lifecycle; no such tag is implied for transitional v1.0.0.
+- Governance Distribution Standard: `governance-distribution-standard-vX.Y.Z`
 
 For a product-applicable Standard, deployment validation is limited to:
 

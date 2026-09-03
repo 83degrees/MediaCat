@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 3.1.1
+**Governance version:** 4.0.0
 **Status:** Approved
-**Approval tag:** `governance-v3.1.1`
+**Approval tag:** `governance-v4.0.0`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -126,12 +126,9 @@ The central governance model is maintained in its own independent Git/GitHub rep
 Its authoritative central artefacts include:
 
 - `/CENTRAL_GOVERNANCE.md`
-- `/DDR_REGISTRY.md`
 - `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
 - `/Templates/PROJECT_PROFILE.template.md`
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
-
-`DDR_REGISTRY.md` is a central-only governance artefact and is not deployed into product repositories.
 
 Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Section 3.1.
 
@@ -211,12 +208,15 @@ The Project Profile defines what the product is.
 It contains at minimum:
 
 - project name;
+- DDR origin code;
 - purpose;
 - scope;
 - explicit boundaries and out-of-scope responsibilities;
 - authoritative architecture artefact;
 - external contracts consumed;
 - relevant external dependencies or evidence sources where necessary.
+
+The DDR origin code is the product's immutable code used when allocating DDR identifiers. It identifies the product in which a DDR originates and does not represent current DDR ownership.
 
 The Project Profile must not repeat common governance, workflow, validation, DDR, repository or operating rules already defined centrally.
 
@@ -468,8 +468,6 @@ Product-local work must not create, edit, rename, move or delete anything within
 The central governance repository remains the source of truth for all content deployed into that subtree.
 
 `PROJECT_PROFILE.md` and `AAR_REGISTER.md` are product-owned artefacts and remain outside the centrally managed subtree.
-
-`DDR_REGISTRY.md` remains central-only and is not deployed into product repositories.
 
 Templates within `01_Central/02_Templates/` are centrally managed implementation aids. Their presence in a product repository does not make them independent governance authorities.
 
@@ -1834,25 +1832,35 @@ Current architecture must be understandable without reconstructing it from histo
 
 #### 19.3 Location and Numbering
 
-Product DDRs are stored in:
+Each DDR is owned by one product.
+
+`Owner` means the product currently accountable for maintaining the DDR.
+
+The authoritative DDR is stored in the current owning product's:
 
 `02_Decisions/`
 
-Identifiers use one global sequence:
+Identifiers use:
 
-`DDR-###`
+`DDR-<origin product code>-<local sequence>`
 
-The allocation authority is the central:
+For example:
 
-`/DDR_REGISTRY.md`
+`DDR-03-001`
 
-held in the central governance repository.
+The origin product code is taken from the creating product's `00_Governance/PROJECT_PROFILE.md`.
 
-Allocation and concurrent-update rules are defined in Appendix D.
+The local sequence is allocated within that product's DDR collection.
+
+A DDR identifier is immutable once created. The origin product code records the product in which the DDR originated and does not necessarily identify the DDR's current Owner.
+
+DDR ownership may subsequently transfer to another product without changing the DDR identifier. Detailed ownership-transfer mechanics are intentionally not defined here.
+
+There is no central DDR allocation authority. Allocation rules are defined in Appendix D.
 
 #### 19.4 DDR Standard
 
-Mandatory DDR content, statuses, registry fields, numbering and supersession mechanics are defined in Appendix D.
+Mandatory DDR content, statuses, numbering, ownership and supersession mechanics are defined in Appendix D.
 
 #### 19.5 Recovered Decisions
 
@@ -2020,12 +2028,6 @@ The deployed product projection contains:
     ├── PROJECT_PROFILE.template.md
     └── DIAGRAM_CONVENTION_LEARNING.md
 ```
-
-The authoritative global DDR allocation registry remains:
-
-`/DDR_REGISTRY.md`
-
-in the central Governance repository and is not part of the deployed product projection.
 
 #### 22.2 Projected Artefact Identity
 
@@ -2595,25 +2597,25 @@ The workflow profile determines which workflow gates apply. The assigned change 
 |---|---|---|---|---|---|---|---|
 | **G0** | Code scope/runtime objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
 | **G1** | — | — | — | — | — | — | — |
-| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | DDR and registry change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
+| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards follow Section 22.14 | DDR change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
 | **G3** | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human acceptance of durable decision record | Human acceptance of the final intended documentation state | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where applicable |
-| **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Identifier, registry and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
+| **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Identifier, ownership and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
 
 #### B.2 Validation and Completion Controls
 
 | Gate / point | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
 |---|---|---|---|---|---|---|---|
-| **Validation activity** | Applicable tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Identifier, registry and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
+| **Validation activity** | Applicable tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed standards satisfy Section 22.14 | Identifier, ownership and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
 | **G5** | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
 | **G6** | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — |
-| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | DDR and registry state merged | Accepted durable documentation merged | Exact visually accepted content merged |
+| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed standards complete under Section 22.14; distribution follows Section 22 where within scope | DDR state merged | Accepted durable documentation merged | Exact visually accepted content merged |
 
 #### B.3 Rework and Exception Controls
 
 | Gate | Code | Architecture | Contract | Governance | DDR | Documentation | Diagram |
 |---|---|---|---|---|---|---|---|
 | **G8** | Pre-merge correction normally continues same branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
-| **G9** | Technical-only correction may bypass repeated review only where code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Registry/metadata-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
+| **G9** | Technical-only correction may bypass repeated review only where code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Metadata/provenance-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
 | **G10** | — | — | — | — | — | — | — |
 
 ---
@@ -2704,42 +2706,38 @@ A DDR records a significant durable design decision and why it was made.
 
 It is not a task log or general implementation journal.
 
-#### D.2 Global Numbering
+#### D.2 Federated Numbering
 
 DDRs use:
 
-`DDR-###`
+`DDR-<origin product code>-<local sequence>`
 
-The authoritative global allocation register is:
+For example:
 
-`/DDR_REGISTRY.md`
+`DDR-03-001`
 
-in the central governance repository.
+Each product's DDR origin code is defined in its `00_Governance/PROJECT_PROFILE.md`.
 
-The registry contains at minimum:
+The origin product code identifies the product in which the DDR was first created and is immutable once used in a DDR identifier.
 
-| DDR | Product | Title | Status |
-|---|---|---|---|
+`Owner` is the product currently accountable for the DDR. The origin product code records provenance and does not necessarily identify the current Owner.
+
+A DDR identifier is immutable once created. DDR ownership may subsequently transfer to another product without changing the identifier. Detailed ownership-transfer mechanics are intentionally deferred.
 
 #### D.3 Allocation
 
 When a new DDR is required:
 
-1. read the latest authoritative registry state;
-2. determine the next available global number;
-3. update the registry as part of the governed work;
-4. create the DDR in the owning product's `02_Decisions/` folder;
-5. ensure registry and DDR remain consistent through review and merge.
+1. read the product's DDR origin code from `00_Governance/PROJECT_PROFILE.md`;
+2. inspect the DDR identifiers already allocated by that product;
+3. determine the next local sequence;
+4. create the DDR in the owning product's `02_Decisions/` folder.
 
-If concurrent work causes an allocation conflict:
+The next local sequence is derived from the product's existing DDR identifiers.
 
-1. refresh the latest registry state;
-2. reallocate the losing/conflicting DDR to the next valid number;
-3. update affected references before merge.
+A mutable "next DDR number" counter must not be maintained in the Project Profile or elsewhere solely for allocation.
 
-A separate reservation spreadsheet or reservation ceremony is not required.
-
-Git conflict/merge control provides the normal concurrency safeguard.
+There is no central DDR allocation authority, registry or reservation process.
 
 #### D.4 Required DDR Content
 
@@ -2763,7 +2761,7 @@ Allowed DDR statuses are:
 - `Accepted` — governing work has completed and the decision record is authoritative historical evidence;
 - `Superseded` — a later accepted DDR replaces the durable decision.
 
-When a replacement DDR becomes accepted, the superseded DDR and central registry must be updated accordingly.
+When a replacement DDR becomes accepted, the superseded DDR must be updated accordingly.
 
 #### D.6 Supersession
 

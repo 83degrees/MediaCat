@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 4.0.0
+**Governance version:** 5.0.0
 **Status:** Approved
-**Approval tag:** `governance-v4.0.0`
+**Approval tag:** `governance-v5.0.0`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -61,7 +61,7 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix A — Authoritative Workflow Gate Matrix
 - Appendix B — Authoritative Change-Class Control Matrix
 - Appendix C — Governance Change Approval Checklist
-- Appendix D — DDR Standard
+- Appendix D — Reserved — DDR Standard extracted to centrally governed standard
 - Appendix E — Audit Reference
 - Appendix F — Monitoring Register
 - Appendix G — Central Governance Distribution Control Model
@@ -127,8 +127,10 @@ Its authoritative central artefacts include:
 
 - `/CENTRAL_GOVERNANCE.md`
 - `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+- `/Standards/DDR_STANDARD.md`
 - `/Templates/PROJECT_PROFILE.template.md`
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
+- `/Templates/DDR.template.md`
 
 Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Section 3.1.
 
@@ -155,17 +157,14 @@ A centrally governed standard:
 - must not contradict `CENTRAL_GOVERNANCE.md`; and
 - must be distributed unchanged to every product to which it applies.
 
-The first centrally governed standard is:
+The centrally governed standards are:
 
-`ARCHITECTURE_DIAGRAM_STANDARD.md`
-
-Its authoritative central-repository path is:
-
-`/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
-
-Its deployed product path is:
-
-`00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+- `ARCHITECTURE_DIAGRAM_STANDARD.md`
+  - authoritative central path: `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+  - deployed product path: `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+- `DDR_STANDARD.md`
+  - authoritative central path: `/Standards/DDR_STANDARD.md`
+  - deployed product path: `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
 
 Where `CENTRAL_GOVERNANCE.md` and a centrally governed standard conflict, `CENTRAL_GOVERNANCE.md` prevails and the conflict must be surfaced for resolution.
 
@@ -188,6 +187,14 @@ When creating, editing or reviewing a governed architecture diagram, an agent mu
 - `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
 - the applicable approved architecture documentation; and
 - where present, `01_Architecture/Diagrams/DIAGRAM_CONVENTION_LEARNING.md`.
+
+When creating, editing, reviewing or superseding a DDR, an agent must also read:
+
+- `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`.
+
+When creating a new DDR, the agent should use the centrally managed implementation aid:
+
+- `00_Governance/01_Central/02_Templates/DDR.template.md`.
 
 The deployed central paths identify the active centrally managed artefacts.
 
@@ -247,6 +254,7 @@ Different authoritative sources answer different questions.
 | Product identity, scope and declared external dependencies | `PROJECT_PROFILE.md` |
 | Approved product architecture | Approved `*_ARCHITECTURE.md` |
 | Architecture diagram construction and shared presentation conventions | `ARCHITECTURE_DIAGRAM_STANDARD.md` |
+| DDR construction, numbering, status and supersession specification | `DDR_STANDARD.md` |
 | Cross-product interface | Provider-owned authoritative contract |
 | Significant durable design rationale | Applicable DDR |
 | Current implemented/runtime state | Approved current production evidence |
@@ -449,10 +457,12 @@ The standard structure is:
 ├── 01_Central/
 │   ├── CENTRAL_GOVERNANCE.md
 │   ├── 01_Standards/
-│   │   └── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   │   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   │   └── DDR_STANDARD.md
 │   └── 02_Templates/
 │       ├── PROJECT_PROFILE.template.md
-│       └── DIAGRAM_CONVENTION_LEARNING.md
+│       ├── DIAGRAM_CONVENTION_LEARNING.md
+│       └── DDR.template.md
 ├── PROJECT_PROFILE.md
 └── AAR_REGISTER.md
 ```
@@ -471,9 +481,9 @@ The central governance repository remains the source of truth for all content de
 
 Templates within `01_Central/02_Templates/` are centrally managed implementation aids. Their presence in a product repository does not make them independent governance authorities.
 
-`ARCHITECTURE_DIAGRAM_STANDARD.md` is an exact deployed copy of the centrally approved standard and must not contain product-specific amendments.
+`ARCHITECTURE_DIAGRAM_STANDARD.md` and `DDR_STANDARD.md` are exact deployed copies of their centrally approved standards and must not contain product-specific amendments.
 
-Product-specific architectural meaning belongs in the applicable approved architecture documentation.
+Product-specific architectural meaning belongs in the applicable approved architecture documentation. Product-specific durable design rationale belongs in the applicable product DDRs.
 
 Routine architecture, validation output, audit evidence or product work must not accumulate in `00_Governance/01_Central/`.
 
@@ -1830,7 +1840,7 @@ A DDR explains why an important decision was made.
 
 Current architecture must be understandable without reconstructing it from historical DDRs.
 
-#### 19.3 Location and Numbering
+#### 19.3 Location and Ownership
 
 Each DDR is owned by one product.
 
@@ -1840,27 +1850,25 @@ The authoritative DDR is stored in the current owning product's:
 
 `02_Decisions/`
 
-Identifiers use:
+Detailed identifier, numbering, allocation and ownership mechanics are defined in the centrally governed `DDR_STANDARD.md`.
 
-`DDR-<origin product code>-<local sequence>`
+#### 19.4 DDR Standard and Template
 
-For example:
+Detailed mandatory DDR content, statuses, numbering, allocation, ownership, immutability and supersession mechanics are defined in:
 
-`DDR-03-001`
+`00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
 
-The origin product code is taken from the creating product's `00_Governance/PROJECT_PROFILE.md`.
+The central authoritative source is:
 
-The local sequence is allocated within that product's DDR collection.
+`/Standards/DDR_STANDARD.md`
 
-A DDR identifier is immutable once created. The origin product code records the product in which the DDR originated and does not necessarily identify the DDR's current Owner.
+When a DDR is created, edited, reviewed or superseded, the applicable agent must apply the active DDR Standard together with this section and other applicable governance controls.
 
-DDR ownership may subsequently transfer to another product without changing the DDR identifier. Detailed ownership-transfer mechanics are intentionally not defined here.
+For a new DDR, the centrally managed implementation aid is:
 
-There is no central DDR allocation authority. Allocation rules are defined in Appendix D.
+`00_Governance/01_Central/02_Templates/DDR.template.md`
 
-#### 19.4 DDR Standard
-
-Mandatory DDR content, statuses, numbering, ownership and supersession mechanics are defined in Appendix D.
+The template is non-authoritative and must not override either `CENTRAL_GOVERNANCE.md` or `DDR_STANDARD.md`.
 
 #### 19.5 Recovered Decisions
 
@@ -2023,10 +2031,12 @@ The deployed product projection contains:
 00_Governance/01_Central/
 ├── CENTRAL_GOVERNANCE.md
 ├── 01_Standards/
-│   └── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   └── DDR_STANDARD.md
 └── 02_Templates/
     ├── PROJECT_PROFILE.template.md
-    └── DIAGRAM_CONVENTION_LEARNING.md
+    ├── DIAGRAM_CONVENTION_LEARNING.md
+    └── DDR.template.md
 ```
 
 #### 22.2 Projected Artefact Identity
@@ -2214,23 +2224,24 @@ Product-local work must not resolve such drift by editing centrally managed cont
 
 A centrally governed standard may be changed without changing or releasing a new version of `CENTRAL_GOVERNANCE.md`, provided the change does not require alteration of the rule book itself.
 
-Changes to the Architecture Diagram Standard follow the applicable workflow profile, Appendix A transition gates and Appendix B change-class controls.
+Changes to a centrally governed standard follow the applicable workflow profile, Appendix A transition gates and Appendix B change-class controls.
 
 The issue must identify the standard being changed and use the applicable change classes.
 
-A change to the Architecture Diagram Standard must include `Change: Governance`; `Change: Documentation` may also apply where appropriate, and other applicable change classes may also be used.
+A change to a centrally governed standard must include `Change: Governance`; `Change: Documentation` may also apply where appropriate, and other applicable change classes may also be used.
 
-The standard retains its own independent version, approval tag and approval lifecycle.
+Each standard retains its own independent version, approval tag and approval lifecycle.
 
-Standard tags use:
+Current standard tag namespaces include:
 
-`diagram-standard-vX.Y.Z`
+- Architecture Diagram Standard: `diagram-standard-vX.Y.Z`
+- DDR Standard: `ddr-standard-vX.Y.Z`
 
-Approval of a new diagram-standard version does not change the version of `CENTRAL_GOVERNANCE.md`.
+Approval of a new standard version does not change the version of `CENTRAL_GOVERNANCE.md` unless the rule book itself also changes.
 
-An approved standard may be distributed independently of a `CENTRAL_GOVERNANCE.md` release and is deployed unchanged to:
+An approved standard may be distributed independently of a `CENTRAL_GOVERNANCE.md` release and is deployed unchanged to its declared path beneath:
 
-`00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+`00_Governance/01_Central/01_Standards/`
 
 Distribution is deployment of an already-approved standard, not reapproval of that standard.
 
@@ -2698,94 +2709,15 @@ Product distribution performs integrity validation only and does not repeat subs
 
 ---
 
-### Appendix D — DDR Standard
+### Appendix D — Reserved — DDR Standard Extracted
 
-#### D.1 Purpose
+The detailed DDR specification formerly contained in this appendix is now governed by the centrally governed:
 
-A DDR records a significant durable design decision and why it was made.
+`Standards/DDR_STANDARD.md`
 
-It is not a task log or general implementation journal.
+Its scope and authority are defined by Sections 2.2, 19.4 and 22.14.
 
-#### D.2 Federated Numbering
-
-DDRs use:
-
-`DDR-<origin product code>-<local sequence>`
-
-For example:
-
-`DDR-03-001`
-
-Each product's DDR origin code is defined in its `00_Governance/PROJECT_PROFILE.md`.
-
-The origin product code identifies the product in which the DDR was first created and is immutable once used in a DDR identifier.
-
-`Owner` is the product currently accountable for the DDR. The origin product code records provenance and does not necessarily identify the current Owner.
-
-A DDR identifier is immutable once created. DDR ownership may subsequently transfer to another product without changing the identifier. Detailed ownership-transfer mechanics are intentionally deferred.
-
-#### D.3 Allocation
-
-When a new DDR is required:
-
-1. read the product's DDR origin code from `00_Governance/PROJECT_PROFILE.md`;
-2. inspect the DDR identifiers already allocated by that product;
-3. determine the next local sequence;
-4. create the DDR in the owning product's `02_Decisions/` folder.
-
-The next local sequence is derived from the product's existing DDR identifiers.
-
-A mutable "next DDR number" counter must not be maintained in the Project Profile or elsewhere solely for allocation.
-
-There is no central DDR allocation authority, registry or reservation process.
-
-#### D.4 Required DDR Content
-
-Each DDR contains at minimum:
-
-- identifier and title;
-- status;
-- decision;
-- context;
-- material alternatives considered where relevant;
-- rationale;
-- consequences/trade-offs;
-- source Linear issue;
-- superseded DDR where applicable.
-
-#### D.5 Status
-
-Allowed DDR statuses are:
-
-- `Proposed` — decision is undergoing governed development/review;
-- `Accepted` — governing work has completed and the decision record is authoritative historical evidence;
-- `Superseded` — a later accepted DDR replaces the durable decision.
-
-When a replacement DDR becomes accepted, the superseded DDR must be updated accordingly.
-
-#### D.6 Supersession
-
-When superseded:
-
-- the old DDR remains preserved;
-- the old DDR is marked `Superseded`;
-- the new DDR identifies what it supersedes.
-
-Historical decisions are not deleted merely because they are no longer current.
-
-#### D.7 Approved DDR Immutability
-
-Once accepted, a DDR must not be substantively rewritten.
-
-A changed durable decision requires a new DDR that supersedes the earlier record.
-
-Only traceable non-substantive corrections that leave the decision, rationale, alternatives and consequences unchanged may be made to an accepted DDR.
-
-#### D.8 Architecture Relationship
-
-Architecture must describe the current approved design without requiring agents to reconstruct it from DDR history.
-
-DDRs preserve significant rationale, not the complete current architecture.
+This appendix defines no independent DDR requirements.
 
 ---
 

@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 6.1.0
+**Governance version:** 7.0.0
 **Status:** Approved
-**Approval tag:** `governance-v6.1.0`
+**Approval tag:** `governance-v7.0.0`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -126,8 +126,8 @@ The central governance model is maintained in its own independent Git/GitHub rep
 Its authoritative central artefacts include:
 
 - `/CENTRAL_GOVERNANCE.md`
-- `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
-- `/Standards/DDR_STANDARD.md`
+- `/Standards/Product/ARCHITECTURE_DIAGRAM_STANDARD.md`
+- `/Standards/Product/DDR_STANDARD.md`
 - `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
 - `/Templates/PROJECT_PROFILE.template.md`
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
@@ -163,25 +163,23 @@ Centrally governed Standards have one of two applicability categories:
 - **Product-applicable** — the Standard is required as product-local working authority and is projected unchanged to every product to which it applies;
 - **Central-only** — the Standard governs central Governance operations only and is not part of the product projection unless its applicability is deliberately changed through governed work.
 
-Repository structure should make applicability visible. Central-only Standards are stored under:
+Repository structure makes applicability visible. Central-only Standards are stored under:
 
 `/Standards/Central/`
 
-Product-applicable Standards should use:
+Product-applicable Standards are stored under:
 
 `/Standards/Product/`
-
-for newly created or deliberately migrated Standards. Existing approved product-applicable Standards at legacy authoritative paths remain valid at those paths until separately governed migration changes them; they must not be moved merely to normalise structure incidentally.
 
 The centrally governed standards are:
 
 - `ARCHITECTURE_DIAGRAM_STANDARD.md`
   - applicability: Product-applicable
-  - authoritative central path: `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
+  - authoritative central path: `/Standards/Product/ARCHITECTURE_DIAGRAM_STANDARD.md`
   - deployed product path: `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
 - `DDR_STANDARD.md`
   - applicability: Product-applicable
-  - authoritative central path: `/Standards/DDR_STANDARD.md`
+  - authoritative central path: `/Standards/Product/DDR_STANDARD.md`
   - deployed product path: `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
 - `GOVERNANCE_DISTRIBUTION_STANDARD.md`
   - applicability: Central-only
@@ -1887,7 +1885,7 @@ Detailed mandatory DDR content, statuses, numbering, allocation, ownership, immu
 
 The central authoritative source is:
 
-`/Standards/DDR_STANDARD.md`
+`/Standards/Product/DDR_STANDARD.md`
 
 When a DDR is created, edited, reviewed or superseded, the applicable agent must apply the active DDR Standard together with this section and other applicable governance controls.
 
@@ -2337,12 +2335,7 @@ A deliberately governed authoritative source-path migration between folders chan
 
 `GOVERNANCE_PROJECTION.yaml` remains the operational source-to-destination population for artefacts deployed to products. It does not define whether a Standard exists or whether a central-only Standard participates in the independent release lifecycle.
 
-Until ASTV-148 deliberately migrates the two existing product-applicable Standards into `/Standards/Product/`, the following legacy authoritative paths remain explicitly recognised as product-applicable discovery exceptions:
-
-- `/Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
-- `/Standards/DDR_STANDARD.md`.
-
-Those compatibility exceptions must be removed when the governed ASTV-148 migration completes. No additional root-level Standard may be introduced as a new exception.
+Root-level files beneath `/Standards/` are not recognised as current governed Standards. Historical root paths remain available through Git history and historical approval tags for provenance; they are not live discovery or applicability exceptions.
 
 ##### 22.14.2 Independent Standard Release
 
@@ -2878,7 +2871,7 @@ Product distribution performs integrity validation only and does not repeat subs
 
 The detailed DDR specification formerly contained in this appendix is now governed by the centrally governed:
 
-`Standards/DDR_STANDARD.md`
+`Standards/Product/DDR_STANDARD.md`
 
 Its scope and authority are defined by Sections 2.2, 19.4 and 22.14.
 

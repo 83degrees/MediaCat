@@ -1,9 +1,9 @@
 # DDR_STANDARD.md
 
 **Standard:** Design Decision Record Standard  
-**Version:** v1.0.0  
+**Version:** v1.0.1  
 **Status:** Approved  
-**Approval tag:** `ddr-standard-v1.0.0`  
+**Approval tag:** `ddr-standard-v1.0.1`  
 **Approval date:** 2026-09-03
 
 ## 1. Purpose and Authority

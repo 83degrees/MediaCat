@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 5.0.1
+**Governance version:** 5.0.2
 **Status:** Approved
-**Approval tag:** `governance-v5.0.1`
+**Approval tag:** `governance-v5.0.2`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -62,7 +62,7 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix B — Authoritative Change-Class Control Matrix
 - Appendix C — Governance Change Approval Checklist
 - Appendix D — Reserved — DDR Standard extracted to centrally governed standard
-- Appendix E — Audit Reference
+- Appendix E — Reserved — Audit controls consolidated into Section 21
 - Appendix F — Monitoring Register
 - Appendix G — Central Governance Distribution Control Model
 
@@ -131,6 +131,7 @@ Its authoritative central artefacts include:
 - `/Templates/PROJECT_PROFILE.template.md`
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
 - `/Templates/DDR.template.md`
+- `/Templates/AUDIT_REVIEW_LOG.template.md`
 
 Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Section 3.1.
 
@@ -462,7 +463,8 @@ The standard structure is:
 │   └── 02_Templates/
 │       ├── PROJECT_PROFILE.template.md
 │       ├── DIAGRAM_CONVENTION_LEARNING.md
-│       └── DDR.template.md
+│       ├── DDR.template.md
+│       └── AUDIT_REVIEW_LOG.template.md
 ├── PROJECT_PROFILE.md
 └── AAR_REGISTER.md
 ```
@@ -1942,18 +1944,27 @@ Audit is a periodic assurance backstop.
 
 It does not replace normal knowledge capture.
 
-#### 21.1 Scope
+#### 21.1 Scope and Bounded Execution
 
 Each audit defines explicit scope and must not silently expand.
 
-Where the size, risk or execution method of an engagement warrants it, the audit may define:
+Where the size, risk or execution method of an engagement warrants it, the audit may define bounded execution controls appropriate to the engagement.
 
-- batch sizes;
+Examples include:
+
+- maximum batch size;
 - review checkpoints;
-- pause-for-approval points;
+- pause-for-user-review or approval points;
+- staged population release;
 - other bounded execution controls.
 
 These controls belong to the applicable audit work instruction or engagement definition rather than becoming permanent central values.
+
+The applicable audit work instruction or engagement definition defines the actual values.
+
+Central governance deliberately does not prescribe a universal batch size.
+
+Where a batch or checkpoint control is defined, the agent must follow it and must not silently continue beyond the authorised boundary.
 
 #### 21.2 Engagement Folder
 
@@ -1963,43 +1974,82 @@ Each formal audit/AAR has its own `07_Audit/` subfolder.
 
 The Review Log is the authoritative audit population and progress record.
 
-It must:
+It must uniquely identify every in-scope item and contain sufficient state to determine, without relying on agent memory:
 
-- uniquely identify every in-scope item;
-- record sufficient review state to determine the outcome for each item;
-- provide sufficient information to establish, without relying on agent memory, whether the complete defined population was reviewed.
+- whether every item in the defined population was reviewed;
+- the review outcome for each item;
+- whether a finding or follow-up resulted;
+- whether the applicable audit checkpoint was completed.
+
+It contains at minimum:
+
+- source issue/item identifier;
+- product/project;
+- review status;
+- review result;
+- finding reference where applicable;
+- completion/checkpoint state.
 
 Audit completeness is determined from the Review Log, not agent memory or scattered comments.
 
-Required Review Log fields are defined in Appendix E.
+When creating a Review Log, the centrally managed implementation aid is:
+
+`00_Governance/01_Central/02_Templates/AUDIT_REVIEW_LOG.template.md`
+
+The template is non-authoritative and must not override this section or any engagement-specific governed instruction.
 
 #### 21.4 Reviewed Versus Archive Ready
 
 A review label means an issue was included and reviewed.
 
+`Reviewed` means the item was examined within the defined audit scope.
+
 It does not mean the issue is archive-ready.
 
 `Reviewed` and `Archive Ready` are distinct concepts.
 
-Archive readiness is determined under Appendix E.
+An issue may be marked `Archive Ready` only where:
+
+- the issue is `Done`;
+- there is no unresolved audit finding that requires the issue to remain operationally active;
+- required follow-up has either completed or is separately governed and traceable;
+- applicable durable-knowledge obligations have been satisfied.
+
+Archival is an administrative action following `Archive Ready`.
+
+Archiving does not:
+
+- change the audit result;
+- remove historical Linear traceability;
+- alter Git history;
+- replace required durable documentation.
 
 #### 21.5 Findings
 
-Audits use the findings taxonomy in Appendix E.
+Audits use the following findings taxonomy:
 
-Substantive governed fixes proceed through normal Linear/Git workflow rather than invisibly inside the audit.
+- `Documentation Update`
+- `DDR`
+- `Investigation / Integrity`
+- `Already Captured / No Finding`
+
+The taxonomy may be refined centrally if operating evidence shows a need.
+
+Substantive findings are resolved through normal governed Linear/Git work.
+
+The audit itself records the finding and its disposition; it does not silently make untracked substantive fixes.
 
 #### 21.6 Audit Completion
 
-An audit completes when:
+An audit engagement completes only when:
 
-- defined population is reviewed;
+- defined population is fully accounted for;
 - Review Log is complete;
-- findings are resolved or explicitly deferred;
-- final audit state is recorded;
-- required engagement labels/checkpoints are applied.
+- findings are resolved or explicitly retained/deferred;
+- final engagement state is recorded;
+- required labels/checkpoints are applied.
 
-Detailed audit reference requirements are defined in Appendix E.
+Audit completion does not trigger unrelated broad revalidation.
 
 ---
 
@@ -2036,7 +2086,8 @@ The deployed product projection contains:
 └── 02_Templates/
     ├── PROJECT_PROFILE.template.md
     ├── DIAGRAM_CONVENTION_LEARNING.md
-    └── DDR.template.md
+    ├── DDR.template.md
+    └── AUDIT_REVIEW_LOG.template.md
 ```
 
 #### 22.2 Projected Artefact Identity
@@ -2727,95 +2778,11 @@ This appendix defines no independent DDR requirements.
 
 ---
 
-### Appendix E — Audit Reference
+### Appendix E — Reserved — Audit Controls Consolidated
 
-#### E.1 Review Log
+The audit control requirements formerly contained in this appendix are consolidated into Section 21 — Audit Model.
 
-The Review Log is the authoritative audit population/progress record.
-
-It must uniquely identify every in-scope item and contain sufficient state to determine, without relying on agent memory:
-
-- whether every item in the defined population was reviewed;
-- the review outcome for each item;
-- whether a finding or follow-up resulted;
-- whether the applicable audit checkpoint was completed.
-
-It contains at minimum:
-
-- source issue/item identifier;
-- product/project;
-- review status;
-- review result;
-- finding reference where applicable;
-- completion/checkpoint state.
-
-#### E.2 Findings Taxonomy
-
-Use:
-
-- `Documentation Update`
-- `DDR`
-- `Investigation / Integrity`
-- `Already Captured / No Finding`
-
-The taxonomy may be refined centrally if operating evidence shows a need.
-
-#### E.3 Reviewed Versus Archive Ready
-
-`Reviewed` means the item was examined within the defined audit scope.
-
-It does not mean the issue is archive-ready.
-
-An issue may be marked `Archive Ready` only where:
-
-- the issue is `Done`;
-- there is no unresolved audit finding that requires the issue to remain operationally active;
-- required follow-up has either completed or is separately governed and traceable;
-- applicable durable-knowledge obligations have been satisfied.
-
-Archival is an administrative action following `Archive Ready`.
-
-Archiving does not:
-
-- change the audit result;
-- remove historical Linear traceability;
-- alter Git history;
-- replace required durable documentation.
-
-#### E.4 Audit Batch and Checkpoint Controls
-
-An audit may define bounded execution controls appropriate to the engagement.
-
-Examples include:
-
-- maximum batch size;
-- pause-for-user-review points;
-- approval checkpoints;
-- staged population release.
-
-The applicable audit work instruction defines the actual values.
-
-Central governance deliberately does not prescribe a universal batch size.
-
-Where a batch/checkpoint control is defined, the agent must follow it and must not silently continue beyond the authorised boundary.
-
-#### E.5 Findings Resolution
-
-Substantive findings are resolved through normal governed Linear/Git work.
-
-The audit itself records the finding and its disposition; it does not silently make untracked substantive fixes.
-
-#### E.6 Audit Completion
-
-An engagement completes only when:
-
-- defined population is fully accounted for;
-- Review Log is complete;
-- findings are resolved or explicitly retained/deferred;
-- final engagement state is recorded;
-- required labels/checkpoints are applied.
-
-Audit completion does not trigger unrelated broad revalidation.
+This appendix defines no independent audit requirements.
 
 ---
 

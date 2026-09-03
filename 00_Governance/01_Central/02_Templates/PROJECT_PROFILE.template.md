@@ -1,5 +1,11 @@
 # PROJECT_PROFILE: <Product name>
 
+**Template:** Project Profile
+**Version:** v1.0.0
+**Status:** Approved
+**Approval tag:** `project-profile-template-v1.0.0`
+**Approval date:** 2026-09-03
+
 This template is a centrally managed implementation aid for creating a conformant product `PROJECT_PROFILE.md`.
 
 It is not an independent governance authority. Requirements for the Project Profile are defined by `CENTRAL_GOVERNANCE.md`.

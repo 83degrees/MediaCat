@@ -14,6 +14,7 @@ is current under the operational Governance 2.0 authority.
 
 - Product name: MediaCat
 - Repository: `83degrees/MediaCat`
+- DDR origin code: `03`
 
 ## Purpose
 
@@ -61,7 +62,7 @@ governed consumers.
 - Approved architecture location: `01_Architecture/MEDIACAT_ARCHITECTURE.md`
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
 - Architecture state: current approved
-- Material DDRs: `DDR-001`
+- Material DDRs: `DDR-03-001`
 
 The Markdown file is the semantic architecture authority. The diagram is its
 governed representation. Historical `schema-v2` / `resolve_item` material does

@@ -1,9 +1,9 @@
 # PROJECT_PROFILE: <Product name>
 
 **Template:** Project Profile
-**Version:** v1.0.0
+**Version:** v1.1.0
 **Status:** Approved
-**Approval tag:** `project-profile-template-v1.0.0`
+**Approval tag:** `project-profile-template-v1.1.0`
 **Approval date:** 2026-09-03
 
 This template is a centrally managed implementation aid for creating a conformant product `PROJECT_PROFILE.md`.
@@ -13,7 +13,7 @@ It is not an independent governance authority. Requirements for the Project Prof
 ## Profile conformance
 
 The required profile content is limited to the sections marked **Required**:
-product name, purpose, scope, ownership/boundaries, approved architecture
+product name, DDR origin code, purpose, scope, ownership/boundaries, approved architecture
 location, contracts provided, contracts consumed, product dependencies,
 implementation namespace/naming identity, and production/evidence route.
 
@@ -36,6 +36,7 @@ approved target or proposal as current implemented.
 - Product name: `<canonical product name>`
 - Repository (optional/recommended): `<owner/repository>`
 - Primary owner (optional/recommended): `<person or accountable role>`
+- DDR origin code: `<two-digit product code>`
 
 ## Required: Purpose
 
@@ -65,7 +66,7 @@ ownership.
 
 - Approved architecture location: `<authoritative architecture path>`
 - Architecture state (optional/recommended): `<current approved | approved target | proposed | unresolved>`
-- Material DDRs (optional/recommended): `<DDR-### or None>`
+- Material DDRs (optional/recommended): `<DDR-<origin product code>-<local sequence> or None>`
 
 The architecture Markdown is the semantic authority. Diagrams are governed
 representations and must conform to the Architecture Diagram Standard.

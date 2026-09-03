@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 5.0.0
+**Governance version:** 5.0.1
 **Status:** Approved
-**Approval tag:** `governance-v5.0.0`
+**Approval tag:** `governance-v5.0.1`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -2485,7 +2485,13 @@ Governance 2.0 maintains a monitoring register for operating-model hypotheses, r
 
 Monitoring items are not controls and must not be treated as mandatory requirements.
 
-Their detailed contents, evidence sources and dispositions are defined in Appendix F.
+The current monitoring population is recorded in the central Governance repository at:
+
+`/MONITORING_REGISTER.md`
+
+The register records operational monitoring state only. It is not a source of Governance rules and is not part of the centrally managed product projection.
+
+Applicable monitoring evidence-source and disposition rules are defined in Appendix F.
 
 A monitoring item only alters governance if it is formally promoted through the governance-improvement process and approved centrally.
 
@@ -2817,28 +2823,17 @@ Audit completion does not trigger unrelated broad revalidation.
 
 Monitoring items are hypotheses or operating-model questions, not mandatory controls.
 
-#### F.1 Initial Monitoring Areas
+#### F.1 Operational Register
 
-Monitor:
+The current monitoring population and item state are maintained in the central Governance repository at:
 
-- repeated context/Linear/tool reads;
-- dependency traversal;
-- context/token growth;
-- user intervention;
-- validation breadth;
-- validation evidence reuse;
-- stale or overlapping validators;
-- multi-class issue cohesion;
-- change-class clarity;
-- DDR threshold/ceremony;
-- audit effectiveness;
-- provider-contract discoverability;
-- branch/PR overhead for non-code;
-- lightweight-route usage;
-- beta/release/rollback reliability;
-- Simple versus Managed Release selection;
-- governance distribution/drift;
-- AAR register usefulness.
+`/MONITORING_REGISTER.md`
+
+The register is operational state only. It does not create or amend Governance rules, and routine maintenance of the monitored population does not by itself change `CENTRAL_GOVERNANCE.md`.
+
+The register is not part of the centrally managed product projection. Ordinary product agents do not need to load it merely to apply Governance.
+
+Where register content appears to conflict with this governance book, this governance book prevails and the conflict must be surfaced.
 
 #### F.2 Evidence Sources
 

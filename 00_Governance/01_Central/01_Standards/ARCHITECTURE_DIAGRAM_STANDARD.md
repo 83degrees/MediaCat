@@ -1,9 +1,9 @@
 # ARCHITECTURE_DIAGRAM_STANDARD.md
 
 **Standard:** Architecture Diagram Standard  
-**Version:** v1.0.4  
+**Version:** v1.0.5  
 **Status:** Approved  
-**Approval tag:** `diagram-standard-v1.0.4`  
+**Approval tag:** `diagram-standard-v1.0.5`  
 **Approval date:** 2026-09-03
 
 ## Contents

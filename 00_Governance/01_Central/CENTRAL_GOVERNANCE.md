@@ -1,9 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 2.2.0  
-**Status:** Approved  
-**Approval tag:** `governance-v2.2.0`  
-**Approval date:** 2026-09-02
+**Governance version:** 3.0.0
+**Status:** Approved
+**Approval tag:** `governance-v3.0.0`
+**Approval date:** 2026-09-03
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -2027,17 +2027,20 @@ The authoritative global DDR allocation registry remains:
 
 in the central Governance repository and is not part of the deployed product projection.
 
-#### 22.2 Governance Identity
+#### 22.2 Projected Artefact Identity
 
-An approved governance book identifies:
+Every approved centrally projected artefact identifies its own:
 
-- governance version;
+- version;
+- approval status;
 - approval tag;
 - approval date.
 
-The approval tag resolves through Git to the exact approved commit SHA.
+Each artefact is independently versioned and uses its own tag namespace.
 
-The file therefore does not attempt to contain the SHA of the commit that contains itself.
+The approval tag resolves through Git to the exact approved commit SHA and reading the artefact through that tag must return the approved content.
+
+An artefact therefore does not attempt to contain the SHA of the commit that contains itself.
 
 #### 22.3 Central Governance Changes Require Linear
 
@@ -2092,11 +2095,15 @@ After substantive approval and applicable validation:
 
 1. merge the accepted central governance state;
 2. identify the resulting exact commit;
-3. create the intended governance approval tag against that commit;
-4. verify tag, version and approval metadata;
-5. complete the post-merge requirements in Appendix C.
+3. identify every projected artefact changed by the merged pull request;
+4. create each changed artefact's declared approval tag against that commit, or verify and reuse it if it already resolves to that commit;
+5. fail without moving or overwriting any declared tag that already resolves elsewhere;
+6. verify each changed artefact's tag, version, approval metadata and content;
+7. complete the applicable post-merge requirements.
 
-The governance version is then approved and available for distribution.
+Multiple independently versioned artefacts changed by one pull request may legitimately have different approval tags resolving to the same merge commit.
+
+The approved artefact versions are then available for distribution as one release set derived under Appendix G.
 
 #### 22.8 Distribution Is Not Re-Approval
 
@@ -2970,13 +2977,12 @@ Each entry contains:
 
 - `source`
 - `destination`
-- `version_tag`
 
 `source` identifies the authoritative central-repository artefact.
 
 `destination` identifies the exact product-repository path.
 
-`version_tag` identifies the immutable approved Git source state for that artefact.
+Release selection must not be stored in the projection manifest.
 
 The projection manifest defines the complete desired state of:
 
@@ -2994,19 +3000,29 @@ Content comparison, not version metadata alone, determines whether deployment is
 
 #### G.6 Artefact Version Provenance
 
-Each projected artefact carries its own `version_tag`.
+Each projected artefact declares its own version, approved status, approval tag and approval date within the artefact.
 
 A single rollout may therefore contain centrally managed artefacts approved at different independent versions.
 
 The underlying Git tag provides exact immutable source provenance.
 
-A deployment event is therefore not identified by any single artefact version.
+A deployment event is identified by its source Governance pull request, merge commit and complete resolved artefact-to-tag release set rather than by any single artefact version.
+
+The release process reads every projected artefact at the source pull request's merge commit and derives the complete current release set from the approval tag declared by each artefact.
+
+The pull-request diff identifies which projected artefacts changed and therefore require approval tags at the merge commit. It must not be used to reconstruct the versions of unchanged projected artefacts.
 
 #### G.7 Deployment-Event Authority
 
-Every automated central-governance distribution event is governed by one Linear issue identified to the executor as:
+Every automated central-governance distribution event is governed by the one Linear issue declared in the source Governance pull-request body as:
 
-`linear_deployment_issue`
+`Linear issue: <TEAM-KEY>-<NUMBER>`
+
+The team key must not be hard-coded.
+
+Exactly one syntactically valid identifier must be present in that field. The executor must validate through Linear that the issue exists and belongs to the Governance project.
+
+Missing, malformed, ambiguous or invalid issue metadata must fail pre-flight.
 
 That Linear issue is the operational authority and rollout record for the deployment event.
 
@@ -3018,12 +3034,13 @@ Before modifying any product repository, the deployment executor must validate t
 
 Pre-flight must establish at minimum that:
 
-- `linear_deployment_issue` exists;
-- the issue belongs to the Governance project;
+- the source Governance pull request is merged and its merge commit is available;
+- exactly one valid `Linear issue:` field identifies an existing issue in the Governance project;
 - `GOVERNED_PRODUCTS.yaml` is valid;
 - `GOVERNANCE_PROJECTION.yaml` is valid;
-- every projected source exists;
-- every `version_tag` exists in Git and contains the projected source artefact;
+- every projected source exists at the source pull request's merge commit and declares valid independent release metadata;
+- every declared approval tag exists in Git and contains the exact projected source artefact read at the merge commit;
+- each changed projected artefact's approval tag resolves to the source pull request's merge commit;
 - every destination is beneath `00_Governance/01_Central/**`;
 - every selected target repository exists and is accessible.
 
@@ -3041,7 +3058,7 @@ and no deployment PR is required.
 
 Where deployment is required, the deployment branch is:
 
-`governance/<linear_deployment_issue>`
+`governance/<governing_linear_issue>`
 
 The branch is based on the product's current default branch.
 
@@ -3051,11 +3068,21 @@ The resulting managed subtree must exactly match the projection.
 
 #### G.10 Idempotency and Concurrency
 
-Re-running the same `linear_deployment_issue` must reuse or update the existing deployment branch and PR rather than creating duplicates.
+The first run for a source Governance pull request derives and records the complete release set from that pull request's merge commit.
+
+A rerun must recompute the release set from the same source pull request and merge commit and require it to match the recorded release set exactly.
+
+A mismatch must fail without replacing the recorded release set.
+
+An already-created approval tag may be reused only where it resolves to the expected commit and contains the expected artefact content. A tag that resolves elsewhere must never be moved or overwritten.
+
+Re-running the same release event must reuse or update the existing deployment branch and pull request rather than creating duplicates.
+
+Products already completed under the same release set must not be redeployed unnecessarily. Outstanding products resume using that same release set.
 
 At most one open central-governance deployment PR may exist in a product repository under the normal automated route.
 
-If a governance deployment PR for a different `linear_deployment_issue` is already open, the new deployment is blocked for that product.
+If a governance deployment PR for a different governing Linear issue is already open, the new deployment is blocked for that product.
 
 The existing deployment PR must not be overwritten, combined with or repurposed for the new rollout.
 
@@ -3067,9 +3094,10 @@ The PR records at minimum:
 
 - the governing Linear deployment issue;
 - the source Governance repository;
+- the source Governance pull request;
 - the managed target subtree;
 - each projected artefact;
-- the corresponding `version_tag`.
+- the corresponding approval tag.
 
 The downstream PR is a deployment record for already-approved content, not a new substantive governance approval surface.
 
@@ -3079,7 +3107,7 @@ Before automatic merge, validation must prove that:
 
 - no path outside `00_Governance/01_Central/**` is modified;
 - the resulting managed subtree exactly matches the declared projection;
-- projected source and `version_tag` identities remain valid;
+- projected source and approval-tag identities remain valid for the recorded release set;
 - no unrelated product content is included.
 
 A valid deployment PR may then be merged automatically.
@@ -3090,7 +3118,14 @@ A failed or unresolved merge is not a successful rollout state.
 
 #### G.13 Rollout Results and Linear Completion
 
-The deployment executor records a concise per-product result against `linear_deployment_issue`.
+The deployment executor records one workflow-generated release-set comment on the governing Linear issue containing:
+
+- the source Governance pull request; and
+- the complete projected artefact-to-approval-tag release set.
+
+Per-artefact commit SHAs are not required in Linear.
+
+The executor also records a concise per-product result against the governing Linear issue.
 
 Normal result states include:
 
@@ -3114,11 +3149,9 @@ Any blocked, failed or still-open deployment keeps the rollout incomplete.
 
 #### G.14 Trigger Routes
 
-The currently authorised Phase 1 route is manual invocation of the central GitHub deployment workflow with an explicit:
+The currently authorised Phase 1 route is manual invocation of the central GitHub deployment workflow with an explicit source Governance pull-request number.
 
-`linear_deployment_issue`
-
-For that route, the deliberate workflow invocation constitutes deployment authorisation provided the supplied issue exists and belongs to the Governance project.
+For that route, the deliberate workflow invocation constitutes deployment authorisation provided the pull request is merged and contains exactly one valid `Linear issue:` field identifying an issue in the Governance project.
 
 A future automatic route may use an approved model such as:
 

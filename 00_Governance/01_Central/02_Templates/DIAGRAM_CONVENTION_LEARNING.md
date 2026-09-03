@@ -1,5 +1,11 @@
 # DIAGRAM_CONVENTION_LEARNING.md
 
+**Template:** Diagram Convention Learning
+**Version:** v1.0.0
+**Status:** Approved
+**Approval tag:** `diagram-convention-learning-v1.0.0`
+**Approval date:** 2026-09-03
+
 This template is a centrally managed implementation aid for creating a product-local `DIAGRAM_CONVENTION_LEARNING.md`. It is not an independent governance authority.
 
 ## Purpose

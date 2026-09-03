@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 3.0.0
+**Governance version:** 3.1.1
 **Status:** Approved
-**Approval tag:** `governance-v3.0.0`
+**Approval tag:** `governance-v3.1.1`
 **Approval date:** 2026-09-03
 
 **Authority of appendices:**  
@@ -2091,19 +2091,23 @@ Human approval applies to the substantive proposed governance content.
 
 #### 22.7 Merge and Approval Release
 
-After substantive approval and applicable validation:
+After substantive approval and applicable validation, squash merge of the accepted Governance pull request to `main` is the substantive approval boundary and automatically initiates the governed post-approval release and distribution process.
 
-1. merge the accepted central governance state;
-2. identify the resulting exact commit;
+The automatic process must:
+
+1. take the source Governance pull-request number and exact merge commit from the merged pull-request event;
+2. independently verify that the pull request was merged to `main` and that its recorded merge commit matches the triggering event;
 3. identify every projected artefact changed by the merged pull request;
-4. create each changed artefact's declared approval tag against that commit, or verify and reuse it if it already resolves to that commit;
-5. fail without moving or overwriting any declared tag that already resolves elsewhere;
-6. verify each changed artefact's tag, version, approval metadata and content;
-7. complete the applicable post-merge requirements.
+4. create each changed artefact's declared approval tag against that exact merge commit where the tag does not already exist;
+5. verify and reuse an existing declared tag only where it already resolves to that exact merge commit;
+6. fail without moving or overwriting any declared tag that resolves elsewhere;
+7. verify each changed artefact's tag, version, approval metadata and content;
+8. derive the complete release set from all projected artefacts at that merge commit under Appendix G;
+9. continue automatically into governed downstream distribution.
 
 Multiple independently versioned artefacts changed by one pull request may legitimately have different approval tags resolving to the same merge commit.
 
-The approved artefact versions are then available for distribution as one release set derived under Appendix G.
+The deterministic post-approval release and distribution process does not require a second substantive governance approval.
 
 #### 22.8 Distribution Is Not Re-Approval
 
@@ -2143,43 +2147,58 @@ If a distribution step fails:
 
 #### 22.10 Governance Rollout Tracking
 
-Governance distribution may remain within the governing central governance-change issue where rollout is straightforward and explicitly within that issue's scope.
+Under the normal automated route, the Linear issue declared in the source Governance pull request remains the operational authority for the complete post-approval release and distribution event.
 
-Where distribution becomes independently sequenced, deferred, multi-stage, operationally significant or otherwise requires separate workflow control, create a separate Linear rollout issue.
+That issue governs:
 
-A governance rollout issue:
+- the approved Governance change;
+- the source Governance pull request and exact merge commit;
+- the complete projected artefact-to-approval-tag release set;
+- downstream distribution to the governed product population;
+- per-product rollout results; and
+- completion of the automatic rollout.
 
-- tracks deployment of already-approved governance;
-- does not require `Change: Governance` solely because it distributes unchanged approved artefacts;
-- must identify the approved artefact versions being distributed;
-- must identify the targeted products;
-- must record successful, deferred, excluded and failed targets;
-- follows the applicable workflow profile and gates.
+A separate Linear rollout issue is not required for the normal automatic distribution path.
 
-The rollout issue does not reopen substantive approval of the governance content.
+Where a deferred, staged, exceptional or otherwise independently governable follow-up requires work beyond the automatic release event, a separate Linear issue may be created for that follow-up.
+
+Such a follow-up issue:
+
+- tracks deployment or remediation of already-approved governance;
+- does not reopen substantive approval of the governance content;
+- does not require `Change: Governance` solely because it distributes unchanged approved artefacts; and
+- must remain traceable to the original approved Governance release event.
 
 #### 22.11 Governance Content-Change Completion Boundary
 
-The central governance content-change issue reaches `Done` when:
+Under the normal automated route, the governing central-governance issue reaches `Done` only when:
 
 1. the accepted governance content has been merged;
-2. the approval tag has been created against the exact accepted commit;
-3. the tag and governance metadata have been verified;
-4. all applicable post-merge approval-release requirements have passed.
+2. every required changed-artefact approval tag has been created or validly reused and verified;
+3. the complete release set has been derived and recorded against the governing Linear issue;
+4. automatic downstream distribution has been executed for the governed product population; and
+5. every targeted product has reached an acceptable terminal rollout state under Appendix G.
 
-Governance distribution is included in that same issue only where it was explicitly part of the approved issue scope.
+The acceptable terminal states are:
 
-Otherwise, distribution is a separate operational activity under Section 22.10.
+- `merged`;
+- `no_change`;
+- explicitly `deferred`; or
+- explicitly `excluded`.
 
-Creation of an approved governance version and deployment of that version are distinct lifecycle concepts.
+A blocked, failed or still-open deployment keeps the governing issue incomplete.
+
+Creation of an approved governance version and deployment of that version remain distinct lifecycle concepts, but under the normal automated route they form one continuous governed release event before the governing issue reaches `Done`.
 
 #### 22.12 Permanent Governance Change and Distribution
 
 Permanent governance changes follow the applicable workflow profile, Appendix A transition gates, Appendix B change-class controls and, for changes to `CENTRAL_GOVERNANCE.md`, Appendix C approval requirements.
 
-Where distribution itself is simple and explicitly scoped in the same issue, it may follow directly after the approved version/tag exists.
+Following human acceptance, applicable validation and merge to `main`, the normal governed route automatically performs approval-tag creation or verification, complete release-set derivation and downstream distribution under Appendix G.
 
-Where rollout is independently sequenced, deferred, multi-stage or otherwise operationally significant, it uses a separate Linear rollout issue.
+A separate rollout issue is required only where subsequent deployment or remediation has become an independently governable piece of work under Section 22.10.
+
+Automatic post-merge distribution must not bypass or replace substantive human approval of the Governance change itself.
 
 #### 22.13 Drift
 
@@ -3014,7 +3033,14 @@ The pull-request diff identifies which projected artefacts changed and therefore
 
 #### G.7 Deployment-Event Authority
 
-Every automated central-governance distribution event is governed by the one Linear issue declared in the source Governance pull-request body as:
+Every automated central-governance release and distribution event originates from a Governance pull request merged to `main`.
+
+The immutable release event is identified by:
+
+- the source Governance pull-request number; and
+- that pull request's exact merge commit.
+
+The event is operationally governed by the one Linear issue declared in the source Governance pull-request body as:
 
 `Linear issue: <TEAM-KEY>-<NUMBER>`
 
@@ -3024,9 +3050,9 @@ Exactly one syntactically valid identifier must be present in that field. The ex
 
 Missing, malformed, ambiguous or invalid issue metadata must fail pre-flight.
 
-That Linear issue is the operational authority and rollout record for the deployment event.
+The source pull request and merge commit establish the immutable Git release-event identity.
 
-The deployment issue governs the rollout as a whole rather than any individual projected artefact.
+The Linear issue is the operational authority and rollout record for that event and governs the rollout as a whole rather than any individual projected artefact.
 
 #### G.8 Global Pre-Flight
 
@@ -3120,7 +3146,8 @@ A failed or unresolved merge is not a successful rollout state.
 
 The deployment executor records one workflow-generated release-set comment on the governing Linear issue containing:
 
-- the source Governance pull request; and
+- the source Governance pull request;
+- the exact source merge commit as the release-event identity; and
 - the complete projected artefact-to-approval-tag release set.
 
 Per-artefact commit SHAs are not required in Linear.
@@ -3147,16 +3174,27 @@ The governing deployment issue may move automatically to `Done` only when every 
 
 Any blocked, failed or still-open deployment keeps the rollout incomplete.
 
-#### G.14 Trigger Routes
+#### G.14 Automatic Post-Approval Trigger
 
-The currently authorised Phase 1 route is manual invocation of the central GitHub deployment workflow with an explicit source Governance pull-request number.
+The normal authorised central-governance release and distribution route is the merged Governance pull-request event.
 
-For that route, the deliberate workflow invocation constitutes deployment authorisation provided the pull request is merged and contains exactly one valid `Linear issue:` field identifying an issue in the Governance project.
+A Governance pull request merged to `main` automatically invokes the central release-and-distribution workflow.
 
-A future automatic route may use an approved model such as:
+A pull request closed without merge must not initiate release or distribution.
 
-`Linear event → validated relay/integration → GitHub repository dispatch → same deployment executor`
+The workflow receives the source Governance pull-request number and exact merge commit directly from the GitHub merged-pull-request event.
 
-Automatic triggering must not be enabled merely because the technical endpoint exists.
+Before release or downstream mutation, the executor must independently verify that:
 
-Its trigger and authorisation policy requires explicit approval before activation.
+- the source pull request was merged;
+- its base branch was `main`;
+- the merge commit recorded by GitHub matches the merge commit supplied by the triggering event; and
+- exactly one valid `Linear issue:` field identifies an existing issue in the Governance project.
+
+Merge following the applicable human-acceptance and validation gates is the substantive governance approval boundary.
+
+The deterministic post-merge release and distribution process does not require a second manual deployment authorisation.
+
+Manual selection of the source pull request or projected artefact approval tags is not part of the normal route.
+
+A rerun must remain bound to the original source pull request, exact merge commit and complete recorded release set.

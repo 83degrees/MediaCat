@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 8.0.0
+**Governance version:** 8.0.1
 **Status:** Approved
-**Approval tag:** `governance-v8.0.0`
+**Approval tag:** `governance-v8.0.1`
 **Approval date:** 2026-09-04
 
 **Authority of appendices:**  
@@ -53,7 +53,7 @@ All appendices form an integral part of this governance book and carry the same 
 ## Part VII — Assurance and Governance Operations
 
 21. Audit Model  
-22. Governance Deployment  
+22. Central Governance Change, Release and Distribution Lifecycle  
 23. Validation Tooling Lifecycle  
 24. Production Evidence and Tool Routes  
 25. Agent Execution Efficiency  
@@ -2026,7 +2026,7 @@ Audit completion does not trigger unrelated broad revalidation.
 
 ---
 
-### 22. Governance Deployment
+### 22. Central Governance Change, Release and Distribution Lifecycle
 
 Approved central governance is maintained in the central Governance Git/GitHub repository.
 
@@ -2047,6 +2047,19 @@ The specialised authoritative downstream distribution protocol is defined in the
 `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
 
 That Standard applies to central Governance downstream distribution operations and the executor. It is not a product-local working authority and is not part of the product projection. Independent central-only Standard approval/release lifecycle requirements are defined by Section 22.14 rather than by product distribution.
+
+#### Section 22 Lifecycle Map
+
+For navigation, the existing numbered controls in this section group into the following lifecycle domains:
+
+- **Source and projected identity** — Sections 22.1–22.2.
+- **Permanent Governance change authority and approval** — Sections 22.3–22.6.
+- **Post-approval release and distribution** — Sections 22.7–22.10.
+- **Completion and integrity** — Sections 22.11–22.13.
+- **Independent centrally governed Standard lifecycle, applicability and provenance** — Sections 22.14–22.14.3.
+- **Existing diagram conformance** — Section 22.15.
+
+This map is navigation only. It does not create, weaken, duplicate or replace any control, and the numbered subsections remain authoritative for the controls they contain.
 
 #### 22.1 Source
 

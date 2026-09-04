@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 8.0.1
+**Governance version:** 8.0.2
 **Status:** Approved
-**Approval tag:** `governance-v8.0.1`
+**Approval tag:** `governance-v8.0.2`
 **Approval date:** 2026-09-04
 
 **Authority of appendices:**  
@@ -64,10 +64,10 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix A — Authoritative Workflow Gate Matrix
 - Appendix B — Authoritative Change-Class Control Matrix
 - Appendix C — Governance Change Approval Checklist
-- Appendix D — Reserved — DDR Standard extracted to centrally governed standard
-- Appendix E — Reserved — Audit controls consolidated into Section 21
+- Appendix D — Historical provenance pointer — DDR Standard extraction (non-operative)
+- Appendix E — Historical provenance pointer — Audit controls consolidation (non-operative)
 - Appendix F — Monitoring Register
-- Appendix G — Reserved — Governance Distribution Standard extracted to central-only standard
+- Appendix G — Historical provenance pointer — Governance Distribution Standard extraction (non-operative)
 
 ---
 
@@ -2901,7 +2901,7 @@ Product distribution performs integrity validation only and does not repeat subs
 
 ---
 
-### Appendix D — Reserved — DDR Standard Extracted
+### Appendix D — Historical Provenance Pointer — DDR Standard Extraction (Non-Operative)
 
 The detailed DDR specification formerly contained in this appendix is now governed by the centrally governed:
 
@@ -2913,7 +2913,7 @@ This appendix defines no independent DDR requirements.
 
 ---
 
-### Appendix E — Reserved — Audit Controls Consolidated
+### Appendix E — Historical Provenance Pointer — Audit Controls Consolidation (Non-Operative)
 
 The audit control requirements formerly contained in this appendix are consolidated into Section 21 — Audit Model.
 
@@ -2965,7 +2965,7 @@ Only a `Promoted` item that then follows normal central governance review and ap
 
 ---
 
-### Appendix G — Reserved — Governance Distribution Standard Extracted
+### Appendix G — Historical Provenance Pointer — Governance Distribution Standard Extraction (Non-Operative)
 
 The specialised central Governance release/distribution protocol formerly contained in this appendix is now governed by the central-only:
 

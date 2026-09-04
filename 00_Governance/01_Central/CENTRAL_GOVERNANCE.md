@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 7.1.2
+**Governance version:** 8.0.0
 **Status:** Approved
-**Approval tag:** `governance-v7.1.2`
+**Approval tag:** `governance-v8.0.0`
 **Approval date:** 2026-09-04
 
 **Authority of appendices:**  
@@ -25,29 +25,32 @@ All appendices form an integral part of this governance book and carry the same 
 6. Sub-Issues and Issue Decomposition  
 7. Execution Routes  
 
-## Part III — Git, Review and Change Acceptance
+## Part III — Durable Product Knowledge
 
-8. Git Working Model and Linear Alignment  
-9. Branch and Pull Request Rules  
-10. Code Review  
-11. Non-Code Review  
+8. Knowledge Retention  
+9. Design Decision Records  
+10. Contract Ownership and Compatibility  
 
-## Part IV — Validation and Completion
+## Part IV — Git, Review and Change Acceptance
 
-12. Validation Model  
-13. Validation Failure Handling  
-14. Non-Code Completion  
-15. Code Completion and Beta  
+11. Git Working Model and Linear Alignment  
+12. Branch and Pull Request Rules  
+13. Code Review  
+14. Non-Code Review  
 
-## Part V — Release and Durable Product Knowledge
+## Part V — Validation and Completion
 
-16. Stable Release  
-17. Release Modes  
-18. Knowledge Retention  
-19. Design Decision Records  
-20. Contract Ownership and Compatibility  
+15. Validation Model  
+16. Validation Failure Handling  
+17. Non-Code Completion  
+18. Code Completion and Beta  
 
-## Part VI — Assurance and Governance Operations
+## Part VI — Stable Product Release
+
+19. Stable Release  
+20. Release Modes  
+
+## Part VII — Assurance and Governance Operations
 
 21. Audit Model  
 22. Governance Deployment  
@@ -101,10 +104,10 @@ For normal governed work, use the following navigation sequence to identify the 
 1. **Establish authority and product context** — use Sections 2–3 and the applicable Project Profile, architecture, contracts and evidence sources.
 2. **Classify the work and select the workflow** — use Sections 4–5 together with Appendix A for workflow gates and Appendix B for change-class-specific controls.
 3. **Define the executable scope and route** — use Sections 6–7 for issue decomposition and execution route.
-4. **Identify durable product-knowledge obligations early** — use Sections 18–20 for architecture, DDR and contract obligations that may need to be satisfied during the same logical work.
-5. **Execute through Git and human review** — use Sections 8–11 where the normal Git/review route applies.
-6. **Validate and complete the issue** — use Sections 12–15, including any applicable durable-knowledge obligations identified above.
-7. **Promote a stable product release only where separately applicable** — use Sections 16–17; stable release is not implied by issue completion.
+4. **Identify durable product-knowledge obligations early** — use Sections 8–10 for architecture, DDR and contract obligations that may need to be satisfied during the same logical work.
+5. **Execute through Git and human review** — use Sections 11–14 where the normal Git/review route applies.
+6. **Validate and complete the issue** — use Sections 15–18, including any applicable durable-knowledge obligations identified above.
+7. **Promote a stable product release only where separately applicable** — use Sections 19–20; stable release is not implied by issue completion.
 8. **Apply assurance and Governance-operations controls where relevant** — use Sections 21–26 for audit, central Governance lifecycle/distribution, validation tooling, production evidence, execution efficiency and continuous improvement.
 
 This routing map is navigation only. It does not create, weaken, duplicate or replace any requirement in the cited sections or appendices. Where a cited section or appendix applies, that source remains authoritative for the control itself.
@@ -765,7 +768,7 @@ If an agent encounters an issue already marked `Done` without evidence that appl
 
 If a merge, deployment, synchronization, environment update or other state-changing action occurs after validation, any acceptance criterion or validation conclusion affected by that action must be revalidated before closure.
 
-Revalidation is proportionate to the changed state. Unaffected evidence may be reused where Section 12.4 and Appendix A.6 permit.
+Revalidation is proportionate to the changed state. Unaffected evidence may be reused where Section 15.4 and Appendix A.6 permit.
 
 A state-changing action must not be treated as administrative merely because the substantive design was already accepted.
 
@@ -894,7 +897,7 @@ Where the normal Git route applies:
 - each changed repository normally has its own linked PR;
 - all repository changes remain traceable to the same governing Linear issue.
 
-An explicitly approved lightweight exception may apply where permitted by Section 9.7.
+An explicitly approved lightweight exception may apply where permitted by Section 12.7.
 
 All repository-specific obligations required for the outcome must be complete before the applicable issue gate is passed.
 
@@ -973,9 +976,185 @@ Governance distinguishes the control that must be satisfied from the actor or me
 
 ---
 
-## Part III — Git, Review and Change Acceptance
+## Part III — Durable Product Knowledge
 
-### 8. Git Working Model and Linear Alignment
+### 8. Knowledge Retention
+
+Durable product knowledge is captured during normal work rather than reconstructed later.
+
+#### 8.1 Completion Check
+
+Before completion determine whether the change:
+
+1. altered product architecture;
+2. created, changed or superseded a decision meeting the DDR threshold;
+3. created or changed a provider-owned contract;
+4. changed another authoritative durable artefact.
+
+Where yes, the corresponding authoritative artefact must be updated.
+
+This is a lightweight completion check, not a broad documentation audit.
+
+#### 8.2 Architecture
+
+Known architectural changes update the authoritative `*_ARCHITECTURE.md` during the same logical work.
+
+Architecture changes must be grounded in:
+
+- the current authoritative architecture;
+- materially applicable contracts;
+- production evidence where current implementation state is relevant;
+- materially applicable DDRs.
+
+Historical context should be consulted only where materially necessary to understand or justify the change.
+
+Architecture must not be invented or altered merely for implementation, documentation or diagramming convenience.
+
+Where production evidence and approved architecture differ, the discrepancy must be surfaced and resolved rather than silently normalised.
+
+#### 8.3 Decisions
+
+Decisions meeting the DDR threshold are captured during normal work.
+
+Audit-based DDR recovery is a backstop.
+
+#### 8.4 Contracts
+
+Provider-owned contract changes update the provider's authoritative contract during the same logical work.
+
+Declared consumers are assessed for compatibility.
+
+#### 8.5 Supporting Artefacts
+
+Supporting durable artefacts are updated only where genuinely affected.
+
+---
+
+### 9. Design Decision Records
+
+DDRs preserve significant durable design decisions and their rationale.
+
+They do not record every implementation choice.
+
+#### 9.1 Threshold
+
+A DDR is normally required where a decision:
+
+- establishes or materially changes architectural direction;
+- chooses among meaningful alternatives with lasting consequences;
+- establishes a future constraint;
+- creates an important cross-product design principle;
+- deliberately accepts a material trade-off;
+- supersedes an earlier durable decision;
+- would otherwise be difficult to reconstruct safely later.
+
+A DDR is not normally required for routine implementation/configuration choices, obvious corrections or purely presentational decisions.
+
+#### 9.2 Relationship to Architecture
+
+Architecture states what is approved now.
+
+A DDR explains why an important decision was made.
+
+Current architecture must be understandable without reconstructing it from historical DDRs.
+
+#### 9.3 Location and Ownership
+
+Each DDR is owned by one product.
+
+`Owner` means the product currently accountable for maintaining the DDR.
+
+The authoritative DDR is stored in the current owning product's:
+
+`02_Decisions/`
+
+Detailed identifier, numbering, allocation and ownership mechanics are defined in the centrally governed `DDR_STANDARD.md`.
+
+#### 9.4 DDR Standard and Template
+
+Detailed mandatory DDR content, statuses, numbering, allocation, ownership, immutability and supersession mechanics are defined in:
+
+`00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
+
+The central authoritative source is:
+
+`/Standards/Product/DDR_STANDARD.md`
+
+When a DDR is created, edited, reviewed or superseded, the applicable agent must apply the active DDR Standard together with this section and other applicable governance controls.
+
+For a new DDR, the centrally managed implementation aid is:
+
+`00_Governance/01_Central/02_Templates/DDR.template.md`
+
+The template is non-authoritative and must not override either `CENTRAL_GOVERNANCE.md` or `DDR_STANDARD.md`.
+
+#### 9.5 Recovered Decisions
+
+A retrospective DDR may be created where audit discovers a missing durable decision and sufficient evidence remains.
+
+This is recovery, not the preferred normal process.
+
+---
+
+### 10. Contract Ownership and Compatibility
+
+Authoritative cross-product contracts are provider-owned.
+
+Consumers do not maintain authoritative duplicates.
+
+#### 10.1 Provider Authority
+
+The provider stores the authoritative contract in its `03_Contracts/` area.
+
+#### 10.2 Consumer Declaration
+
+Consumers identify external contracts they consume in `PROJECT_PROFILE.md`.
+
+#### 10.3 Contract Change Assessment
+
+Before approving a provider-owned contract change:
+
+1. identify all declared consumers;
+2. assess the change as compatible or potentially breaking for each;
+3. determine whether implementation/expectation is affected;
+4. identify required consumer follow-up;
+5. resolve material compatibility risk required for approval.
+
+Full consumer testing is not automatic.
+
+Validation depth is proportionate to actual contract delta and credible risk.
+
+A provider-owned contract is not approved in isolation from its declared consumers.
+
+#### 10.4 Cross-Product Dependency Boundary
+
+Cross-product dependencies must use an explicit governed interface or contract.
+
+A consumer must not depend on another product's undocumented internal implementation as though it were a supported interface.
+
+This includes reliance on internal:
+
+- entities;
+- files;
+- data structures;
+- helper conventions;
+- implementation details;
+- runtime behaviour not represented by the governed interface.
+
+Where an exceptional temporary dependency on an undocumented internal is genuinely necessary, it requires an explicit task-specific user override under Section 2.8.
+
+Such an override:
+
+- applies only to the stated work item;
+- must be recorded;
+- must not establish the internal as a supported interface;
+- must trigger an AAR observation where the dependency is expected to persist or recur.
+
+---
+
+## Part IV — Git, Review and Change Acceptance
+
+### 11. Git Working Model and Linear Alignment
 
 Git records version history.
 
@@ -987,20 +1166,20 @@ The table below shows which Git concepts normally become relevant at each Linear
 |---|---|---|
 | `Backlog` | Normally no Git activity | — |
 | `Ready` | Normally no Git activity yet | — |
-| `In Progress` | Create/use issue branch; make changes; commit; push as needed | 8.2 Branch, 8.3 Commit, 8.4 Push |
-| `Ready for Review` | Branch pushed; linked PR open and reviewable | 8.4 Push, 8.5 Pull Request |
-| `Changes Requested` — pre-merge | Continue same branch/PR; commit and push corrections | 8.2–8.6 |
-| `Changes Requested` — after failed beta | Same Linear issue; create corrective branch/PR from appropriate `main` state | 8.1, 8.2, 8.5, 8.6 |
-| `Ready for Validation` | Reviewed PR represents accepted proposed change; merge has not yet occurred | 8.5 Pull Request, 8.7 Merge |
-| `Beta` | Applicable PR has been squash-merged; resulting `main` SHA is deployed to `ha-starburst` | 8.1 `main`, 8.7 Merge |
-| `Done` | Required issue-level Git actions complete | 8.7 Merge |
-| `Blocked` | Preserve current Git state for later resumption | 8.2 Branch, 8.3 Commit, 8.5 Pull Request |
+| `In Progress` | Create/use issue branch; make changes; commit; push as needed | 11.2 Branch, 11.3 Commit, 11.4 Push |
+| `Ready for Review` | Branch pushed; linked PR open and reviewable | 11.4 Push, 11.5 Pull Request |
+| `Changes Requested` — pre-merge | Continue same branch/PR; commit and push corrections | 11.2–11.6 |
+| `Changes Requested` — after failed beta | Same Linear issue; create corrective branch/PR from appropriate `main` state | 11.1, 11.2, 11.5, 11.6 |
+| `Ready for Validation` | Reviewed PR represents accepted proposed change; merge has not yet occurred | 11.5 Pull Request, 11.7 Merge |
+| `Beta` | Applicable PR has been squash-merged; resulting `main` SHA is deployed to `ha-starburst` | 11.1 `main`, 11.7 Merge |
+| `Done` | Required issue-level Git actions complete | 11.7 Merge |
+| `Blocked` | Preserve current Git state for later resumption | 11.2 Branch, 11.3 Commit, 11.5 Pull Request |
 
 The table is a workflow guide.
 
-Sections 8.1–8.8 define the individual Git concepts.
+Sections 11.1–11.8 define the individual Git concepts.
 
-#### 8.1 `main`
+#### 11.1 `main`
 
 `main` represents accepted integrated development state.
 
@@ -1008,7 +1187,7 @@ It does not mean every commit has passed beta or is a stable release.
 
 Stable SemVer tags identify proven stable states.
 
-#### 8.2 Branch
+#### 11.2 Branch
 
 A branch is a separate line of work for an issue.
 
@@ -1018,7 +1197,7 @@ Normal model:
 
 A corrective branch may be required after a previously merged beta candidate fails.
 
-#### 8.3 Commit
+#### 11.3 Commit
 
 A commit records an identifiable Git state.
 
@@ -1026,7 +1205,7 @@ Multiple commits may occur during implementation/rework.
 
 A commit alone does not publish, request review, merge or release work.
 
-#### 8.4 Push
+#### 11.4 Push
 
 Push sends commits to GitHub.
 
@@ -1036,7 +1215,7 @@ Implementation may contain multiple:
 
 cycles.
 
-#### 8.5 Pull Request
+#### 11.5 Pull Request
 
 A pull request proposes incorporation of a branch into `main`.
 
@@ -1051,7 +1230,7 @@ It provides the principal GitHub review surface and may contain:
 
 Opening a PR does not mean the change has been accepted or merged.
 
-#### 8.6 Review Changes
+#### 11.6 Review Changes
 
 Before merge, requested changes normally use the applicable Appendix A rework and review gates while continuing on the existing branch and PR.
 
@@ -1059,7 +1238,7 @@ After a merged beta candidate fails, the same Linear issue continues through the
 
 The Linear issue remains the same unless the correction has become an independently governable piece of work requiring issue decomposition under Section 6.
 
-#### 8.7 Merge
+#### 11.7 Merge
 
 The standard merge method is:
 
@@ -1073,7 +1252,7 @@ The resulting `main` SHA becomes the beta candidate.
 
 Where the applicable workflow profile does not require Beta, merge normally occurs after review and applicable validation, immediately before `Done`.
 
-#### 8.8 Tag and Release
+#### 11.8 Tag and Release
 
 A Git tag identifies an exact commit using a durable name.
 
@@ -1091,43 +1270,43 @@ Beta uses exact commit SHAs and does not require a beta tag.
 
 ---
 
-### 9. Branch and Pull Request Rules
+### 12. Branch and Pull Request Rules
 
 Default:
 
 `one independently reviewable Linear work item → one dedicated branch → one linked PR`
 
-#### 9.1 Dedicated Work Branches
+#### 12.1 Dedicated Work Branches
 
 A branch normally remains associated with the issue through implementation, review, requested changes and validation until merge.
 
 Long-lived branches containing unrelated issues should be avoided.
 
-#### 9.2 Pull Requests
+#### 12.2 Pull Requests
 
 The PR should be linked to the Linear issue.
 
 The relationship among issue, branch, proposed change, review and completion should remain clear.
 
-#### 9.3 Rework Before Merge
+#### 12.3 Rework Before Merge
 
 Review or validation rework before merge normally continues on the same branch and PR.
 
-#### 9.4 Rework After Merge
+#### 12.4 Rework After Merge
 
 If a merged beta candidate fails, corrective work remains on the same Linear issue but uses a new corrective branch and PR.
 
 The earlier merged PR remains immutable historical evidence of the failed beta candidate.
 
-#### 9.5 Scope
+#### 12.5 Scope
 
 Git structure follows work decomposition rather than repository folder or file type.
 
-#### 9.6 Actor Neutrality
+#### 12.6 Actor Neutrality
 
 Manual and automated execution use the same Git traceability standard.
 
-#### 9.7 Lightweight Non-Code Route
+#### 12.7 Lightweight Non-Code Route
 
 A clearly presentational/editorial non-code change may bypass the normal dedicated branch/PR route only with explicit user approval for that work item.
 
@@ -1155,13 +1334,13 @@ The agent may recommend the lightweight route but may not self-authorise it.
 
 Appendix A.4 defines its relationship to normal gates.
 
-#### 9.8 Exceptional Direct Changes
+#### 12.8 Exceptional Direct Changes
 
 Other direct changes to the protected target branch are not normal governed work.
 
 A specific in-flight user override may authorise one, but it does not create a standing alternative workflow.
 
-#### 9.9 Post-Merge Branch Cleanup
+#### 12.9 Post-Merge Branch Cleanup
 
 Issue branches are temporary work branches.
 
@@ -1184,7 +1363,7 @@ Squash-merge commit identity differences are not, by themselves, evidence that s
 
 ---
 
-### 10. Code Review
+### 13. Code Review
 
 Code requires human review at the applicable Appendix A human-acceptance gate before validation may proceed.
 
@@ -1192,7 +1371,7 @@ GitHub is the detailed code-review surface.
 
 Linear remains workflow authority.
 
-#### 10.1 Entry
+#### 13.1 Entry
 
 A code issue enters `Ready for Review` when:
 
@@ -1202,7 +1381,7 @@ A code issue enters `Ready for Review` when:
 - change is meaningfully reviewable;
 - substantive execution has paused.
 
-#### 10.2 Human Review
+#### 13.2 Human Review
 
 The user may examine:
 
@@ -1214,19 +1393,19 @@ The user may examine:
 
 Detailed review feedback remains attached to the PR rather than duplicated into Linear.
 
-#### 10.3 Accepted Review
+#### 13.3 Accepted Review
 
 Acceptance satisfies the substantive human-review requirement for the applicable Appendix A gate.
 
 It does not mean validation, Beta or stable release has completed.
 
-#### 10.4 Changes Requested
+#### 13.4 Changes Requested
 
 Required changes proceed through the applicable Appendix A rework gate.
 
 Before merge, the same issue/branch/PR normally continue.
 
-#### 10.5 Review Authority
+#### 13.5 Review Authority
 
 Human approval is initially mandatory for code.
 
@@ -1234,13 +1413,13 @@ Automated or agent review may support but not replace it unless central governan
 
 ---
 
-### 11. Non-Code Review
+### 14. Non-Code Review
 
 Non-code review is proportionate to artefact and risk.
 
 It must not inherit code-review ceremony automatically.
 
-#### 11.1 Entry
+#### 14.1 Entry
 
 A non-code issue enters `Ready for Review` when:
 
@@ -1249,13 +1428,13 @@ A non-code issue enters `Ready for Review` when:
 - applicable review surface exists;
 - substantive execution has paused.
 
-#### 11.2 Text-Based Artefacts
+#### 14.2 Text-Based Artefacts
 
 Architecture, contracts, DDRs, governance and durable documentation normally use a linked PR where the standard Git route applies.
 
 Review establishes whether the artefact is acceptable in substance.
 
-#### 11.3 Diagrams and Visual Artefacts
+#### 14.3 Diagrams and Visual Artefacts
 
 A textual or XML diff alone is insufficient where visual result matters.
 
@@ -1283,7 +1462,7 @@ Human visual review remains required where visual meaning matters.
 
 Compliance with the diagram standard does not replace review of the product-specific architectural meaning represented by the diagram.
 
-#### 11.4 Presentational Versus Substantive
+#### 14.4 Presentational Versus Substantive
 
 A change is presentational only where it changes how information is displayed, not what it means.
 
@@ -1302,15 +1481,15 @@ A change is substantive where it can alter reasonable interpretation, including 
 
 If reasonable interpretation could change, treat the change as substantive.
 
-#### 11.5 Review Authority
+#### 14.5 Review Authority
 
 Automation may assist but does not replace required human judgement over architecture, contracts, governance, durable decisions or final visual acceptance.
 
 ---
 
-## Part IV — Validation and Completion
+## Part V — Validation and Completion
 
-### 12. Validation Model
+### 15. Validation Model
 
 Validation provides evidence that a governed change or repository state satisfies applicable controls.
 
@@ -1328,7 +1507,7 @@ Appendix A is authoritative for workflow transition gates and workflow-profile g
 
 Appendix B is authoritative for change-class-specific controls.
 
-#### 12.1 Universal Integrity and Selection
+#### 15.1 Universal Integrity and Selection
 
 Every governed change receives one lightweight universal selection/integrity assessment.
 
@@ -1342,13 +1521,13 @@ Its purpose is to:
 
 It is not a universal substantive validation suite.
 
-#### 12.2 Change-Class-Specific Validation
+#### 15.2 Change-Class-Specific Validation
 
 Substantive validation is driven by applicable change class and identified risk.
 
 A class does not inherit unrelated validation merely because another validator exists.
 
-#### 12.3 Dependency-Triggered Validation
+#### 15.3 Dependency-Triggered Validation
 
 Validation follows the credible affected dependency chain only as far as impact can reasonably propagate.
 
@@ -1358,7 +1537,7 @@ Traversal requires a specific affected dependency or risk.
 
 Appendix A.5 defines the dependency stop rule.
 
-#### 12.4 Reusable Evidence
+#### 15.4 Reusable Evidence
 
 Evidence may be reused where relevant immutable state remains unchanged.
 
@@ -1372,7 +1551,7 @@ Unchanged state should not be revalidated solely to reproduce the same evidence.
 
 Appendix A.6 defines the evidence reuse rule.
 
-#### 12.5 Final-Acceptance Validation
+#### 15.5 Final-Acceptance Validation
 
 Where review can alter an artefact, final validation applies to the exact user-accepted state.
 
@@ -1384,7 +1563,7 @@ Validation of the standard itself and validation of a product diagram are separa
 
 Deployment of a new Architecture Diagram Standard does not by itself require revalidation of unchanged product diagrams.
 
-#### 12.6 Validation Selection
+#### 15.6 Validation Selection
 
 Before substantive validation determine:
 
@@ -1397,7 +1576,7 @@ Before substantive validation determine:
 
 Only the resulting set is executed.
 
-#### 12.7 Validation Evidence
+#### 15.7 Validation Evidence
 
 Retained evidence should identify:
 
@@ -1409,7 +1588,7 @@ Retained evidence should identify:
 
 Routine output is not retained indefinitely merely because it exists.
 
-#### 12.8 Merge Preservation
+#### 15.8 Merge Preservation
 
 Where applicable validation is performed before a squash merge, the resulting merge commit may rely on that evidence where the governed content is demonstrably identical to the validated and accepted content.
 
@@ -1428,7 +1607,7 @@ For artefacts requiring final-state validation, including visually accepted diag
 
 ---
 
-### 13. Validation Failure Handling
+### 16. Validation Failure Handling
 
 Validation failure is assessed according to what failed and what correction is required.
 
@@ -1436,43 +1615,43 @@ Rework follows the applicable Appendix A rework gate.
 
 Whether repeated human review is required depends on whether the accepted substance has changed, as defined by Appendix A and the applicable change-class controls in Appendix B.
 
-#### 13.1 Validation-Tool Failure
+#### 16.1 Validation-Tool Failure
 
 A broken validator or tool failure must be distinguished from an artefact/product failure.
 
 Expected negative search results, no-match outcomes and runtime/tool errors are not automatically governed-change failures.
 
-### 14. Non-Code Completion
+### 17. Non-Code Completion
 
 Non-code completion follows the applicable workflow profile and transition gates defined in Appendix A.
 
 Applicable change-class-specific completion controls are defined in Appendix B.
 
-Sections 14.1–14.5 describe the operating model and evidence expectations for non-code completion; they do not independently authorise workflow transitions.
+Sections 17.1–17.5 describe the operating model and evidence expectations for non-code completion; they do not independently authorise workflow transitions.
 
-#### 14.1 Merge Timing
+#### 17.1 Merge Timing
 
 Normal non-code PR merge occurs after human acceptance and applicable validation, immediately before `Done`.
 
-#### 14.2 Final Accepted State
+#### 17.2 Final Accepted State
 
 The merged state must preserve the exact final accepted governed content.
 
 Where applicable, final integrity/provenance evidence refers to that accepted content and its resulting repository state.
 
-Section 12.8 governs preservation of pre-merge evidence across squash merge.
+Section 15.8 governs preservation of pre-merge evidence across squash merge.
 
-#### 14.3 Presentational Changes
+#### 17.3 Presentational Changes
 
 Presentational work uses the lightest applicable path.
 
-The lightweight Git route remains subject to explicit user approval under Section 9.7 and Appendix A.4.
+The lightweight Git route remains subject to explicit user approval under Section 12.7 and Appendix A.4.
 
-#### 14.4 No Stable Release Requirement
+#### 17.4 No Stable Release Requirement
 
 Non-code issue completion does not by itself require a product stable-release step.
 
-#### 14.5 Final Closure Evidence
+#### 17.5 Final Closure Evidence
 
 Before a governed issue enters `Done`, closure evidence must record enough information to establish:
 
@@ -1492,7 +1671,7 @@ Human acceptance and transition authority are governed by Appendix A.
 
 Any separately required action-specific authorisation remains mandatory.
 
-### 15. Code Completion and Beta
+### 18. Code Completion and Beta
 
 Code completion follows the applicable workflow profile and transition gates defined in Appendix A.
 
@@ -1502,25 +1681,25 @@ Stable release is separate.
 
 Applicable change-class-specific controls are defined in Appendix B.
 
-#### 15.1 Entry to Beta
+#### 18.1 Entry to Beta
 
 Entry to `Beta` occurs only when the applicable Appendix A Beta-entry gate and Appendix B code controls have been satisfied.
 
 The resulting deployed candidate state is the state against which Beta operation is assessed.
 
-#### 15.2 Beta Candidate Integrity
+#### 18.2 Beta Candidate Integrity
 
 Beta result applies only to the exact deployed runtime-affecting state represented by the candidate SHA.
 
 A later runtime-affecting change does not inherit that result.
 
-#### 15.3 Beta Operation
+#### 18.3 Beta Operation
 
 Beta testing focuses on behaviour and risks introduced by the change.
 
 Duration and depth are proportionate to risk.
 
-#### 15.4 Successful Beta
+#### 18.4 Successful Beta
 
 Successful Beta satisfies the Beta-operation requirement for completion.
 
@@ -1528,7 +1707,7 @@ Transition from `Beta` to `Done` is governed by the applicable Appendix A gate.
 
 The implementation issue is complete when that gate is satisfied, but no stable product release is automatically created.
 
-#### 15.5 Failed Beta
+#### 18.5 Failed Beta
 
 A failed Beta requires rework through the applicable Appendix A rework gate.
 
@@ -1538,7 +1717,7 @@ Corrective implementation uses a new branch and PR under the same Linear issue u
 
 `ha-starburst` may be rolled back to a selected stable tag with explicit user authorisation.
 
-#### 15.6 Agent-Assisted Beta Deployment
+#### 18.6 Agent-Assisted Beta Deployment
 
 Initial beta deployment is agent-assisted rather than fully automatic.
 
@@ -1550,7 +1729,7 @@ Deployment must:
 - verify deployed state;
 - preserve rollback capability.
 
-#### 15.7 Failed-Beta `main` Protection
+#### 18.7 Failed-Beta `main` Protection
 
 When a beta candidate fails, `main` contains a known failed runtime state until that failure is corrected or otherwise explicitly resolved.
 
@@ -1575,21 +1754,21 @@ Normal runtime-affecting merge activity resumes only after one of the resolution
 
 ---
 
-## Part V — Release and Durable Product Knowledge
+## Part VI — Stable Product Release
 
-### 16. Stable Release
+### 19. Stable Release
 
 A stable release promotes an integrated product state whose runtime-affecting content has valid beta/stable coverage into an explicitly versioned stable state.
 
 It is product-level activity separate from individual issue completion.
 
-#### 16.1 Stable Authority
+#### 19.1 Stable Authority
 
 Stable promotion requires explicit user authorisation.
 
 Successful beta does not automatically create a release.
 
-#### 16.2 Semantic Versioning
+#### 19.2 Semantic Versioning
 
 Stable releases use:
 
@@ -1603,7 +1782,7 @@ Stable releases use:
 
 Version significance reflects released product behaviour/state, not implementation effort.
 
-#### 16.3 Beta and Stable Coverage
+#### 19.3 Beta and Stable Coverage
 
 A stable release SHA must have valid runtime coverage for all runtime-affecting content included in that release.
 
@@ -1620,13 +1799,13 @@ Any runtime-affecting change introduced after the applicable beta result require
 
 A non-runtime-affecting change does not require Home Assistant redeployment merely to reproduce coverage for unchanged runtime content.
 
-#### 16.4 Release Cut-Off
+#### 19.4 Release Cut-Off
 
 The selected stable SHA is the release cut-off.
 
 Later commits on `main` are not part of that release.
 
-#### 16.5 Stable Tag and GitHub Release
+#### 19.5 Stable Tag and GitHub Release
 
 Every stable release receives:
 
@@ -1644,7 +1823,7 @@ The GitHub Release should concisely identify:
 - known material limitations;
 - previous stable rollback target.
 
-#### 16.6 Agent-Assisted Stable Deployment
+#### 19.6 Agent-Assisted Stable Deployment
 
 Initial stable deployment is agent-assisted and requires explicit user authorisation.
 
@@ -1655,13 +1834,13 @@ The model supports deployment to:
 - `ha-starburst`;
 - `ha-glenrosa`.
 
-#### 16.7 Rollback
+#### 19.7 Rollback
 
 Rollback is agent-assisted and requires explicit user authorisation.
 
 Each environment may be rolled back independently to a selected previous stable tag.
 
-#### 16.8 Release Integrity
+#### 19.8 Release Integrity
 
 A stable release must remain traceable to:
 
@@ -1674,11 +1853,11 @@ A stable release must remain traceable to:
 
 ---
 
-### 17. Release Modes
+### 20. Release Modes
 
 Stable releases use either **Simple Release** or **Managed Release**.
 
-#### 17.1 Simple Release
+#### 20.1 Simple Release
 
 Simple Release is the default where:
 
@@ -1698,7 +1877,7 @@ A Simple Release is a promotion action rather than a parallel backlog item.
 
 Its durable release record is the Git tag and GitHub Release.
 
-#### 17.2 Managed Release
+#### 20.2 Managed Release
 
 Use a Managed Release where release activity itself requires material operational coordination, including:
 
@@ -1712,11 +1891,11 @@ Use a Managed Release where release activity itself requires material operationa
 
 A dedicated Linear work item manages the release.
 
-#### 17.3 Escalation
+#### 20.3 Escalation
 
 A Simple Release may be converted to Managed if unexpected complexity appears.
 
-#### 17.4 Release Completion
+#### 20.4 Release Completion
 
 Release completion requires:
 
@@ -1730,181 +1909,7 @@ Release completion requires:
 
 ---
 
-### 18. Knowledge Retention
-
-Durable product knowledge is captured during normal work rather than reconstructed later.
-
-#### 18.1 Completion Check
-
-Before completion determine whether the change:
-
-1. altered product architecture;
-2. created, changed or superseded a decision meeting the DDR threshold;
-3. created or changed a provider-owned contract;
-4. changed another authoritative durable artefact.
-
-Where yes, the corresponding authoritative artefact must be updated.
-
-This is a lightweight completion check, not a broad documentation audit.
-
-#### 18.2 Architecture
-
-Known architectural changes update the authoritative `*_ARCHITECTURE.md` during the same logical work.
-
-Architecture changes must be grounded in:
-
-- the current authoritative architecture;
-- materially applicable contracts;
-- production evidence where current implementation state is relevant;
-- materially applicable DDRs.
-
-Historical context should be consulted only where materially necessary to understand or justify the change.
-
-Architecture must not be invented or altered merely for implementation, documentation or diagramming convenience.
-
-Where production evidence and approved architecture differ, the discrepancy must be surfaced and resolved rather than silently normalised.
-
-#### 18.3 Decisions
-
-Decisions meeting the DDR threshold are captured during normal work.
-
-Audit-based DDR recovery is a backstop.
-
-#### 18.4 Contracts
-
-Provider-owned contract changes update the provider's authoritative contract during the same logical work.
-
-Declared consumers are assessed for compatibility.
-
-#### 18.5 Supporting Artefacts
-
-Supporting durable artefacts are updated only where genuinely affected.
-
----
-
-### 19. Design Decision Records
-
-DDRs preserve significant durable design decisions and their rationale.
-
-They do not record every implementation choice.
-
-#### 19.1 Threshold
-
-A DDR is normally required where a decision:
-
-- establishes or materially changes architectural direction;
-- chooses among meaningful alternatives with lasting consequences;
-- establishes a future constraint;
-- creates an important cross-product design principle;
-- deliberately accepts a material trade-off;
-- supersedes an earlier durable decision;
-- would otherwise be difficult to reconstruct safely later.
-
-A DDR is not normally required for routine implementation/configuration choices, obvious corrections or purely presentational decisions.
-
-#### 19.2 Relationship to Architecture
-
-Architecture states what is approved now.
-
-A DDR explains why an important decision was made.
-
-Current architecture must be understandable without reconstructing it from historical DDRs.
-
-#### 19.3 Location and Ownership
-
-Each DDR is owned by one product.
-
-`Owner` means the product currently accountable for maintaining the DDR.
-
-The authoritative DDR is stored in the current owning product's:
-
-`02_Decisions/`
-
-Detailed identifier, numbering, allocation and ownership mechanics are defined in the centrally governed `DDR_STANDARD.md`.
-
-#### 19.4 DDR Standard and Template
-
-Detailed mandatory DDR content, statuses, numbering, allocation, ownership, immutability and supersession mechanics are defined in:
-
-`00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
-
-The central authoritative source is:
-
-`/Standards/Product/DDR_STANDARD.md`
-
-When a DDR is created, edited, reviewed or superseded, the applicable agent must apply the active DDR Standard together with this section and other applicable governance controls.
-
-For a new DDR, the centrally managed implementation aid is:
-
-`00_Governance/01_Central/02_Templates/DDR.template.md`
-
-The template is non-authoritative and must not override either `CENTRAL_GOVERNANCE.md` or `DDR_STANDARD.md`.
-
-#### 19.5 Recovered Decisions
-
-A retrospective DDR may be created where audit discovers a missing durable decision and sufficient evidence remains.
-
-This is recovery, not the preferred normal process.
-
----
-
-### 20. Contract Ownership and Compatibility
-
-Authoritative cross-product contracts are provider-owned.
-
-Consumers do not maintain authoritative duplicates.
-
-#### 20.1 Provider Authority
-
-The provider stores the authoritative contract in its `03_Contracts/` area.
-
-#### 20.2 Consumer Declaration
-
-Consumers identify external contracts they consume in `PROJECT_PROFILE.md`.
-
-#### 20.3 Contract Change Assessment
-
-Before approving a provider-owned contract change:
-
-1. identify all declared consumers;
-2. assess the change as compatible or potentially breaking for each;
-3. determine whether implementation/expectation is affected;
-4. identify required consumer follow-up;
-5. resolve material compatibility risk required for approval.
-
-Full consumer testing is not automatic.
-
-Validation depth is proportionate to actual contract delta and credible risk.
-
-A provider-owned contract is not approved in isolation from its declared consumers.
-
-#### 20.4 Cross-Product Dependency Boundary
-
-Cross-product dependencies must use an explicit governed interface or contract.
-
-A consumer must not depend on another product's undocumented internal implementation as though it were a supported interface.
-
-This includes reliance on internal:
-
-- entities;
-- files;
-- data structures;
-- helper conventions;
-- implementation details;
-- runtime behaviour not represented by the governed interface.
-
-Where an exceptional temporary dependency on an undocumented internal is genuinely necessary, it requires an explicit task-specific user override under Section 2.8.
-
-Such an override:
-
-- applies only to the stated work item;
-- must be recorded;
-- must not establish the internal as a supported interface;
-- must trigger an AAR observation where the dependency is expected to persist or recur.
-
----
-
-## Part VI — Assurance and Governance Operations
+## Part VII — Assurance and Governance Operations
 
 ### 21. Audit Model
 
@@ -2740,7 +2745,7 @@ Action-specific authorisation, including beta deployment or stable release/deplo
 
 A clearly presentational/editorial non-code change may use the lightweight Git route only where:
 
-1. it meets the eligibility criteria in Section 9.7; and
+1. it meets the eligibility criteria in Section 12.7; and
 2. the user explicitly approves that route for the specific work item.
 
 The exception may simplify Git/PR mechanics.
@@ -2764,7 +2769,7 @@ Relationship alone does not justify additional validation.
 
 Where evidence already proves an applicable requirement against the exact unchanged immutable state, it may be reused unless freshness itself is material to the control.
 
-Section 12.8 additionally governs preservation of pre-merge validation evidence where squash merge changes Git commit identity without changing governed content.
+Section 15.8 additionally governs preservation of pre-merge validation evidence where squash merge changes Git commit identity without changing governed content.
 
 ---
 
@@ -2889,7 +2894,7 @@ The detailed DDR specification formerly contained in this appendix is now govern
 
 `Standards/Product/DDR_STANDARD.md`
 
-Its scope and authority are defined by Sections 2.2, 19.4 and 22.14.
+Its scope and authority are defined by Sections 2.2, 9.4 and 22.14.
 
 This appendix defines no independent DDR requirements.
 

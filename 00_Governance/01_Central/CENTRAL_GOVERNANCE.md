@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 7.1.1
+**Governance version:** 7.1.2
 **Status:** Approved
-**Approval tag:** `governance-v7.1.1`
+**Approval tag:** `governance-v7.1.2`
 **Approval date:** 2026-09-04
 
 **Authority of appendices:**  
@@ -353,36 +353,13 @@ Proposed or exploratory design must not be described as current implementation o
 
 Agents must monitor the operation of the governance model during normal work.
 
-If an agent identifies that central governance is:
+Governance-improvement observations and recommendations are advisory only. They do not become governance unless explicitly accepted by the user and incorporated into the applicable authoritative central Governance artefact through its defined approval lifecycle.
 
-- ambiguous;
-- incomplete;
-- internally inconsistent;
-- unnecessarily burdensome;
-- causing repeated execution inefficiency;
-- failing to cover a recurring risk;
-- encouraging workarounds;
-- retaining a stale or duplicative control,
-
-the agent should record the observation and provide a concise recommendation.
-
-The recommendation should identify:
-
-- the rule, omission or operating-model issue;
-- the practical effect encountered;
-- available evidence or examples;
-- the proposed central change;
-- known risks or trade-offs.
-
-The recommendation is advisory only.
-
-It does not become governance unless explicitly accepted by the user and incorporated into the applicable authoritative central governance artefact through its defined approval lifecycle.
-
-This may be `CENTRAL_GOVERNANCE.md` or a separately governed central standard where that standard is the authoritative artefact for the subject.
-
-The feedback loop is:
+The constitutional feedback loop remains:
 
 `observe → evidence → recommend → user review → applicable central change if accepted`
+
+Detailed observation, recommendation, review and promotion mechanics are consolidated in Section 26.1.
 
 #### 2.7 Project AAR Register
 
@@ -418,7 +395,7 @@ Statuses are:
 
 Entries are append-only except for status and follow-up/reference fields.
 
-Open observations are periodically reviewed for possible central promotion.
+Recurring review and promotion mechanics for open observations are defined in Section 26.2.
 
 #### 2.8 In-Flight User Authority
 
@@ -550,54 +527,7 @@ Product-local recurring diagram presentation conventions may be captured in `DIA
 
 It must not be used to restate central standards, architecture, contracts or governance.
 
-#### Diagram Convention Learning
-
-Agents may add or refine `DIAGRAM_CONVENTION_LEARNING.md` incidentally during normal governed work only where that work involves creation, editing or review of a governed architecture diagram.
-
-This restriction governs incidental learning capture. It does not prevent periodic review, disposition or maintenance of existing learning entries under Section 26.1.
-
-An entry should be recorded only where a convention is:
-
-- recurring;
-- clearly deliberate; or
-- explicitly reinforced during the work.
-
-Agents must not create arbitrary new conventions merely for diagramming convenience.
-
-A single accidental or isolated presentation detail should not normally be recorded.
-
-Entries should remain lightweight.
-
-Each entry should record, at minimum:
-
-- the observed convention; and
-- sufficient provenance to understand where it was learned, normally the originating Linear issue or equivalent work reference.
-
-Example:
-
-```markdown
-## Gateway sizing
-
-- Observed convention: ASTV routing gateways use 50 × 50 diamonds.
-- First observed: ASTV-78
-```
-
-Additions or refinements made solely to `DIAGRAM_CONVENTION_LEARNING.md` as incidental learning:
-
-- travel with the branch, PR or other normal change surface of the diagram work that produced the observation;
-- do not require a separate Linear issue;
-- do not add a change class;
-- do not introduce an additional review or validation gate;
-- do not prevent the originating work item from completing; and
-- do not constitute approval of the convention as governance or architecture.
-
-Periodic disposition or maintenance under Section 26.1 may update or remove learning entries without requiring concurrent creation, editing or review of a governed architecture diagram. Such changes travel with the governance, assurance or other governed work surface through which the periodic review is being performed.
-
-Previously recorded learning may be reused as a provisional local working default where it does not conflict with a higher authority.
-
-Use of a learned convention does not make that convention approved.
-
-Rejection or removal of a learned convention does not retrospectively make earlier diagrams governance failures merely because they used that convention while it remained provisional.
+The learning file contains provisional product-local observations and working defaults only. Incidental capture, reuse, maintenance, review and disposition mechanics are defined in Section 26.3.
 
 #### 3.3 `02_Decisions/`
 
@@ -2643,7 +2573,95 @@ Applicable monitoring evidence-source and disposition rules are defined in Appen
 
 A monitoring item only alters governance if it is formally promoted through the governance-improvement process and approved centrally.
 
-#### 26.1 Diagram Convention Review
+#### 26.1 Governance Improvement Review and Promotion
+
+If an agent identifies that central governance is:
+
+- ambiguous;
+- incomplete;
+- internally inconsistent;
+- unnecessarily burdensome;
+- causing repeated execution inefficiency;
+- failing to cover a recurring risk;
+- encouraging workarounds;
+- retaining a stale or duplicative control,
+
+the agent should record the observation and provide a concise recommendation.
+
+The recommendation should identify:
+
+- the rule, omission or operating-model issue;
+- the practical effect encountered;
+- available evidence or examples;
+- the proposed central change;
+- known risks or trade-offs.
+
+The recommendation is advisory only.
+
+It does not become governance unless explicitly accepted by the user and incorporated into the applicable authoritative central governance artefact through its defined approval lifecycle.
+
+This may be `CENTRAL_GOVERNANCE.md` or a separately governed central standard where that standard is the authoritative artefact for the subject.
+
+The feedback loop is:
+
+`observe → evidence → recommend → user review → applicable central change if accepted`
+
+#### 26.2 Project AAR Review and Promotion
+
+Open observations in product `00_Governance/AAR_REGISTER.md` files are periodically reviewed for possible central promotion.
+
+Review of an AAR observation does not change the register's authority or make the observation Governance. Promotion occurs only where the observation is accepted through the governance-improvement process and incorporated into the applicable authoritative central Governance artefact through its normal approval lifecycle.
+
+The AAR register remains product-owned operational learning state and must retain the purpose, boundaries, required fields, statuses and append-only rules defined in Section 2.7.
+
+#### 26.3 Diagram Convention Learning and Review
+
+Agents may add or refine `DIAGRAM_CONVENTION_LEARNING.md` incidentally during normal governed work only where that work involves creation, editing or review of a governed architecture diagram.
+
+This restriction governs incidental learning capture. It does not prevent periodic review, disposition or maintenance of existing learning entries under this section.
+
+An entry should be recorded only where a convention is:
+
+- recurring;
+- clearly deliberate; or
+- explicitly reinforced during the work.
+
+Agents must not create arbitrary new conventions merely for diagramming convenience.
+
+A single accidental or isolated presentation detail should not normally be recorded.
+
+Entries should remain lightweight.
+
+Each entry should record, at minimum:
+
+- the observed convention; and
+- sufficient provenance to understand where it was learned, normally the originating Linear issue or equivalent work reference.
+
+Example:
+
+```markdown
+## Gateway sizing
+
+- Observed convention: ASTV routing gateways use 50 × 50 diamonds.
+- First observed: ASTV-78
+```
+
+Additions or refinements made solely to `DIAGRAM_CONVENTION_LEARNING.md` as incidental learning:
+
+- travel with the branch, PR or other normal change surface of the diagram work that produced the observation;
+- do not require a separate Linear issue;
+- do not add a change class;
+- do not introduce an additional review or validation gate;
+- do not prevent the originating work item from completing; and
+- do not constitute approval of the convention as governance or architecture.
+
+Periodic disposition or maintenance may update or remove learning entries without requiring concurrent creation, editing or review of a governed architecture diagram. Such changes travel with the governance, assurance or other governed work surface through which the periodic review is being performed.
+
+Previously recorded learning may be reused as a provisional local working default where it does not conflict with a higher authority.
+
+Use of a learned convention does not make that convention approved.
+
+Rejection or removal of a learned convention does not retrospectively make earlier diagrams governance failures merely because they used that convention while it remained provisional.
 
 Product `DIAGRAM_CONVENTION_LEARNING.md` files must be reviewed periodically and proportionately.
 

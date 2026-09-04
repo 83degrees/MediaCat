@@ -1,9 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 7.1.0
+**Governance version:** 7.1.1
 **Status:** Approved
-**Approval tag:** `governance-v7.1.0`
-**Approval date:** 2026-09-03
+**Approval tag:** `governance-v7.1.1`
+**Approval date:** 2026-09-04
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -93,6 +93,21 @@ Governance controls apply to the change and its risk, not to whether the work is
 The same required control gates therefore apply regardless of execution method, while the actor and mechanics used to perform the work may differ.
 
 Governance must not become more burdensome than the risks it is intended to control.
+
+#### 1.1 Governed Execution Path
+
+For normal governed work, use the following navigation sequence to identify the applicable authority without treating this map as a separate source of control:
+
+1. **Establish authority and product context** — use Sections 2–3 and the applicable Project Profile, architecture, contracts and evidence sources.
+2. **Classify the work and select the workflow** — use Sections 4–5 together with Appendix A for workflow gates and Appendix B for change-class-specific controls.
+3. **Define the executable scope and route** — use Sections 6–7 for issue decomposition and execution route.
+4. **Identify durable product-knowledge obligations early** — use Sections 18–20 for architecture, DDR and contract obligations that may need to be satisfied during the same logical work.
+5. **Execute through Git and human review** — use Sections 8–11 where the normal Git/review route applies.
+6. **Validate and complete the issue** — use Sections 12–15, including any applicable durable-knowledge obligations identified above.
+7. **Promote a stable product release only where separately applicable** — use Sections 16–17; stable release is not implied by issue completion.
+8. **Apply assurance and Governance-operations controls where relevant** — use Sections 21–26 for audit, central Governance lifecycle/distribution, validation tooling, production evidence, execution efficiency and continuous improvement.
+
+This routing map is navigation only. It does not create, weaken, duplicate or replace any requirement in the cited sections or appendices. Where a cited section or appendix applies, that source remains authoritative for the control itself.
 
 ---
 

@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 8.0.2
+**Governance version:** 9.0.0
 **Status:** Approved
-**Approval tag:** `governance-v8.0.2`
+**Approval tag:** `governance-v9.0.0`
 **Approval date:** 2026-09-04
 
 **Authority of appendices:**  
@@ -55,7 +55,7 @@ All appendices form an integral part of this governance book and carry the same 
 21. Audit Model  
 22. Central Governance Change, Release and Distribution Lifecycle  
 23. Validation Tooling Lifecycle  
-24. Production Evidence and Tool Routes  
+24. Production Evidence Authority  
 25. Agent Execution Efficiency  
 26. Monitoring and Continuous Improvement  
 
@@ -146,6 +146,7 @@ Its authoritative central artefacts include:
 - `/CENTRAL_GOVERNANCE.md`
 - `/Standards/Product/ARCHITECTURE_DIAGRAM_STANDARD.md`
 - `/Standards/Product/DDR_STANDARD.md`
+- `/Standards/Product/PRODUCTION_EVIDENCE_STANDARD.md`
 - `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
 - `/Templates/PROJECT_PROFILE.template.md`
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
@@ -199,6 +200,10 @@ The centrally governed standards are:
   - applicability: Product-applicable
   - authoritative central path: `/Standards/Product/DDR_STANDARD.md`
   - deployed product path: `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
+- `PRODUCTION_EVIDENCE_STANDARD.md`
+  - applicability: Product-applicable
+  - authoritative central path: `/Standards/Product/PRODUCTION_EVIDENCE_STANDARD.md`
+  - deployed product path: `00_Governance/01_Central/01_Standards/PRODUCTION_EVIDENCE_STANDARD.md`
 - `GOVERNANCE_DISTRIBUTION_STANDARD.md`
   - applicability: Central-only
   - authoritative central path: `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
@@ -293,6 +298,7 @@ Different authoritative sources answer different questions.
 | Approved product architecture | Approved `*_ARCHITECTURE.md` |
 | Architecture diagram construction and shared presentation conventions | `ARCHITECTURE_DIAGRAM_STANDARD.md` |
 | DDR construction, numbering, status and supersession specification | `DDR_STANDARD.md` |
+| Production-evidence acquisition, freshness, retention, integrity and reuse practice | `PRODUCTION_EVIDENCE_STANDARD.md` |
 | Central Governance release/distribution protocol | `GOVERNANCE_DISTRIBUTION_STANDARD.md` |
 | Cross-product interface | Provider-owned authoritative contract |
 | Significant durable design rationale | Applicable DDR |
@@ -474,7 +480,8 @@ The standard structure is:
 │   ├── CENTRAL_GOVERNANCE.md
 │   ├── 01_Standards/
 │   │   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
-│   │   └── DDR_STANDARD.md
+│   │   ├── DDR_STANDARD.md
+│   │   └── PRODUCTION_EVIDENCE_STANDARD.md
 │   └── 02_Templates/
 │       ├── PROJECT_PROFILE.template.md
 │       ├── DIAGRAM_CONVENTION_LEARNING.md
@@ -498,9 +505,9 @@ The central governance repository remains the source of truth for all content de
 
 Templates within `01_Central/02_Templates/` are centrally managed implementation aids. Their presence in a product repository does not make them independent governance authorities.
 
-`ARCHITECTURE_DIAGRAM_STANDARD.md` and `DDR_STANDARD.md` are exact deployed copies of their centrally approved standards and must not contain product-specific amendments.
+`ARCHITECTURE_DIAGRAM_STANDARD.md`, `DDR_STANDARD.md` and `PRODUCTION_EVIDENCE_STANDARD.md` are exact deployed copies of their centrally approved standards and must not contain product-specific amendments.
 
-Product-specific architectural meaning belongs in the applicable approved architecture documentation. Product-specific durable design rationale belongs in the applicable product DDRs.
+Product-specific architectural meaning belongs in the applicable approved architecture documentation. Product-specific durable design rationale belongs in the applicable product DDRs. Product/environment evidence routes belong in the applicable Project Profile or environment authority.
 
 Routine architecture, validation output, audit evidence or product work must not accumulate in `00_Governance/01_Central/`.
 
@@ -2072,7 +2079,8 @@ The deployed product projection contains:
 ├── CENTRAL_GOVERNANCE.md
 ├── 01_Standards/
 │   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
-│   └── DDR_STANDARD.md
+│   ├── DDR_STANDARD.md
+│   └── PRODUCTION_EVIDENCE_STANDARD.md
 └── 02_Templates/
     ├── PROJECT_PROFILE.template.md
     ├── DIAGRAM_CONVENTION_LEARNING.md
@@ -2335,6 +2343,7 @@ Current Standard tag namespaces include:
 
 - Architecture Diagram Standard: `diagram-standard-vX.Y.Z`
 - DDR Standard: `ddr-standard-vX.Y.Z`
+- Production Evidence Standard: `production-evidence-standard-vX.Y.Z`
 - Governance Distribution Standard: `governance-distribution-standard-vX.Y.Z`
 
 For a product-applicable Standard, deployment validation is limited to:
@@ -2410,80 +2419,43 @@ Regression checks tied to those assumptions run when those assumptions or toolin
 
 ---
 
-### 24. Production Evidence and Tool Routes
+### 24. Production Evidence Authority
 
-Where current production evidence is required, agents use the approved evidence route before declaring evidence unavailable or work blocked.
+Where current implemented/runtime state is material to governed work, sufficiently reliable and sufficiently current production evidence must be obtained through an approved evidence route.
 
-#### 24.1 Evidence Route
+Detailed production-evidence acquisition, freshness, retained-evidence handling, provenance, integrity and reuse practice is governed by the active product-applicable:
 
-For Home Assistant:
+`00_Governance/01_Central/01_Standards/PRODUCTION_EVIDENCE_STANDARD.md`
 
-1. designated HA MCP connection for the relevant environment;
-2. approved read-only snapshot/retained evidence where direct access is unavailable or inappropriate;
-3. another explicitly approved project evidence source.
+The central authoritative source is:
 
-#### 24.2 Capability Check
+`/Standards/Product/PRODUCTION_EVIDENCE_STANDARD.md`
 
-Before declaring a capability unavailable, check:
+The applicable Project Profile or other explicit environment authority identifies the actual product/environment production and evidence route. Central Governance and the Production Evidence Standard do not hard-code environment-specific connector or endpoint identities.
 
-- available tools;
-- deferred/connected tools;
-- Project Profile;
-- central governance;
-- known environment-specific route.
+When production evidence is material, agents apply this section, the active Production Evidence Standard and the applicable Project Profile/environment authority together.
 
-The first failed attempt is not sufficient to declare a blocker.
+#### 24.1 Evidence Availability
 
-#### 24.3 Freshness
+Before declaring required production evidence unavailable or work blocked, use the approved route and other applicable approved evidence capabilities in accordance with the Production Evidence Standard.
 
-Live evidence represents current state.
+A failed first route does not by itself establish that required evidence is unavailable or that work is blocked.
 
-Snapshots represent their recorded capture time.
+#### 24.2 Freshness Requirement
 
-Where freshness affects a decision, sufficiently current evidence is required.
+Where freshness affects a governed decision, sufficiently current evidence is required.
 
-#### 24.4 Production Versus Architecture
+Detailed assessment of live versus retained evidence, contextual freshness, provenance and limitations is governed by the Production Evidence Standard.
 
-Production evidence shows what is implemented.
+#### 24.3 Production Versus Architecture
 
-Architecture shows what is approved.
+Production evidence establishes what is implemented or currently observed within its evidenced scope.
 
-A discrepancy is surfaced rather than silently resolved.
+Approved architecture establishes what is approved.
 
-#### 24.5 Retained Production Evidence
+A discrepancy is surfaced rather than silently resolved or normalised.
 
-Retained production snapshots or captures are immutable read-only evidence.
-
-Do not:
-
-- edit them;
-- rename or restructure their contents to make them easier to use;
-- regenerate them in place;
-- retrospectively correct them;
-- use them as a working directory;
-- treat a later interpretation as though it formed part of the original capture.
-
-Before relying on retained evidence, consider its recorded:
-
-- source;
-- capture time;
-- scope;
-- inclusions and exclusions;
-- completeness;
-- integrity information;
-- known limitations.
-
-If a capture is deficient, record the limitation or create a new authorised capture.
-
-Do not retrospectively alter the original evidence to remove the deficiency.
-
-#### 24.6 Scope and Reuse
-
-Gather only evidence needed for current scope and risk.
-
-Reuse sufficiently current evidence already established for the same work item where valid.
-
-#### 24.7 Production Mutation Boundary
+#### 24.4 Production Mutation Boundary
 
 Production evidence access is read-only by default.
 
@@ -2499,7 +2471,7 @@ For beta or stable deployment, authority may instead arise directly from the app
 
 This permits a Simple Release without inventing a separate Linear release issue.
 
-Where practical, local, static or otherwise non-mutating validation should precede controlled runtime mutation.
+The Production Evidence Standard does not create or broaden mutation authority.
 
 Broader technical permissions do not create broader governance authority.
 

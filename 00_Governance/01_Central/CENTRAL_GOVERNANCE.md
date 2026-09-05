@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 10.0.0
+**Governance version:** 10.0.1
 **Status:** Approved
-**Approval tag:** `governance-v10.0.0`
+**Approval tag:** `governance-v10.0.1`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -73,7 +73,7 @@ All appendices form an integral part of this governance book and carry the same 
 
 ### 1. Objective
 
-Governance 2.0 provides the minimum effective controls needed to protect product integrity, architecture, contracts, durable decisions, recoverability and auditability, while making normal development and maintenance straightforward to execute.
+Central Governance provides the minimum effective controls needed to protect product integrity, architecture, contracts, durable decisions, recoverability and auditability, while making normal development and maintenance straightforward to execute.
 
 The operating model favours:
 
@@ -2218,7 +2218,7 @@ Efficiency never bypasses genuinely applicable:
 
 ### 26. Monitoring and Continuous Improvement
 
-Governance 2.0 maintains a monitoring register for operating-model hypotheses, risks and improvement questions that require evidence from real use before becoming governance.
+Central Governance maintains a monitoring register for operating-model hypotheses, risks and improvement questions that require evidence from real use before becoming governance.
 
 Monitoring items are not controls and must not be treated as mandatory requirements.
 

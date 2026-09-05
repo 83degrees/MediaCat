@@ -1,10 +1,10 @@
 # PROJECT_PROFILE: <Product name>
 
 **Template:** Project Profile
-**Version:** v1.1.0
+**Version:** v1.2.0
 **Status:** Approved
-**Approval tag:** `project-profile-template-v1.1.0`
-**Approval date:** 2026-09-03
+**Approval tag:** `project-profile-template-v1.2.0`
+**Approval date:** 2026-09-05
 
 This template is a centrally managed implementation aid for creating a conformant product `PROJECT_PROFILE.md`.
 
@@ -13,7 +13,7 @@ It is not an independent governance authority. Requirements for the Project Prof
 ## Profile conformance
 
 The required profile content is limited to the sections marked **Required**:
-product name, DDR origin code, purpose, scope, ownership/boundaries, approved architecture
+product name, DDR origin code, default Linear team, purpose, scope, ownership/boundaries, approved architecture
 location, contracts provided, contracts consumed, product dependencies,
 implementation namespace/naming identity, and production/evidence route.
 
@@ -37,6 +37,14 @@ approved target or proposal as current implemented.
 - Repository (optional/recommended): `<owner/repository>`
 - Primary owner (optional/recommended): `<person or accountable role>`
 - DDR origin code: `<two-digit product code>`
+
+## Required: Linear work routing
+
+- Default Linear team: `<Linear team key/identifier>`
+
+This field supplies the project-specific default value used by the central
+Linear team-selection rule. Do not repeat or redefine that operating rule in the
+Project Profile.
 
 ## Required: Purpose
 

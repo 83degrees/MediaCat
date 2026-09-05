@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 10.2.0
+**Governance version:** 10.3.0
 **Status:** Approved
-**Approval tag:** `governance-v10.2.0`
+**Approval tag:** `governance-v10.3.0`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -243,6 +243,7 @@ It contains at minimum:
 
 - project name;
 - DDR origin code;
+- default Linear team;
 - purpose;
 - scope;
 - explicit boundaries and out-of-scope responsibilities;
@@ -639,6 +640,14 @@ This applies to:
 GitHub remains the version-control and review surface for branches, commits, pull requests and release/version history.
 
 GitHub Releases and pull requests are not alternative product work trackers.
+
+#### 4.13 Linear Team Selection
+
+Where current governed work has an applicable `PROJECT_PROFILE.md`, the default Linear team for a newly created issue is the `Default Linear team` declared in that profile.
+
+Use a different Linear team only when the user explicitly specifies one.
+
+The Project Profile supplies the project-specific team value only. It must not restate or locally redefine this team-selection rule.
 
 ---
 

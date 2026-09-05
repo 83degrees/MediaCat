@@ -2,8 +2,8 @@
 
 ## Profile conformance
 
-This profile contains the required Governance 2.0 product-profile subjects and
-is current under the operational Governance 2.0 authority.
+This profile contains the required product-profile subjects and
+is current under the approved Central Governance authority.
 
 ## Document status
 

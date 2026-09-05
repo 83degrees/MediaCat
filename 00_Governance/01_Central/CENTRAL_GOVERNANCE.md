@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 9.0.1
+**Governance version:** 9.0.2
 **Status:** Approved
-**Approval tag:** `governance-v9.0.1`
+**Approval tag:** `governance-v9.0.2`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -193,22 +193,12 @@ Product-applicable Standards are stored under:
 
 The centrally governed standards are:
 
-- `ARCHITECTURE_DIAGRAM_STANDARD.md`
-  - applicability: Product-applicable
-  - authoritative central path: `/Standards/Product/ARCHITECTURE_DIAGRAM_STANDARD.md`
-  - deployed product path: `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`
-- `DDR_STANDARD.md`
-  - applicability: Product-applicable
-  - authoritative central path: `/Standards/Product/DDR_STANDARD.md`
-  - deployed product path: `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`
-- `PRODUCTION_EVIDENCE_STANDARD.md`
-  - applicability: Product-applicable
-  - authoritative central path: `/Standards/Product/PRODUCTION_EVIDENCE_STANDARD.md`
-  - deployed product path: `00_Governance/01_Central/01_Standards/PRODUCTION_EVIDENCE_STANDARD.md`
-- `GOVERNANCE_DISTRIBUTION_STANDARD.md`
-  - applicability: Central-only
-  - authoritative central path: `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
-  - no deployed product path
+| Standard | Applicability | Authoritative central path | Deployed product path |
+|---|---|---|---|
+| `ARCHITECTURE_DIAGRAM_STANDARD.md` | Product-applicable | `/Standards/Product/ARCHITECTURE_DIAGRAM_STANDARD.md` | `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md` |
+| `DDR_STANDARD.md` | Product-applicable | `/Standards/Product/DDR_STANDARD.md` | `00_Governance/01_Central/01_Standards/DDR_STANDARD.md` |
+| `PRODUCTION_EVIDENCE_STANDARD.md` | Product-applicable | `/Standards/Product/PRODUCTION_EVIDENCE_STANDARD.md` | `00_Governance/01_Central/01_Standards/PRODUCTION_EVIDENCE_STANDARD.md` |
+| `GOVERNANCE_DISTRIBUTION_STANDARD.md` | Central-only | `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md` | — |
 
 Where `CENTRAL_GOVERNANCE.md` and a centrally governed standard conflict, `CENTRAL_GOVERNANCE.md` prevails and the conflict must be surfaced for resolution.
 
@@ -281,10 +271,12 @@ Changes to `PROJECT_PROFILE.md` are classified according to their semantic effec
 
 Examples:
 
-- a substantive change to product scope, responsibility or architectural boundary normally carries `Change: Architecture`;
-- a correction or descriptive update that does not alter architecture or another governed authority may carry `Change: Documentation`;
-- changing the declaration that a product consumes an existing external contract does not by itself mean the provider-owned contract has changed and therefore does not automatically require `Change: Contract`;
-- other change classes apply only where their underlying governed subject is actually changed.
+| Semantic effect | Typical change class | Important condition |
+|---|---|---|
+| Substantive change to product scope, responsibility or architectural boundary | `Change: Architecture` | Normally carries this class because the underlying architectural subject changes |
+| Correction or descriptive update | `Change: Documentation` | Applies only where architecture or another governed authority is not altered |
+| Change to the declaration that a product consumes an existing external contract | Not automatically `Change: Contract` | The provider-owned contract itself has not necessarily changed |
+| Another governed subject is actually changed | Applicable underlying change class | Apply the class only where its underlying governed subject is changed |
 
 File location or filename does not override semantic classification.
 
@@ -1719,6 +1711,20 @@ A stable release must remain traceable to:
 
 Stable releases use either **Simple Release** or **Managed Release**.
 
+#### Release Mode Comparison
+
+| Attribute | Simple Release | Managed Release |
+|---|---|---|
+| Default / when used | Default where all Section 20.1 conditions are satisfied | Used where release activity itself requires material operational coordination |
+| Separate Linear release issue | Not required | Required; a dedicated Linear work item manages the release |
+| Cross-product coordination | None | May include multiple coordinated products/releases |
+| Sequencing / migration preparation | No unusual sequencing and no migration/environment preparation | May include dependency-sensitive sequencing or migration/environment preparation |
+| Release-specific validation | No material release-specific validation | May include special release validation |
+| Rollback preparation | No special rollback preparation requiring managed control | May include special rollback preparation |
+| Execution lifecycle tracking | Promotion action rather than a parallel backlog item | May include several distinct execution steps requiring lifecycle tracking |
+| Release record / tracking | Git tag and GitHub Release; no separate Linear release issue | Git tag and GitHub Release plus the dedicated Linear release work item |
+| Escalation | May convert to Managed if unexpected complexity appears | Already managed |
+
 #### 20.1 Simple Release
 
 Simple Release is the default where:
@@ -1733,12 +1739,6 @@ Simple Release is the default where:
 - no migration/environment preparation is required;
 - no material release-specific validation is required.
 
-A separate Linear release issue is not required.
-
-A Simple Release is a promotion action rather than a parallel backlog item.
-
-Its durable release record is the Git tag and GitHub Release.
-
 #### 20.2 Managed Release
 
 Use a Managed Release where release activity itself requires material operational coordination, including:
@@ -1750,8 +1750,6 @@ Use a Managed Release where release activity itself requires material operationa
 - special rollback preparation;
 - several distinct execution steps requiring lifecycle tracking;
 - explicit user decision that managed control is warranted.
-
-A dedicated Linear work item manages the release.
 
 #### 20.3 Escalation
 
@@ -1914,12 +1912,14 @@ That Standard applies to central Governance downstream distribution operations a
 
 For navigation, the existing numbered controls in this section group into the following lifecycle domains:
 
-- **Source and projected identity** — Sections 22.1–22.2.
-- **Permanent Governance change authority and approval** — Sections 22.3–22.6.
-- **Post-approval release and distribution** — Sections 22.7–22.10.
-- **Completion and integrity** — Sections 22.11–22.13.
-- **Independent centrally governed Standard lifecycle, applicability and provenance** — Sections 22.14–22.14.3.
-- **Existing diagram conformance** — Section 22.15.
+| Lifecycle domain | Authoritative sections | Purpose |
+|---|---|---|
+| Source and projected identity | Sections 22.1–22.2 | Source/projection identity and artefact release identity |
+| Permanent Governance change authority and approval | Sections 22.3–22.6 | Linear authority, override distinction, impact assessment and pre-merge approval |
+| Post-approval release and distribution | Sections 22.7–22.10 | Merge-triggered release/distribution and rollout tracking |
+| Completion and integrity | Sections 22.11–22.13 | Completion boundary, normal route and drift handling |
+| Independent centrally governed Standard lifecycle, applicability and provenance | Sections 22.14–22.14.3 | Standard lifecycle, applicability, discovery and provenance |
+| Existing diagram conformance | Section 22.15 | When the active diagram Standard applies to existing diagrams |
 
 This map is navigation only. It does not create, weaken, duplicate or replace any control, and the numbered subsections remain authoritative for the controls they contain.
 

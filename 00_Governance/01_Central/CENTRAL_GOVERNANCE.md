@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 9.0.2
+**Governance version:** 9.0.3
 **Status:** Approved
-**Approval tag:** `governance-v9.0.2`
+**Approval tag:** `governance-v9.0.3`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -64,11 +64,8 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix A — Authoritative Workflow Gate Matrix
 - Appendix B — Authoritative Change-Class Control Matrix
 - Appendix C — Governance Change Approval Checklist
-- Appendix D — Historical provenance pointer — DDR Standard extraction (non-operative)
-- Appendix E — Historical provenance pointer — Audit controls consolidation (non-operative)
-- Appendix F — Monitoring Register
-- Appendix G — Historical provenance pointer — Governance Distribution Standard extraction (non-operative)
-- Appendix H — Authoritative Repository Structure and Artefact Placement
+- Appendix D — Monitoring Register
+- Appendix E — Authoritative Repository Structure and Artefact Placement
 
 ---
 
@@ -125,7 +122,7 @@ There is one authoritative central governance book:
 
 The central governance repository owns and approves this artefact.
 
-Once approved, the exact approved file is deployed unchanged into each product repository as part of the centrally managed governance projection defined in Appendix H.2.
+Once approved, the exact approved file is deployed unchanged into each product repository as part of the centrally managed governance projection defined in Appendix E.2.
 
 Product repositories must not locally modify the deployed central governance book.
 
@@ -154,7 +151,7 @@ Its authoritative central artefacts include:
 - `/Templates/DDR.template.md`
 - `/Templates/AUDIT_REVIEW_LOG.template.md`
 
-Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Appendix H.2.
+Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Appendix E.2.
 
 The repository's `main` branch represents the accepted integrated governance state.
 
@@ -438,7 +435,7 @@ Agents should infer expected handling of an artefact substantially from its loca
 
 Top-level folders should use meaningful subfolders where this improves organisation. Large flat collections of unrelated files should be avoided.
 
-Detailed standard repository paths, folder purposes, placement rules and materialisation mechanics are defined in **Appendix H — Authoritative Repository Structure and Artefact Placement**. Appendix H is consulted when detailed placement is material; ordinary work need not load the full placement catalogue where the relevant existing location is already established.
+Detailed standard repository paths, folder purposes, placement rules and materialisation mechanics are defined in **Appendix E — Authoritative Repository Structure and Artefact Placement**. Appendix E is consulted when detailed placement is material; ordinary work need not load the full placement catalogue where the relevant existing location is already established.
 
 #### 3.1 Central and Product Ownership Boundary
 
@@ -468,7 +465,7 @@ Repository location does not change the substantive authority relationships defi
 
 New recurring top-level artefact classes are raised through the AAR/governance-improvement process rather than introduced independently by individual products.
 
-The canonical top-level structure and detailed placement rules remain authoritative through Appendix H.
+The canonical top-level structure and detailed placement rules remain authoritative through Appendix E.
 
 #### 3.3 Secrets and Credentials
 
@@ -2414,7 +2411,7 @@ The current monitoring population is recorded in the central Governance reposito
 
 The register records operational monitoring state only. It is not a source of Governance rules and is not part of the centrally managed product projection.
 
-Applicable monitoring evidence-source and disposition rules are defined in Appendix F.
+Applicable monitoring evidence-source and disposition rules are defined in Appendix D.
 
 A monitoring item only alters governance if it is formally promoted through the governance-improvement process and approved centrally.
 
@@ -2728,31 +2725,11 @@ Product distribution performs integrity validation only and does not repeat subs
 
 ---
 
-### Appendix D — Historical Provenance Pointer — DDR Standard Extraction (Non-Operative)
-
-The detailed DDR specification formerly contained in this appendix is now governed by the centrally governed:
-
-`Standards/Product/DDR_STANDARD.md`
-
-Its scope and authority are defined by Sections 2.2, 9.4 and 22.14.
-
-This appendix defines no independent DDR requirements.
-
----
-
-### Appendix E — Historical Provenance Pointer — Audit Controls Consolidation (Non-Operative)
-
-The audit control requirements formerly contained in this appendix are consolidated into Section 21 — Audit Model.
-
-This appendix defines no independent audit requirements.
-
----
-
-### Appendix F — Monitoring Register
+### Appendix D — Monitoring Register
 
 Monitoring items are hypotheses or operating-model questions, not mandatory controls.
 
-#### F.1 Operational Register
+#### D.1 Operational Register
 
 The current monitoring population and item state are maintained in the central Governance repository at:
 
@@ -2764,7 +2741,7 @@ The register is not part of the centrally managed product projection. Ordinary p
 
 Where register content appears to conflict with this governance book, this governance book prevails and the conflict must be surfaced.
 
-#### F.2 Evidence Sources
+#### D.2 Evidence Sources
 
 Prefer evidence already produced through normal operation:
 
@@ -2779,7 +2756,7 @@ Prefer evidence already produced through normal operation:
 
 A separate heavyweight telemetry system must not be introduced without evidence of need.
 
-#### F.3 Disposition
+#### D.3 Disposition
 
 Monitoring items may be:
 
@@ -2792,25 +2769,13 @@ Only a `Promoted` item that then follows normal central governance review and ap
 
 ---
 
-### Appendix G — Historical Provenance Pointer — Governance Distribution Standard Extraction (Non-Operative)
-
-The specialised central Governance release/distribution protocol formerly contained in this appendix is now governed by the central-only:
-
-`Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
-
-Its scope, applicability and authority are defined by Sections 2.2, 22 and 22.14.
-
-This appendix defines no independent Governance distribution requirements.
-
----
-
-### Appendix H — Authoritative Repository Structure and Artefact Placement
+### Appendix E — Authoritative Repository Structure and Artefact Placement
 
 This appendix is the authoritative detailed repository-reference surface for the standard product-repository model governed by Section 3.
 
 It defines canonical paths, folder purposes, placement rules and materialisation mechanics. Section 3 remains authoritative for the constitutional repository model, central-versus-product ownership boundary, convention-over-configuration principle, new recurring top-level artefact-class control, and secrets/credentials boundary.
 
-#### H.1 Canonical Top-Level Structure
+#### E.1 Canonical Top-Level Structure
 
 Top-level folders use:
 
@@ -2837,7 +2802,7 @@ A standard structural location need not physically exist in Git until it contain
 
 Empty standard folders must not be materialised solely through placeholder files such as `.gitkeep` or dummy `README.md` files unless a specific operational requirement requires the physical directory to exist.
 
-#### H.2 `00_Governance/`
+#### E.2 `00_Governance/`
 
 Contains centrally deployed governance artefacts and product-owned governance/context artefacts.
 
@@ -2862,7 +2827,7 @@ The standard structure is:
 
 The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure.
 
-#### H.3 `01_Architecture/`
+#### E.3 `01_Architecture/`
 
 Contains authoritative and supporting architecture artefacts.
 
@@ -2890,25 +2855,25 @@ It must not be used to restate central standards, architecture, contracts or gov
 
 The learning file contains provisional product-local observations and working defaults only. Incidental capture, reuse, maintenance, review and disposition mechanics are defined in Section 26.3.
 
-#### H.4 `02_Decisions/`
+#### E.4 `02_Decisions/`
 
 Contains Design Decision Records.
 
 Routine issue notes, temporary design discussion and implementation history do not belong here.
 
-#### H.5 `03_Contracts/`
+#### E.5 `03_Contracts/`
 
 Contains authoritative interfaces/contracts provided by this product.
 
 Consumers reference the provider-owned contract from their `PROJECT_PROFILE.md`; they do not maintain authoritative duplicates.
 
-#### H.6 `04_Source/`
+#### E.6 `04_Source/`
 
 Contains executable or deployable product implementation.
 
 Source remains clearly separated from tests, validation tooling, governance, architecture, audit and deployment tooling.
 
-#### H.7 `05_Tests/`
+#### E.7 `05_Tests/`
 
 Contains tests of product behaviour.
 
@@ -2925,7 +2890,7 @@ Purpose:
 
 > Determine whether the product behaves as intended.
 
-#### H.8 `06_Validation/`
+#### E.8 `06_Validation/`
 
 Contains validation tooling and retained validation evidence concerning governed repository/change integrity.
 
@@ -2943,7 +2908,7 @@ Purpose:
 
 Validation must not become a duplicate testing framework.
 
-#### H.9 `07_Audit/`
+#### E.9 `07_Audit/`
 
 Reserved for formal audit and review engagements.
 
@@ -2951,7 +2916,7 @@ Each engagement has its own subfolder.
 
 Routine PR history, normal Linear issue notes and temporary development output do not belong here.
 
-#### H.10 `08_Deployment/`
+#### E.10 `08_Deployment/`
 
 Contains deployment and rollback mechanics where required.
 

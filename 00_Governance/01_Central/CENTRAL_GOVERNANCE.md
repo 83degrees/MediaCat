@@ -1,9 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 9.0.0
+**Governance version:** 9.0.1
 **Status:** Approved
-**Approval tag:** `governance-v9.0.0`
-**Approval date:** 2026-09-04
+**Approval tag:** `governance-v9.0.1`
+**Approval date:** 2026-09-05
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -16,7 +16,7 @@ All appendices form an integral part of this governance book and carry the same 
 
 1. Objective  
 2. Governance Model  
-3. Standard Repository Structure  
+3. Standard Repository Model  
 
 ## Part II — Work Management and Execution
 
@@ -68,6 +68,7 @@ All appendices form an integral part of this governance book and carry the same 
 - Appendix E — Historical provenance pointer — Audit controls consolidation (non-operative)
 - Appendix F — Monitoring Register
 - Appendix G — Historical provenance pointer — Governance Distribution Standard extraction (non-operative)
+- Appendix H — Authoritative Repository Structure and Artefact Placement
 
 ---
 
@@ -124,7 +125,7 @@ There is one authoritative central governance book:
 
 The central governance repository owns and approves this artefact.
 
-Once approved, the exact approved file is deployed unchanged into each product repository as part of the centrally managed governance projection defined in Section 3.1.
+Once approved, the exact approved file is deployed unchanged into each product repository as part of the centrally managed governance projection defined in Appendix H.2.
 
 Product repositories must not locally modify the deployed central governance book.
 
@@ -153,7 +154,7 @@ Its authoritative central artefacts include:
 - `/Templates/DDR.template.md`
 - `/Templates/AUDIT_REVIEW_LOG.template.md`
 
-Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Section 3.1.
+Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Appendix H.2.
 
 The repository's `main` branch represents the accepted integrated governance state.
 
@@ -435,61 +436,19 @@ This authority remains subject to genuinely non-waivable external legal, safety 
 
 ---
 
-### 3. Standard Repository Structure
+### 3. Standard Repository Model
 
-Every product repository follows the same standard top-level structure unless central governance itself is changed.
+Every product repository follows the same centrally governed repository model unless central governance itself is changed.
 
-Top-level folders use:
+Repository structure favours convention over configuration.
 
-`##_Name`
+Agents should infer expected handling of an artefact substantially from its location.
 
-The baseline is:
+Top-level folders should use meaningful subfolders where this improves organisation. Large flat collections of unrelated files should be avoided.
 
-```text
-<Product>/
-│
-├── AGENTS.md
-├── 00_Governance/
-├── 01_Architecture/
-├── 02_Decisions/
-├── 03_Contracts/
-├── 04_Source/
-├── 05_Tests/
-├── 06_Validation/
-├── 07_Audit/
-└── 08_Deployment/
-```
+Detailed standard repository paths, folder purposes, placement rules and materialisation mechanics are defined in **Appendix H — Authoritative Repository Structure and Artefact Placement**. Appendix H is consulted when detailed placement is material; ordinary work need not load the full placement catalogue where the relevant existing location is already established.
 
-Top-level folders should use meaningful subfolders where this improves organisation.
-
-Large flat collections of unrelated files should be avoided.
-
-A standard structural location need not physically exist in Git until it contains required content.
-
-Empty standard folders must not be materialised solely through placeholder files such as `.gitkeep` or dummy `README.md` files unless a specific operational requirement requires the physical directory to exist.
-
-#### 3.1 `00_Governance/`
-
-Contains centrally deployed governance artefacts and product-owned governance/context artefacts.
-
-The standard structure is:
-
-```text
-00_Governance/
-├── 01_Central/
-│   ├── CENTRAL_GOVERNANCE.md
-│   ├── 01_Standards/
-│   │   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
-│   │   ├── DDR_STANDARD.md
-│   │   └── PRODUCTION_EVIDENCE_STANDARD.md
-│   └── 02_Templates/
-│       ├── PROJECT_PROFILE.template.md
-│       ├── DIAGRAM_CONVENTION_LEARNING.md
-│       ├── DDR.template.md
-│       └── AUDIT_REVIEW_LOG.template.md
-├── PROJECT_PROFILE.md
-└── AAR_REGISTER.md
-```
+#### 3.1 Central and Product Ownership Boundary
 
 Everything under:
 
@@ -511,119 +470,15 @@ Product-specific architectural meaning belongs in the applicable approved archit
 
 Routine architecture, validation output, audit evidence or product work must not accumulate in `00_Governance/01_Central/`.
 
-#### 3.2 `01_Architecture/`
+Repository location does not change the substantive authority relationships defined elsewhere in this Governance book. In particular, approved `*_ARCHITECTURE.md` remains authoritative for product architecture; diagrams support but do not replace that record; provider-owned contracts remain authoritative for their interfaces; centrally governed Standards retain only their defined scope; and centrally managed templates remain non-authoritative implementation aids.
 
-Contains authoritative and supporting architecture artefacts.
-
-The authoritative architecture document uses:
-
-`*_ARCHITECTURE.md`
-
-For example:
-
-```text
-01_Architecture/
-├── <PRODUCT>_ARCHITECTURE.md
-└── Diagrams/
-    ├── <governed diagram files>
-    └── DIAGRAM_CONVENTION_LEARNING.md
-```
-
-Architecture diagrams support the authoritative architecture record but do not replace it.
-
-Product-local recurring diagram presentation conventions may be captured in `DIAGRAM_CONVENTION_LEARNING.md`.
-
-`DIAGRAM_CONVENTION_LEARNING.md` is the standard location for product-local diagram convention learning.
-
-It must not be used to restate central standards, architecture, contracts or governance.
-
-The learning file contains provisional product-local observations and working defaults only. Incidental capture, reuse, maintenance, review and disposition mechanics are defined in Section 26.3.
-
-#### 3.3 `02_Decisions/`
-
-Contains Design Decision Records.
-
-Routine issue notes, temporary design discussion and implementation history do not belong here.
-
-#### 3.4 `03_Contracts/`
-
-Contains authoritative interfaces/contracts provided by this product.
-
-Consumers reference the provider-owned contract from their `PROJECT_PROFILE.md`; they do not maintain authoritative duplicates.
-
-#### 3.5 `04_Source/`
-
-Contains executable or deployable product implementation.
-
-Source remains clearly separated from tests, validation tooling, governance, architecture, audit and deployment tooling.
-
-#### 3.6 `05_Tests/`
-
-Contains tests of product behaviour.
-
-Examples include:
-
-- unit tests;
-- integration tests;
-- behavioural tests;
-- fixtures;
-- test helpers;
-- implementation test scripts.
-
-Purpose:
-
-> Determine whether the product behaves as intended.
-
-#### 3.7 `06_Validation/`
-
-Contains validation tooling and retained validation evidence concerning governed repository/change integrity.
-
-Where useful:
-
-```text
-06_Validation/
-├── Tools/
-└── Evidence/
-```
-
-Purpose:
-
-> Determine whether the governed change or repository state satisfies applicable controls.
-
-Validation must not become a duplicate testing framework.
-
-#### 3.8 `07_Audit/`
-
-Reserved for formal audit and review engagements.
-
-Each engagement has its own subfolder.
-
-Routine PR history, normal Linear issue notes and temporary development output do not belong here.
-
-#### 3.9 `08_Deployment/`
-
-Contains deployment and rollback mechanics where required.
-
-Examples include:
-
-- install/update helpers;
-- beta deployment helpers;
-- stable deployment helpers;
-- rollback tooling;
-- deployment manifests;
-- environment mappings.
-
-This folder must not contain duplicate authoritative source.
-
-#### 3.10 Repository Organisation Principle
-
-Repository structure favours convention over configuration.
-
-Agents should infer expected handling of an artefact substantially from its location.
+#### 3.2 Repository Organisation Principle
 
 New recurring top-level artefact classes are raised through the AAR/governance-improvement process rather than introduced independently by individual products.
 
-#### 3.11 Secrets and Credentials
+The canonical top-level structure and detailed placement rules remain authoritative through Appendix H.
+
+#### 3.3 Secrets and Credentials
 
 Credentials, passwords, tokens, private keys and other secret runtime values must not be committed to governed repositories or deliberately retained in validation, audit or production-evidence artefacts.
 
@@ -2946,3 +2801,167 @@ The specialised central Governance release/distribution protocol formerly contai
 Its scope, applicability and authority are defined by Sections 2.2, 22 and 22.14.
 
 This appendix defines no independent Governance distribution requirements.
+
+---
+
+### Appendix H — Authoritative Repository Structure and Artefact Placement
+
+This appendix is the authoritative detailed repository-reference surface for the standard product-repository model governed by Section 3.
+
+It defines canonical paths, folder purposes, placement rules and materialisation mechanics. Section 3 remains authoritative for the constitutional repository model, central-versus-product ownership boundary, convention-over-configuration principle, new recurring top-level artefact-class control, and secrets/credentials boundary.
+
+#### H.1 Canonical Top-Level Structure
+
+Top-level folders use:
+
+`##_Name`
+
+The baseline is:
+
+```text
+<Product>/
+│
+├── AGENTS.md
+├── 00_Governance/
+├── 01_Architecture/
+├── 02_Decisions/
+├── 03_Contracts/
+├── 04_Source/
+├── 05_Tests/
+├── 06_Validation/
+├── 07_Audit/
+└── 08_Deployment/
+```
+
+A standard structural location need not physically exist in Git until it contains required content.
+
+Empty standard folders must not be materialised solely through placeholder files such as `.gitkeep` or dummy `README.md` files unless a specific operational requirement requires the physical directory to exist.
+
+#### H.2 `00_Governance/`
+
+Contains centrally deployed governance artefacts and product-owned governance/context artefacts.
+
+The standard structure is:
+
+```text
+00_Governance/
+├── 01_Central/
+│   ├── CENTRAL_GOVERNANCE.md
+│   ├── 01_Standards/
+│   │   ├── ARCHITECTURE_DIAGRAM_STANDARD.md
+│   │   ├── DDR_STANDARD.md
+│   │   └── PRODUCTION_EVIDENCE_STANDARD.md
+│   └── 02_Templates/
+│       ├── PROJECT_PROFILE.template.md
+│       ├── DIAGRAM_CONVENTION_LEARNING.md
+│       ├── DDR.template.md
+│       └── AUDIT_REVIEW_LOG.template.md
+├── PROJECT_PROFILE.md
+└── AAR_REGISTER.md
+```
+
+The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure.
+
+#### H.3 `01_Architecture/`
+
+Contains authoritative and supporting architecture artefacts.
+
+The authoritative architecture document uses:
+
+`*_ARCHITECTURE.md`
+
+For example:
+
+```text
+01_Architecture/
+├── <PRODUCT>_ARCHITECTURE.md
+└── Diagrams/
+    ├── <governed diagram files>
+    └── DIAGRAM_CONVENTION_LEARNING.md
+```
+
+Architecture diagrams support the authoritative architecture record but do not replace it.
+
+Product-local recurring diagram presentation conventions may be captured in `DIAGRAM_CONVENTION_LEARNING.md`.
+
+`DIAGRAM_CONVENTION_LEARNING.md` is the standard location for product-local diagram convention learning.
+
+It must not be used to restate central standards, architecture, contracts or governance.
+
+The learning file contains provisional product-local observations and working defaults only. Incidental capture, reuse, maintenance, review and disposition mechanics are defined in Section 26.3.
+
+#### H.4 `02_Decisions/`
+
+Contains Design Decision Records.
+
+Routine issue notes, temporary design discussion and implementation history do not belong here.
+
+#### H.5 `03_Contracts/`
+
+Contains authoritative interfaces/contracts provided by this product.
+
+Consumers reference the provider-owned contract from their `PROJECT_PROFILE.md`; they do not maintain authoritative duplicates.
+
+#### H.6 `04_Source/`
+
+Contains executable or deployable product implementation.
+
+Source remains clearly separated from tests, validation tooling, governance, architecture, audit and deployment tooling.
+
+#### H.7 `05_Tests/`
+
+Contains tests of product behaviour.
+
+Examples include:
+
+- unit tests;
+- integration tests;
+- behavioural tests;
+- fixtures;
+- test helpers;
+- implementation test scripts.
+
+Purpose:
+
+> Determine whether the product behaves as intended.
+
+#### H.8 `06_Validation/`
+
+Contains validation tooling and retained validation evidence concerning governed repository/change integrity.
+
+Where useful:
+
+```text
+06_Validation/
+├── Tools/
+└── Evidence/
+```
+
+Purpose:
+
+> Determine whether the governed change or repository state satisfies applicable controls.
+
+Validation must not become a duplicate testing framework.
+
+#### H.9 `07_Audit/`
+
+Reserved for formal audit and review engagements.
+
+Each engagement has its own subfolder.
+
+Routine PR history, normal Linear issue notes and temporary development output do not belong here.
+
+#### H.10 `08_Deployment/`
+
+Contains deployment and rollback mechanics where required.
+
+Examples include:
+
+- install/update helpers;
+- beta deployment helpers;
+- stable deployment helpers;
+- rollback tooling;
+- deployment manifests;
+- environment mappings.
+
+This folder must not contain duplicate authoritative source.

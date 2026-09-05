@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 10.0.1
+**Governance version:** 10.1.0
 **Status:** Approved
-**Approval tag:** `governance-v10.0.1`
+**Approval tag:** `governance-v10.1.0`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -151,6 +151,7 @@ Its authoritative central artefacts include:
 - `/Templates/DIAGRAM_CONVENTION_LEARNING.md`
 - `/Templates/DDR.template.md`
 - `/Templates/AUDIT_REVIEW_LOG.template.md`
+- `/Templates/product_root_agents.template.md`
 
 Central governance artefacts required locally by product agents are deployed through the centrally managed governance projection defined in Appendix E.2.
 
@@ -207,35 +208,28 @@ Every product repository contains a small, stable root:
 
 `AGENTS.md`
 
-Its purpose is to direct the agent to applicable governance and project context.
+Its purpose is to route the agent to applicable Governance and product-context authority without becoming a second Governance rulebook.
 
-It should principally instruct the agent to:
+Before working in the repository, the loader directs the agent to establish:
 
-1. read `00_Governance/01_Central/CENTRAL_GOVERNANCE.md`;
-2. read `00_Governance/PROJECT_PROFILE.md`;
-3. apply both sources and the standard repository conventions when working in the repository.
+- `00_Governance/01_Central/CENTRAL_GOVERNANCE.md` as the constitutional Governance authority; and
+- `00_Governance/PROJECT_PROFILE.md` as the product-context authority.
 
-When creating, editing or reviewing a governed architecture diagram, an agent must also read:
+The agent then uses the governed execution path to identify and read the sections, appendices, Standards and other current authority applicable to the task. The agent must retain sufficient awareness of Central Governance to route safely, but must not load unrelated Governance material solely because it exists.
 
-- `00_Governance/01_Central/01_Standards/ARCHITECTURE_DIAGRAM_STANDARD.md`;
-- the applicable approved architecture documentation; and
-- where present, `01_Architecture/Diagrams/DIAGRAM_CONVENTION_LEARNING.md`.
+The root `AGENTS.md` is centrally managed and projected verbatim from the inert central source:
 
-When creating, editing, reviewing or superseding a DDR, an agent must also read:
+`/Templates/product_root_agents.template.md`
 
-- `00_Governance/01_Central/01_Standards/DDR_STANDARD.md`.
+The central source is deliberately not named `AGENTS.md` and is not an active instruction surface within the Governance repository. The active filename `AGENTS.md` is introduced only at the governed product-root projection target.
 
-When creating a new DDR, the agent should use the centrally managed implementation aid:
+Product repositories must not locally modify the projected root loader.
 
-- `00_Governance/01_Central/02_Templates/DDR.template.md`.
+The root loader remains common across governed products. Product-specific operating rules, product identity and product-specific authority belong in their applicable authoritative product artefacts rather than in `AGENTS.md`.
 
-The deployed central paths identify the active centrally managed artefacts.
+When task scope makes a specialised centrally governed Standard applicable, the governed execution path identifies that Standard for loading. The root loader itself must not duplicate those task-specific routing rules.
 
-Agents must not select between historical or alternative central copies.
-
-`DIAGRAM_CONVENTION_LEARNING.md` in `01_Architecture/Diagrams/` contains provisional product-local observations and working defaults. It is not governance, approved architecture or a product-specific override of the central standard.
-
-The root `AGENTS.md` must not become an additional governance rulebook or a location for project-specific operating rules.
+The root `AGENTS.md` must not become an additional Governance rulebook or a location for project-specific operating rules.
 
 #### 2.4 Project Profile
 
@@ -448,9 +442,11 @@ Everything under:
 
 is centrally managed content.
 
-Product-local work must not create, edit, rename, move or delete anything within that subtree.
+The product-root `AGENTS.md` is also centrally managed as the single explicit managed path outside that subtree.
 
-The central governance repository remains the source of truth for all content deployed into that subtree.
+Product-local work must not create, edit, rename, move or delete anything within `00_Governance/01_Central/**`, and must not locally modify product-root `AGENTS.md`.
+
+The central Governance repository remains the source of truth for all centrally projected content. The canonical source for product-root `AGENTS.md` is `/Templates/product_root_agents.template.md`.
 
 `PROJECT_PROFILE.md` and `AAR_REGISTER.md` are product-owned artefacts and remain outside the centrally managed subtree.
 
@@ -1902,11 +1898,12 @@ Audit completion does not trigger unrelated broad revalidation.
 
 Approved central Governance is maintained in the central Governance Git/GitHub repository.
 
-Central Governance artefacts required locally by product agents are distributed into the centrally managed product subtree:
+Central Governance artefacts required locally by product agents are distributed to the authorised centrally managed projection destinations. These consist of:
 
-`00_Governance/01_Central/**`
+- `00_Governance/01_Central/**`; and
+- the exact product-root `AGENTS.md` loader.
 
-Content within that subtree remains centrally owned and must not be locally altered by product work.
+Content at those managed destinations remains centrally owned and must not be locally altered by product work.
 
 This section is the constitutional authority and routing surface for permanent central Governance changes. Detailed release/provenance mechanics are defined in the central-only Governance Lifecycle Standard; downstream product deployment mechanics are defined in the central-only Governance Distribution Standard.
 
@@ -1921,6 +1918,8 @@ Neither Standard may approve Governance content, widen its own authority or over
 The authoritative source of every central Governance artefact is its approved location in the central Governance repository.
 
 The central Governance repository owns the centrally managed product projection and the operational artefacts used to define release and distribution populations.
+
+The authoritative source for product-root `AGENTS.md` is the inert `/Templates/product_root_agents.template.md`; it becomes an active loader only when projected to the product root.
 
 Product repositories must not locally modify centrally projected Governance content. Distribution of approved central content is deployment, not a transfer of authority to the product repository.
 
@@ -1971,7 +1970,9 @@ The merge does not itself complete the governing issue. It authorises and initia
 
 Every approved Governance artefact requiring independent release identity must have immutable, verifiable release/provenance identity.
 
-Detailed source-event binding, artefact discovery, release metadata verification, approval-tag creation/reuse/verification, release-set derivation, Linear provenance recording, idempotency and lifecycle recovery are authoritative in:
+An explicitly projection-owned artefact may instead derive its approval identity from the exact approved Governance source event where this rulebook and the Governance Lifecycle Standard define that model. The product-root loader source is such a projection-owned artefact and does not require embedded independent release metadata merely to be projected.
+
+Detailed source-event binding, artefact discovery, release metadata verification, approval-tag creation/reuse/verification, projection-owned source-event identity, release-set derivation, Linear provenance recording, idempotency and lifecycle recovery are authoritative in:
 
 `/Standards/Central/GOVERNANCE_LIFECYCLE_STANDARD.md`
 
@@ -1981,7 +1982,7 @@ Once required central release/provenance has been established, downstream produc
 
 `/Standards/Central/GOVERNANCE_DISTRIBUTION_STANDARD.md`
 
-Distribution copies exact already-approved Governance into the centrally managed product subtree. It is deployment, not substantive re-approval, and does not require a second human Governance approval.
+Distribution copies exact already-approved Governance into the authorised centrally managed projection destinations. It is deployment, not substantive re-approval, and does not require a second human Governance approval.
 
 The Distribution Standard consumes the release/provenance identity established by the Lifecycle Standard and must not independently recreate or redefine that identity.
 
@@ -2013,7 +2014,7 @@ The governing central-Governance issue reaches `Done` only when all requirements
 At minimum this means:
 
 1. the exact accepted Governance content has been merged;
-2. every required changed independently released Governance artefact has valid verified release/provenance identity;
+2. every required changed independently released Governance artefact has valid verified release/provenance identity and every changed projection-owned artefact has valid exact source-event provenance;
 3. where projected artefacts changed, the complete projected release set has been derived and recorded against the governing Linear issue;
 4. where projected artefacts changed, downstream distribution has been executed for the governed product population; and
 5. where distribution occurs, every targeted product has reached an acceptable terminal rollout state under the Governance Distribution Standard.
@@ -2031,7 +2032,7 @@ A separate rollout or remediation issue is required only where deferred, excepti
 
 #### 22.9 Drift
 
-A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/**` is a Governance-integrity issue.
+A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/**`, or a product-root `AGENTS.md` that differs from its applicable centrally approved projection, is a Governance-integrity issue.
 
 Restore the applicable approved central artefact rather than preserve or normalise local divergence.
 
@@ -2615,6 +2616,8 @@ The baseline is:
 └── 08_Deployment/
 ```
 
+Product-root `AGENTS.md` is the single centrally managed top-level file. Its central source, ownership and loader semantics are defined in Sections 2.3 and 3.1.
+
 A standard structural location need not physically exist in Git until it contains required content.
 
 Empty standard folders must not be materialised solely through placeholder files such as `.gitkeep` or dummy `README.md` files unless a specific operational requirement requires the physical directory to exist.
@@ -2642,7 +2645,7 @@ The standard structure is:
 └── AAR_REGISTER.md
 ```
 
-The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure.
+The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure. The separately managed product-root `AGENTS.md` is governed by the same central-ownership principle through its explicit exception in Sections 2.3 and 3.1.
 
 #### E.3 `01_Architecture/`
 

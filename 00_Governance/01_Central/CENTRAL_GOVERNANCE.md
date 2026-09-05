@@ -1,8 +1,8 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 10.1.0
+**Governance version:** 10.2.0
 **Status:** Approved
-**Approval tag:** `governance-v10.1.0`
+**Approval tag:** `governance-v10.2.0`
 **Approval date:** 2026-09-05
 
 **Authority of appendices:**  
@@ -2086,6 +2086,28 @@ Conflicting overlapping validators require authority resolution rather than auto
 Environment assumptions such as OS, PowerShell version, locale, date parsing, file layout and dependency versions should be explicit where relevant.
 
 Regression checks tied to those assumptions run when those assumptions or tooling change, not automatically after unrelated changes.
+
+#### 23.6 Execution Route for Mandatory Automated Suites
+
+Where an authoritative governed source makes execution of a maintained automated regression or test suite necessary to evidence acceptance of current governed work, the owning product must maintain a reproducible, version-controlled execution route for that suite.
+
+The existence of a test suite, script, workflow or CI configuration does not by itself make execution mandatory. The requirement applies only when the suite is an applicable governed acceptance dependency for the work being assessed.
+
+Governance requires the outcome, not a particular platform. A compliant execution route may be a repository CI workflow, checked-in runner or script, reproducible container or development-environment definition, or another deterministic version-controlled method that permits the required suite to be invoked without reconstructing an undocumented ad-hoc environment.
+
+The route must identify, as applicable:
+
+- runtime and dependency requirements;
+- invocation or entry point;
+- required fixtures, configuration and environment assumptions;
+- expected pass/fail evidence; and
+- the exact repository state to which resulting evidence applies.
+
+Such execution-route tooling is normally product-owned validation tooling under this section. It is Governance Tooling only where its governed purpose is to operate on or assure the central Governance system itself.
+
+If a suite is an applicable required acceptance dependency but cannot be executed because its required route is absent or broken, that acceptance dependency has not been evidenced and validation must not be claimed complete. The missing or broken route should normally be handled as separately governed corrective work rather than silently reconstructed within unrelated work, unless the suite is demonstrably not applicable or the user provides a specific in-flight override under Section 2.8.
+
+Maintaining an execution route does not require unnecessary reruns. Valid existing evidence remains reusable against unchanged immutable state where Section 15.4 and Appendix A.6 permit, and Section 25 efficiency principles continue to apply.
 
 ---
 

@@ -16,6 +16,10 @@ is current under the approved Central Governance authority.
 - Repository: `83degrees/MediaCat`
 - DDR origin code: `03`
 
+## Linear work routing
+
+- Default Linear team: `ASTV`
+
 ## Purpose
 
 MediaCat is the media-catalogue and route-registry product. It supplies

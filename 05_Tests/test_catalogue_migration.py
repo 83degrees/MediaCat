@@ -16,7 +16,7 @@ from custom_components.curated_media.resolver import CatalogueResolver
 
 
 ROOT = Path(__file__).parents[1]
-TARGET = ROOT / "04_Source" / "curated_media" / "catalogue.yaml"
+TARGET = ROOT / "04_Source" / "config" / "curated_media" / "catalogue.yaml"
 ROLLBACK_ROOT = (
     ROOT
     / "0A_Historic"

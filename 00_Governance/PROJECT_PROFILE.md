@@ -96,7 +96,7 @@ their undocumented internals.
 | Dependency | Type | Owner | Governed interface/evidence | Required state | Failure boundary |
 | --- | --- | --- | --- | --- | --- |
 | Home Assistant | platform | Home Assistant | Current verified production evidence | Curated Media integration, action registration, and Media Source framework available | Integration setup, lookup, or Media Source operation stops at its documented boundary. |
-| Curated Media catalogue data | data | MediaCat | `04_Source/curated_media/catalogue.yaml` and normalized lookup contract | Catalogue loads as the supported immutable model | Setup fails explicitly; no partial normalized record is returned. |
+| Curated Media catalogue data | data | MediaCat | Repository implementation baseline under `04_Source/config/` and normalized lookup contract | Catalogue loads as the supported immutable model | Setup fails explicitly; no partial normalized record is returned. |
 | Delegated Home Assistant Media Source providers | external service | Respective provider owners | Opaque provider URI and current evidence | Selected provider can resolve its URI for Media Source playback | Provider failure surfaces without retry or another MediaCat route selection. |
 
 ASTV and AdvMedia are governed consumers of MediaCat, not owners of MediaCat or
@@ -115,7 +115,7 @@ delegated providers, or execution endpoints.
 
 | Identity | Classification | Owner | Permitted use | Evidence |
 | --- | --- | --- | --- | --- |
-| `curated_media`, `04_Source/custom_components/curated_media`, `04_Source/curated_media/catalogue.yaml` | owned | MediaCat | Current integration, catalogue, action, and Media Source implementation | Architecture and repository source |
+| `curated_media` | owned | MediaCat | Current integration, catalogue, action, and Media Source implementation | Architecture and repository source |
 | `curated_media.resolve_media_record` | owned | MediaCat | Governed normalized lookup | Provider-owned lookup contract |
 | `curated_media.resolve_item` and schema-v2 branches | owned | MediaCat | Retained legacy/raw compatibility only; not the current cross-product interface | Architecture and historical evidence |
 | `astv_` and `script.astv_*` | external | ASTV | Governed caller boundary only | ASTV-owned architecture and contracts |
@@ -145,8 +145,9 @@ There is no separate current deployed `mediacat` Home Assistant domain.
   objects, and retained completed traces are finite evidence rather than a
   continuous monitor.
 
-Current runtime-sensitive source is maintained at
-`04_Source/custom_components/curated_media/`, the active catalogue source is
-maintained at `04_Source/curated_media/catalogue.yaml`, and maintained tests and
-fixtures are under `05_Tests/`. Their Home Assistant deployment paths and
-runtime behaviour are not changed by this repository-structure migration.
+## Repository source baseline
+
+The current MediaCat implementation baseline is held under `04_Source/config/`.
+Maintained tests and fixtures remain under `05_Tests/`. Their Home Assistant
+deployment paths and runtime behaviour are not changed by this repository-
+structure migration.

@@ -68,6 +68,7 @@ V2_FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
 V3_CATALOGUE = (
     Path(__file__).parents[1]
     / "04_Source"
+    / "config"
     / "curated_media"
     / "catalogue.yaml"
 )

@@ -1,9 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 10.3.0
+**Governance version:** 11.0.0
 **Status:** Approved
-**Approval tag:** `governance-v10.3.0`
-**Approval date:** 2026-09-05
+**Approval tag:** `governance-v11.0.0`
+**Approval date:** 2026-09-10
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -564,12 +564,15 @@ It means:
 
 - review is complete;
 - applicable pre-beta validation has passed;
-- the PR has been squash-merged to `main`;
-- the exact resulting `main` commit SHA has been identified;
-- the user has authorised beta deployment;
-- that SHA has been deployed to `ha-starburst`;
-- deployed state has been verified;
-- real-world beta operation is underway.
+- the accepted runtime candidate has been integrated into the product's persistent `beta` branch;
+- the exact resulting Beta candidate identity has been recorded;
+- the user has authorised beta deployment or release where required;
+- that exact candidate has been deployed or released to the applicable Beta runtime/environment;
+- required product-specific preflight or configuration validation has passed;
+- deployed/released candidate identity has been sufficiently verified;
+- real-world Beta operation is underway.
+
+`Beta` does not mean the candidate has already been promoted to stable `main`.
 
 #### 4.8 Done
 
@@ -595,9 +598,11 @@ An agent must not declare work blocked merely because the first tool or evidence
 
 `Changes Requested` is a rework state.
 
-Before a PR has been merged, the same issue, branch and PR should normally remain in use.
+Before a PR has been integrated into the applicable target branch, the same issue, branch and PR should normally remain in use.
 
-After a code PR has already been merged for beta, a beta failure remains on the same Linear issue but corrective implementation uses a new branch and PR from the current appropriate `main` state.
+After a runtime candidate has been integrated into `beta`, a Beta failure remains on the same Linear issue. Corrective implementation normally uses a new corrective branch based on the current failed-Beta `beta` state and a new PR targeting `beta`.
+
+A failed Beta does not require or authorise promotion of that candidate to `main`.
 
 Where correction changes previously accepted content or behaviour, the work returns through human review.
 
@@ -823,9 +828,11 @@ It must never bypass human approval or other governance gates.
 
 #### 7.5 Rework and Resume
 
-Before merge, rework normally resumes the same issue, branch and PR.
+Before integration into the applicable target branch, rework normally resumes the same issue, branch and PR.
 
-After a merged beta candidate fails, the same Linear issue continues but corrective Git work uses a new branch and PR.
+After a candidate integrated into `beta` fails Beta, the same Linear issue continues but corrective Git work normally uses a new corrective branch from the failed-Beta `beta` state and a new PR targeting `beta`.
+
+`main` remains unchanged by the failed candidate.
 
 #### 7.6 Execution-Route Neutrality
 
@@ -1028,10 +1035,10 @@ The table below shows which Git concepts normally become relevant at each Linear
 | `In Progress` | Create/use issue branch; make changes; commit; push as needed | 11.2 Branch, 11.3 Commit, 11.4 Push |
 | `Ready for Review` | Branch pushed; linked PR open and reviewable | 11.4 Push, 11.5 Pull Request |
 | `Changes Requested` — pre-merge | Continue same branch/PR; commit and push corrections | 11.2–11.6 |
-| `Changes Requested` — after failed beta | Same Linear issue; create corrective branch/PR from appropriate `main` state | 11.1, 11.2, 11.5, 11.6 |
-| `Ready for Validation` | Reviewed PR represents accepted proposed change; merge has not yet occurred | 11.5 Pull Request, 11.7 Merge |
-| `Beta` | Applicable PR has been squash-merged; resulting `main` SHA is deployed to `ha-starburst` | 11.1 `main`, 11.7 Merge |
-| `Done` | Required issue-level Git actions complete | 11.7 Merge |
+| `Changes Requested` — after failed Beta | Same Linear issue; corrective branch/PR normally based on failed-Beta `beta` state and targeted back to `beta`; `main` unchanged | 11.1 `main`, 11.2 `beta` and Branch, 11.5 Pull Request, 11.6 Review Changes |
+| `Ready for Validation` | Reviewed PR represents accepted proposed change; for WF-01 runtime work, candidate is ready for controlled integration into `beta` and Beta-entry preparation | 11.2 `beta` and Branch, 11.5 Pull Request, 11.7 Merge and Promotion |
+| `Beta` | Accepted candidate is integrated into `beta`; exact Beta candidate is deployed/released and required preflight validation has passed; runtime Beta operation is underway | 11.2 `beta` and Branch, 11.7 Merge and Promotion |
+| `Done` | Required issue-level Git actions complete; for WF-01 runtime work, Beta-passed content has been promoted to `main` with required equivalence evidence | 11.1 `main`, 11.7 Merge and Promotion |
 | `Blocked` | Preserve current Git state for later resumption | 11.2 Branch, 11.3 Commit, 11.5 Pull Request |
 
 The table is a workflow guide.
@@ -1040,21 +1047,35 @@ Sections 11.1–11.8 define the individual Git concepts.
 
 #### 11.1 `main`
 
-`main` represents accepted integrated development state.
+`main` represents accepted integrated product state.
 
-It does not mean every commit has passed beta or is a stable release.
+For product runtime-affecting content governed through `WF-01`, `main` contains only content that has successfully completed the applicable Beta gate and been promoted with required tested-content equivalence evidence.
 
-Stable SemVer tags identify proven stable states.
+Non-runtime work following `WF-02` may merge to `main` after its applicable review, validation and completion controls without acquiring a Beta result solely because it shares the repository.
 
-#### 11.2 Branch
+Stable SemVer tags identify explicitly released stable states; issue-level promotion to `main` remains separate from creating a stable product release.
 
-A branch is a separate line of work for an issue.
+#### 11.2 `beta` and Branch
+
+A product using `WF-01` maintains a persistent `beta` integration branch for accepted runtime candidates awaiting or undergoing Beta validation.
+
+`beta` is not a stable branch and does not replace `main` as the accepted integrated product state. It exists to isolate unproven runtime-affecting content from `main` until Beta succeeds.
+
+The default runtime-candidate model is serialized:
+
+`one product → one unresolved runtime Beta candidate`
+
+A second runtime-affecting candidate must not be integrated into `beta` while another candidate remains unresolved unless an explicit governed exception defines how candidate identity, environment state and validation evidence remain unambiguous.
+
+After successful promotion or explicit abandonment/reversion of the candidate, `beta` is deterministically realigned with the accepted `main` baseline before another runtime candidate is integrated.
+
+Issue branches remain separate lines of work.
 
 Normal model:
 
 `one independently reviewable Linear work item → one issue branch`
 
-A corrective branch may be required after a previously merged beta candidate fails.
+A corrective branch may be required after a candidate integrated into `beta` fails. Corrective work normally branches from the failed-Beta `beta` state so the correction is assessed against the candidate that actually failed.
 
 #### 11.3 Commit
 
@@ -1076,7 +1097,9 @@ cycles.
 
 #### 11.5 Pull Request
 
-A pull request proposes incorporation of a branch into `main`.
+A pull request proposes incorporation of a branch into the target branch appropriate to the selected workflow.
+
+For normal `WF-01` runtime-changing work, the reviewed issue PR targets persistent `beta` before Beta operation. For work that does not require Beta, the normal target remains `main`. Promotion of Beta-passed content from `beta` to `main` is governed separately by Section 11.7 and does not create a second substantive human-review requirement where the accepted/tested content is unchanged.
 
 It provides the principal GitHub review surface and may contain:
 
@@ -1091,25 +1114,31 @@ Opening a PR does not mean the change has been accepted or merged.
 
 #### 11.6 Review Changes
 
-Before merge, requested changes normally use the applicable Appendix A rework and review gates while continuing on the existing branch and PR.
+Before integration into the applicable target branch, requested changes normally use the applicable Appendix A rework and review gates while continuing on the existing issue branch and PR.
 
-After a merged beta candidate fails, the same Linear issue continues through the applicable Appendix A rework gates using a new corrective branch/PR.
+After a candidate integrated into `beta` fails Beta, the same Linear issue continues through the applicable Appendix A rework gates using a new corrective branch/PR normally based on and targeted to `beta`.
 
 The Linear issue remains the same unless the correction has become an independently governable piece of work requiring issue decomposition under Section 6.
 
-#### 11.7 Merge
+#### 11.7 Merge and Promotion
 
-The standard merge method is:
+The standard issue-PR merge method is:
 
 **Squash merge**
 
-The commits in an issue PR are incorporated into `main` as one resulting issue-level commit.
+Where the applicable workflow profile requires Beta, the reviewed issue branch is squash-merged into persistent `beta` after human acceptance and applicable pre-Beta validation. The resulting `beta` commit/state becomes the Beta candidate and its exact identity must be recorded.
 
-Where the applicable workflow profile requires Beta, squash merge occurs after review and applicable pre-Beta validation and before Beta deployment.
+Where the applicable workflow profile does not require Beta, the issue PR normally squash-merges to `main` after review and applicable validation, immediately before `Done`.
 
-The resulting `main` SHA becomes the beta candidate.
+After a `WF-01` candidate successfully completes Beta, the same tested runtime-affecting content is promoted from `beta` to `main` before the issue reaches `Done`.
 
-Where the applicable workflow profile does not require Beta, merge normally occurs after review and applicable validation, immediately before `Done`.
+Promotion does not require a second substantive human review where the accepted and Beta-tested content is unchanged. It does require integrity evidence sufficient to prove that the runtime-affecting content incorporated into `main` is equivalent to the content that passed Beta.
+
+Prefer a fast-forward or other promotion mechanism that preserves exact candidate identity where practical. Where Git ancestry or intervening non-runtime `main` changes require a different commit identity, equivalence may be established using tree, file/content hashes, artifact identity or another immutable comparison appropriate to the affected runtime content.
+
+Any runtime-affecting difference introduced during promotion invalidates the prior Beta result and requires a new Beta candidate before that difference may enter `main`.
+
+After successful promotion, `beta` must be realigned to the accepted `main` state before another runtime candidate is integrated.
 
 #### 11.8 Tag and Release
 
@@ -1137,9 +1166,11 @@ Default:
 
 #### 12.1 Dedicated Work Branches
 
-A branch normally remains associated with the issue through implementation, review, requested changes and validation until merge.
+An issue branch normally remains associated with the issue through implementation, review, requested changes and validation until integration into the applicable target branch.
 
 Long-lived branches containing unrelated issues should be avoided.
+
+The persistent product `beta` branch defined in Section 11.2 is an explicit integration-branch exception to the temporary issue-branch model; it is not an issue branch and must not accumulate multiple unresolved runtime candidates by default.
 
 #### 12.2 Pull Requests
 
@@ -1151,11 +1182,13 @@ The relationship among issue, branch, proposed change, review and completion sho
 
 Review or validation rework before merge normally continues on the same branch and PR.
 
-#### 12.4 Rework After Merge
+#### 12.4 Rework After Beta Integration
 
-If a merged beta candidate fails, corrective work remains on the same Linear issue but uses a new corrective branch and PR.
+If a candidate integrated into `beta` fails Beta, corrective work remains on the same Linear issue but normally uses a new corrective branch from the failed-Beta `beta` state and a new PR targeting `beta`.
 
-The earlier merged PR remains immutable historical evidence of the failed beta candidate.
+The earlier issue PR and failed Beta candidate remain immutable historical evidence. `main` remains unchanged by the failed candidate.
+
+If the failed change is explicitly abandoned rather than corrected, the applicable Beta runtime/environment is restored as required and persistent `beta` is realigned to the accepted `main` baseline before another runtime candidate is integrated.
 
 #### 12.5 Scope
 
@@ -1203,9 +1236,11 @@ A specific in-flight user override may authorise one, but it does not create a s
 
 Issue branches are temporary work branches.
 
-After a pull request is merged, its head branch is deleted automatically under the normal governed operating model.
+After an issue pull request is merged, its head branch is deleted automatically under the normal governed operating model.
 
-Post-merge branch retention is outside the normal model.
+The persistent product `beta` branch is not an issue-PR head branch and is explicitly retained as governed integration infrastructure.
+
+Other post-merge issue-branch retention is outside the normal model.
 
 At the time this rule was established, the governed repositories were private repositories using GitHub Free and protected branches/rulesets were not available as an operational mechanism for preserving a merged branch from automatic deletion.
 
@@ -1459,20 +1494,22 @@ Retained evidence should identify:
 
 Routine output is not retained indefinitely merely because it exists.
 
-#### 15.8 Merge Preservation
+#### 15.8 Integration and Promotion Preservation
 
-Where applicable validation is performed before a squash merge, the resulting merge commit may rely on that evidence where the governed content is demonstrably identical to the validated and accepted content.
+Where applicable validation is performed before integration into `beta` or before a non-Beta squash merge, the resulting commit may rely on that evidence where the governed content is demonstrably identical to the validated and accepted content.
 
 A change in Git commit identity alone does not require substantive revalidation.
 
-Where useful, post-merge integrity confirmation may establish preservation by comparing the relevant accepted content, file hash or equivalent immutable representation.
+Where useful, post-integration integrity confirmation may establish preservation by comparing the relevant accepted content, file hash, artifact identity or equivalent immutable representation.
 
-Prior validation evidence does not carry forward where the merge:
+A successful Beta result may likewise carry through promotion from `beta` to `main` only where the runtime-affecting content incorporated into `main` is demonstrably equivalent to the exact content/state that passed Beta.
 
-- changes the governed content;
-- changes its effective meaning;
-- introduces additional unvalidated content;
-- otherwise means the merged state is no longer equivalent to the accepted validated state.
+Prior validation or Beta evidence does not carry forward where integration or promotion:
+
+- changes the governed/runtime-affecting content;
+- changes its effective meaning or behaviour;
+- introduces additional unvalidated runtime-affecting content;
+- otherwise means the resulting state is no longer equivalent to the accepted or Beta-tested state.
 
 For artefacts requiring final-state validation, including visually accepted diagrams, the merged artefact must remain the exact accepted content even though its enclosing Git commit SHA may differ.
 
@@ -1556,13 +1593,17 @@ Applicable change-class-specific controls are defined in Appendix B.
 
 Entry to `Beta` occurs only when the applicable Appendix A Beta-entry gate and Appendix B code controls have been satisfied.
 
-The resulting deployed candidate state is the state against which Beta operation is assessed.
+For normal `WF-01` runtime work this requires, at minimum, that the accepted candidate has been integrated into persistent `beta`, its exact candidate identity has been recorded, the exact candidate has been deployed/released to the applicable Beta runtime/environment with required authority, required product-specific preflight/configuration validation has passed, and deployed/released state has been sufficiently verified.
+
+The resulting deployed/released candidate state is the state against which Beta operation is assessed.
 
 #### 18.2 Beta Candidate Integrity
 
-Beta result applies only to the exact deployed runtime-affecting state represented by the candidate SHA.
+Beta result applies only to the exact deployed/released runtime-affecting state represented by the recorded Beta candidate identity.
 
 A later runtime-affecting change does not inherit that result.
+
+Runtime traces or behavioural evidence prove only what they actually observe; where candidate identity is material, deployment/release provenance and runtime evidence must be combined as necessary rather than treating behaviour evidence alone as proof of repository SHA or artifact identity.
 
 #### 18.3 Beta Operation
 
@@ -1570,58 +1611,61 @@ Beta testing focuses on behaviour and risks introduced by the change.
 
 Duration and depth are proportionate to risk.
 
-#### 18.4 Successful Beta
+A test having executed is not, by itself, proof that an acceptance criterion passed. Beta evidence must establish the criterion actually being relied upon.
 
-Successful Beta satisfies the Beta-operation requirement for completion.
+#### 18.4 Successful Beta and Promotion
 
-Transition from `Beta` to `Done` is governed by the applicable Appendix A gate.
+Successful Beta satisfies the Beta-operation requirement but does not by itself complete the issue.
 
-The implementation issue is complete when that gate is satisfied, but no stable product release is automatically created.
+Before transition from `Beta` to `Done`, the same Beta-tested runtime-affecting content must be promoted from `beta` to `main` and required promotion-equivalence evidence must be established under Sections 11.7 and 15.8.
+
+No second substantive human review is required solely for unchanged promotion of already accepted and Beta-tested content.
+
+The implementation issue is complete when the applicable Appendix A completion gate is satisfied, but no stable product release is automatically created.
 
 #### 18.5 Failed Beta
 
 A failed Beta requires rework through the applicable Appendix A rework gate.
 
-The failed candidate remains part of Git history.
+The failed candidate remains part of Git history and may remain on `beta` while corrective work is performed.
 
-Corrective implementation uses a new branch and PR under the same Linear issue unless issue decomposition is genuinely required.
+Corrective implementation normally uses a new branch from the failed-Beta `beta` state and a new PR targeting `beta` under the same Linear issue unless issue decomposition is genuinely required.
 
-`ha-starburst` may be rolled back to a selected stable tag with explicit user authorisation.
+The failed candidate is not promoted to `main`.
+
+Where appropriate, the Beta runtime/environment may be rolled back to the accepted `main` state or another approved rollback target with explicit user authorisation where required.
 
 #### 18.6 Agent-Assisted Beta Deployment
 
-Initial beta deployment is agent-assisted rather than fully automatic.
+Initial Beta deployment/release is agent-assisted rather than fully automatic unless a separately approved product mechanism provides an authorised automated route.
 
-The agent performs deployment mechanics only after explicit user authorisation.
+The agent performs mutation/deployment mechanics only after explicit user authorisation where Governance requires it.
 
-Deployment must:
+Deployment/release must:
 
-- target a specific SHA;
-- verify deployed state;
+- target the exact recorded Beta candidate identity;
+- sufficiently verify deployed/released state;
 - preserve rollback capability.
 
-#### 18.7 Failed-Beta `main` Protection
+Product-specific mechanics and evidence routes belong to the applicable product/environment authority rather than being hard-coded in Central Governance.
 
-When a beta candidate fails, `main` contains a known failed runtime state until that failure is corrected or otherwise explicitly resolved.
+#### 18.7 Beta Branch Protection, Concurrency and Resolution
 
-During that period:
+While an unresolved runtime Beta candidate exists:
 
-- new runtime-affecting changes must not merge to `main` unless the user explicitly authorises the exception;
-- corrective work for the failed beta may proceed through the normal corrective branch/PR route;
-- non-runtime-affecting changes may proceed only where they do not interfere with correction, rollback, evidence or traceability of the failed candidate.
+- `main` remains the accepted integrated state and must not receive the unresolved candidate;
+- a second runtime-affecting candidate must not be integrated into `beta` by default;
+- corrective work for a failed candidate may proceed against `beta` through the same Linear issue;
+- non-runtime work may proceed only where it does not alter the Beta-tested runtime content, invalidate candidate evidence, interfere with correction/rollback, or make candidate identity ambiguous.
 
-The failed commit remains part of Git history.
+A Beta candidate is resolved only when either:
 
-Where appropriate, a deployed environment may be rolled back independently under the applicable user-authorised rollback process.
+1. it successfully completes Beta and the tested runtime-affecting content is promoted to `main` with required equivalence evidence; or
+2. it is explicitly abandoned/reverted and the Beta runtime/environment and persistent `beta` branch are restored/realigned to an accepted known baseline as required.
 
-The failed-beta restriction ends only when either:
+After resolution, persistent `beta` must be deterministically realigned with accepted `main` before the next runtime candidate is integrated.
 
-1. a corrective candidate successfully completes Beta; or
-2. the user explicitly abandons or reverts the failed change and the affected repository/runtime state has been brought to an accepted known state.
-
-Creating a corrective branch, opening a corrective PR, or merely identifying a proposed fix does not by itself resolve the failed-beta restriction.
-
-Normal runtime-affecting merge activity resumes only after one of the resolution conditions above is satisfied.
+A product-specific concurrency exception requires explicit governed authority and must preserve unambiguous candidate identity, environment state, rollback and validation evidence.
 
 ---
 
@@ -1659,16 +1703,17 @@ A stable release SHA must have valid runtime coverage for all runtime-affecting 
 
 Runtime content already contained in an earlier stable release is considered to retain established runtime coverage while that content remains unchanged.
 
-Runtime-affecting content introduced or altered after that established coverage must obtain applicable beta coverage before stable promotion.
+Runtime-affecting content introduced or altered after that established coverage must obtain applicable Beta coverage before stable promotion.
 
-The release SHA may therefore be:
+The release SHA may therefore represent:
 
-- an exact successfully beta-tested SHA; or
-- a later descendant where changes introduced after the applicable beta/stable coverage are demonstrably non-runtime-affecting and have passed their applicable controls.
+- an exact successfully Beta-tested commit where issue-level promotion preserved that commit identity;
+- a promoted `main` commit whose runtime-affecting content is demonstrably equivalent to the exact Beta-tested content under Sections 11.7 and 15.8; or
+- a later descendant where changes introduced after the applicable Beta/stable coverage are demonstrably non-runtime-affecting and have passed their applicable controls.
 
-Any runtime-affecting change introduced after the applicable beta result requires a new beta candidate.
+Any runtime-affecting change introduced after the applicable Beta result requires a new Beta candidate.
 
-A non-runtime-affecting change does not require Home Assistant redeployment merely to reproduce coverage for unchanged runtime content.
+A non-runtime-affecting change does not require Beta redeployment or runtime revalidation merely to reproduce coverage for unchanged runtime content.
 
 #### 19.4 Release Cut-Off
 
@@ -2082,7 +2127,7 @@ Changes to validation tooling are assessed separately from the product state the
 
 Tool changes do not automatically trigger broad product revalidation.
 
-Executable validation/release/deployment/workflow tooling whose governed purpose is to operate or assure the central Governance system uses `Change: Governance Tooling` rather than `Change: Code` solely because it is executable. It requires the Appendix B Governance Tooling controls and does not require Home Assistant Beta unless the same issue also contains genuine deployable product runtime implementation.
+Executable validation/release/deployment/workflow tooling whose governed purpose is to operate or assure the central Governance system uses `Change: Governance Tooling` rather than `Change: Code` solely because it is executable. It requires the Appendix B Governance Tooling controls and does not require product runtime Beta unless the same issue also contains genuine deployable product runtime implementation.
 
 #### 23.4 Superseded Validators
 
@@ -2415,8 +2460,8 @@ Action-specific authorisation, including beta deployment or stable release/deplo
 | Gate / point | Transition / point | `WF-01` | `WF-02` | Universal requirement |
 |---|---|---:|---:|---|
 | **Validation activity** | During `Ready for Validation` | Yes | Yes | Applicable validation is performed against the accepted substance and current relevant state; valid reusable evidence is considered; affected requirements are revalidated following relevant state-changing actions |
-| **G5 — Beta Entry Gate** | `Ready for Validation → Beta` | Yes | No | Applicable validation passed and all requirements for entry to Beta are satisfied |
-| **G6 — Beta Completion Gate** | `Beta → Done` | Yes | No | Completion obligations satisfied against the final implemented and beta-validated state |
+| **G5 — Beta Entry Gate** | `Ready for Validation → Beta` | Yes | No | Applicable pre-Beta validation passed; accepted candidate integrated into persistent `beta`; exact Beta candidate identity recorded; exact candidate deployed/released to the applicable Beta runtime/environment with required authority; required product preflight/configuration validation passed; deployed/released state sufficiently verified |
+| **G6 — Beta Completion Gate** | `Beta → Done` | Yes | No | Beta acceptance passed against the exact candidate; same tested runtime-affecting content promoted to `main`; promotion equivalence and required completion obligations satisfied; persistent `beta` realigned as required |
 | **G7 — Completion Gate** | `Ready for Validation → Done` | No | Yes | Applicable validation passed and completion obligations satisfied against the final implemented state |
 
 #### A.3 Rework and Exception Gates
@@ -2455,7 +2500,7 @@ Relationship alone does not justify additional validation.
 
 Where evidence already proves an applicable requirement against the exact unchanged immutable state, it may be reused unless freshness itself is material to the control.
 
-Section 15.8 additionally governs preservation of pre-merge validation evidence where squash merge changes Git commit identity without changing governed content.
+Section 15.8 additionally governs preservation of pre-integration validation evidence and Beta evidence across integration or promotion where Git commit identity changes without changing the governed or Beta-tested content.
 
 ---
 
@@ -2481,16 +2526,16 @@ The workflow profile determines which workflow gates apply. The assigned change 
 
 | Gate / point | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
 |---|---|---|---|---|---|---|---|---|
-| **Validation activity** | Applicable product tests/technical checks pass; candidate suitable for merge/Beta | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed Standards satisfy Section 22.7 and the Governance Lifecycle Standard | Applicable unit/integration/fixture checks pass; governing control objective, failure behaviour, release/provenance integrity and rerun behaviour validated where relevant; Home Assistant Beta is not required solely for Governance Tooling | Identifier, ownership and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
-| **G5** | PR squash-merged to `main`; resulting SHA identified; user authorises beta deployment; exact SHA deployed to `ha-starburst`; deployed state verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | Applies only where the same issue also selects WF-01 through another class; Governance Tooling obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
-| **G6** | Beta succeeds against exact deployed candidate state; result remains traceable | — | — | — | — | — | — | — |
-| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed Standards complete under Section 22.7 and the Governance Lifecycle Standard; distribution follows Section 22 where within scope | Accepted tooling implementation merged; required technical checks pass; any affected post-merge release/provenance state is validated; no Home Assistant Beta is required unless another applicable class selected WF-01 | DDR state merged | Accepted durable documentation merged | Exact visually accepted content merged |
+| **Validation activity** | Applicable product tests/technical checks pass; candidate suitable for controlled Beta integration/deployment | Applicable architecture consistency and authority checks pass | Compatibility risk resolved; consumer validation only where justified | Governance structure/integrity checks pass; Appendix C requirements apply only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed Standards satisfy Section 22.7 and the Governance Lifecycle Standard | Applicable unit/integration/fixture checks pass; governing control objective, failure behaviour, release/provenance integrity and rerun behaviour validated where relevant; product runtime Beta is not required solely for Governance Tooling | Identifier, ownership and supersession consistency pass | Only applicable integrity/document checks | Exact final accepted bytes/content used for integrity/provenance checks; Architecture Diagram Standard conformity confirmed where applicable |
+| **G5** | Accepted issue PR squash-merged to persistent `beta`; exact Beta candidate identity recorded; required beta deployment/release authorised; exact candidate deployed/released to applicable Beta runtime/environment; required product preflight/configuration validation passes; deployed/released state sufficiently verified | If part of same issue, architecture obligations already satisfied before Beta | If part of same issue, compatibility obligations already satisfied before Beta | If part of same issue, governance obligations already satisfied before Beta | Applies only where the same issue also selects WF-01 through another class; Governance Tooling obligations already satisfied before Beta | If part of same issue, DDR obligations already satisfied before Beta | If part of same issue, durable-document obligations already satisfied where required | If part of same issue, final accepted diagram obligations already satisfied |
+| **G6** | Beta succeeds against exact candidate; same tested runtime-affecting content promoted to `main`; promotion equivalence verified; persistent `beta` realigned as required; result remains traceable | — | — | — | — | — | — | — |
+| **G7** | — | Accepted architecture state merged | Accepted contract state merged | Accepted governance state merged; Appendix C post-merge requirements apply only to `CENTRAL_GOVERNANCE.md` changes; separately governed Standards complete under Section 22.7 and the Governance Lifecycle Standard; distribution follows Section 22 where within scope | Accepted tooling implementation merged; required technical checks pass; any affected post-merge release/provenance state is validated; no product runtime Beta is required unless another applicable class selected WF-01 | DDR state merged | Accepted durable documentation merged | Exact visually accepted content merged |
 
 #### B.3 Rework and Exception Controls
 
 | Gate | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
 |---|---|---|---|---|---|---|---|---|
-| **G8** | Pre-merge correction normally continues same branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Tooling behaviour/control-semantics correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
+| **G8** | Pre-integration correction normally continues same issue branch/PR. Failed Beta correction uses same Linear issue but new corrective branch/PR normally based on and targeted to `beta`; failed candidate does not enter `main` | Substantive correction returns through human review | Contract meaning/compatibility correction returns through human review | Governance-substance correction returns through human review | Tooling behaviour/control-semantics correction returns through human review | Decision-substance correction returns through human review | Substantive correction returns through human review where required | Semantic/visual-meaning correction returns through human visual review |
 | **G9** | Technical-only correction may bypass repeated review only where product code behaviour remains unchanged | Metadata/provenance-only correction | Metadata/provenance-only correction | Technical packaging/approval-metadata correction where governance substance is unchanged | Technical-only correction may bypass repeated review only where accepted tooling behaviour and governing control semantics remain unchanged | Metadata/provenance-only correction where decision is unchanged | Non-substantive technical correction | Integrity/provenance regeneration against unchanged accepted content |
 | **G10** | — | — | — | — | — | — | — | — |
 

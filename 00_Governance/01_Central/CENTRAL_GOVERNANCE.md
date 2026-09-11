@@ -1,9 +1,9 @@
 # CENTRAL_GOVERNANCE.md
 
-**Governance version:** 11.0.0
+**Governance version:** 11.1.0
 **Status:** Approved
-**Approval tag:** `governance-v11.0.0`
-**Approval date:** 2026-09-10
+**Approval tag:** `governance-v11.1.0`
+**Approval date:** 2026-09-11
 
 **Authority of appendices:**  
 All appendices form an integral part of this governance book and carry the same authority as the main body unless an appendix explicitly states otherwise. Agents must apply applicable appendix requirements together with the relevant body sections and must not treat appendices as optional or supplementary guidance.
@@ -443,11 +443,18 @@ Everything under:
 
 is centrally managed content.
 
-The product-root `AGENTS.md` is also centrally managed as the single explicit managed path outside that subtree.
+Two exact managed paths outside that subtree are also centrally owned:
 
-Product-local work must not create, edit, rename, move or delete anything within `00_Governance/01_Central/**`, and must not locally modify product-root `AGENTS.md`.
+- product-root `AGENTS.md`;
+- `.github/workflows/central-gov-hook.yml`.
 
-The central Governance repository remains the source of truth for all centrally projected content. The canonical source for product-root `AGENTS.md` is `/Templates/product_root_agents.template.md`.
+Product-local work must not create, edit, rename, move or delete anything within `00_Governance/01_Central/**`, and must not locally modify either exact centrally managed out-of-subtree path.
+
+The central Governance repository remains the source of truth for all centrally projected content. The canonical source for product-root `AGENTS.md` is `/Templates/product_root_agents.template.md`. The canonical source for `.github/workflows/central-gov-hook.yml` is `/Templates/central_gov_hook.yml`.
+
+The product hook is deliberately thin. It triggers on every pull request and calls the single central reusable workflow at `83degrees/governance/.github/workflows/central-gov-wf.yml@main`. The reusable workflow and its central check implementation at `/tooling/central_gov_checks.py` remain in the Governance repository and are not projected into product repositories. The central workflow is check-only/read-only; product-specific parameters are not supplied by the hook. Applicable checks are inferred centrally from deterministic governed repository structure.
+
+These exact out-of-subtree exceptions do not authorise central ownership of other product-root or `.github/**` content.
 
 `PROJECT_PROFILE.md` and `AAR_REGISTER.md` are product-owned artefacts and remain outside the centrally managed subtree.
 
@@ -840,6 +847,22 @@ Equivalent risk receives equivalent governance regardless of actor.
 
 Governance distinguishes the control that must be satisfied from the actor or mechanism used to satisfy it.
 
+#### 7.7 Workflow-to-Git Route Binding
+
+Where the selected workflow profile determines the required PR target, that consequence must be made explicit rather than left for an executor or reviewer to infer.
+
+For `WF-01` runtime-changing product work:
+
+- G0 records the selected workflow profile and required reviewed-issue PR target as persistent product `beta`;
+- G0 verifies that the required persistent `beta` branch exists before the issue may enter `Ready`;
+- G1 execution instructions or handoff state the target/base branch explicitly;
+- the established Git route must match the G0 routing decision; and
+- G2 independently verifies the actual PR base branch before substantive review begins.
+
+An executor, including an agent, must not silently default a `WF-01` issue PR to `main` or infer the target from repository defaults.
+
+If the required persistent `beta` branch is absent, runtime-changing `WF-01` work is not ready to start. The absence must be resolved as governed prerequisite work or through an applicable explicit user override; it must not first be discovered by attempting to retarget a completed PR.
+
 ---
 
 ## Part III — Durable Product Knowledge
@@ -1100,6 +1123,14 @@ cycles.
 A pull request proposes incorporation of a branch into the target branch appropriate to the selected workflow.
 
 For normal `WF-01` runtime-changing work, the reviewed issue PR targets persistent `beta` before Beta operation. For work that does not require Beta, the normal target remains `main`. Promotion of Beta-passed content from `beta` to `main` is governed separately by Section 11.7 and does not create a second substantive human-review requirement where the accepted/tested content is unchanged.
+
+Before substantive review begins at G2, the actual PR base must be independently verified against the workflow-to-Git route recorded for the issue. A PR that does not target the branch required by its selected workflow fails G2 and must not be treated as review-ready.
+
+Governed product repositories receive the centrally managed `.github/workflows/central-gov-hook.yml` hook. On every pull request the hook calls the single reusable Governance workflow at `83degrees/governance/.github/workflows/central-gov-wf.yml@main`; the product repository does not contain a copy of the workflow implementation or check logic. The central workflow invokes the central checks in `/tooling/central_gov_checks.py` using read-only access. For the first mechanical routing control, a PR that changes any path under canonical `04_Source/**` is treated as runtime-affecting and therefore requires both an existing persistent `beta` branch and an actual PR base of `beta`. A non-runtime PR may target `main` without being blocked solely by this routing check.
+
+This path-based check is an enforcement mechanism for the standard repository model, not a substitute for correct semantic classification. Runtime-affecting implementation placed outside `04_Source/**` remains a repository-model violation and must not be treated as non-runtime merely because the routing check did not classify its path as runtime implementation.
+
+The centrally managed check supplies independent mechanical evidence for G2. Where repository-plan or platform limits do not make the check a technically mandatory merge status, Governance still treats a failing or absent required check as a failed G2 condition; the work must not proceed to substantive review or merge as though the route were valid.
 
 It provides the principal GitHub review surface and may contain:
 
@@ -1952,10 +1983,11 @@ Audit completion does not trigger unrelated broad revalidation.
 
 Approved central Governance is maintained in the central Governance Git/GitHub repository.
 
-Central Governance artefacts required locally by product agents are distributed to the authorised centrally managed projection destinations. These consist of:
+Central Governance artefacts required locally by product agents or by centrally governed repository controls are distributed to the authorised centrally managed projection destinations. These consist of:
 
-- `00_Governance/01_Central/**`; and
-- the exact product-root `AGENTS.md` loader.
+- `00_Governance/01_Central/**`;
+- exact product-root `AGENTS.md`; and
+- exact `.github/workflows/central-gov-hook.yml`.
 
 Content at those managed destinations remains centrally owned and must not be locally altered by product work.
 
@@ -1974,6 +2006,8 @@ The authoritative source of every central Governance artefact is its approved lo
 The central Governance repository owns the centrally managed product projection and the operational artefacts used to define release and distribution populations.
 
 The authoritative source for product-root `AGENTS.md` is the inert `/Templates/product_root_agents.template.md`; it becomes an active loader only when projected to the product root.
+
+The authoritative source for `.github/workflows/central-gov-hook.yml` is `/Templates/central_gov_hook.yml`. The projected file is only the generic product-side hook. The reusable workflow at `/.github/workflows/central-gov-wf.yml` and central check implementation at `/tooling/central_gov_checks.py` remain solely in the central Governance repository.
 
 Product repositories must not locally modify centrally projected Governance content. Distribution of approved central content is deployment, not a transfer of authority to the product repository.
 
@@ -2086,7 +2120,7 @@ A separate rollout or remediation issue is required only where deferred, excepti
 
 #### 22.9 Drift
 
-A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/**`, or a product-root `AGENTS.md` that differs from its applicable centrally approved projection, is a Governance-integrity issue.
+A locally altered, misplaced, mismatched, incomplete or untraceable artefact within `00_Governance/01_Central/**`, product-root `AGENTS.md`, or `.github/workflows/central-gov-hook.yml` that differs from its applicable centrally approved projection is a Governance-integrity issue.
 
 Restore the applicable approved central artefact rather than preserve or normalise local divergence.
 
@@ -2440,9 +2474,9 @@ The actor performing the work does not change the applicable workflow profile or
 
 | Gate | Transition / point | `WF-01` | `WF-02` | Universal requirement |
 |---|---|---:|---:|---|
-| **G0 — Ready Gate** | `Backlog → Ready` | Yes | Yes | Objective, acceptance criteria, repository, applicable change classes and material dependencies sufficiently defined; no unresolved prerequisite decision |
-| **G1 — Start Gate** | `Ready → In Progress` | Yes | Yes | An authorised execution trigger has occurred; execution route selected; normal Git route established where applicable |
-| **G2 — Review-Readiness Gate** | `In Progress → Ready for Review` | Yes | Yes | Proposed change complete and reviewable; applicable PR/review surface available; substantive execution paused |
+| **G0 — Ready Gate** | `Backlog → Ready` | Yes | Yes | Objective, acceptance criteria, repository, applicable change classes and material dependencies sufficiently defined; no unresolved prerequisite decision. For `WF-01`, selected workflow and required reviewed-issue PR target are explicitly recorded and required persistent `beta` existence is verified. |
+| **G1 — Start Gate** | `Ready → In Progress` | Yes | Yes | An authorised execution trigger has occurred; execution route selected; normal Git route established where applicable. Where workflow determines a target branch, execution/handoff explicitly states that base and the established route matches the G0 decision. |
+| **G2 — Review-Readiness Gate** | `In Progress → Ready for Review` | Yes | Yes | Proposed change complete and reviewable; applicable PR/review surface available; substantive execution paused. Actual PR base is independently verified against the selected workflow/recorded route, and any applicable centrally managed routing check passes. |
 | **G3 — Human Acceptance Gate** | Human acceptance while in `Ready for Review` | Yes | Yes | Required human review completed and accepted |
 | **G4 — Validation Entry Gate** | `Ready for Review → Ready for Validation` | Yes | Yes | Applicable human acceptance has been obtained and remains valid; accepted substance is ready for applicable validation |
 
@@ -2516,9 +2550,9 @@ The workflow profile determines which workflow gates apply. The assigned change 
 
 | Gate | Code | Architecture | Contract | Governance | Governance Tooling | DDR | Documentation | Diagram |
 |---|---|---|---|---|---|---|---|---|
-| **G0** | Product runtime code scope/objective identifiable | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | Central Governance tooling purpose/control objective and non-product-runtime boundary identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
-| **G1** | — | — | — | — | — | — | — | — |
-| **G2** | Linked PR pushed; implementation ready for human review | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed Standards follow Section 22.7 and the Governance Lifecycle Standard | Linked PR pushed; tooling implementation and affected Governance control/release behaviour reviewable | DDR change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
+| **G0** | Product runtime code scope/objective identifiable; for `WF-01`, required PR target recorded and persistent `beta` existence confirmed | Architectural concern/boundary identifiable | Provider/consumer relationship identifiable | Governance scope identifiable | Central Governance tooling purpose/control objective and non-product-runtime boundary identifiable | DDR need identifiable where already known | Durable-document scope identifiable | Diagram/visual scope identifiable |
+| **G1** | For `WF-01`, executor/handoff names the required `beta` base explicitly and the established route matches G0 | — | — | — | — | — | — | — |
+| **G2** | Linked PR pushed; implementation ready for human review; for `WF-01`, actual PR base independently matches required persistent `beta` and applicable routing check passes | Authoritative architecture change reviewable | Contract delta and declared-consumer impact identifiable | Governance change reviewable; Appendix C preparation applies only where `CENTRAL_GOVERNANCE.md` is being changed; separately governed Standards follow Section 22.7 and the Governance Lifecycle Standard | Linked PR pushed; tooling implementation and affected Governance control/release behaviour reviewable | DDR change reviewable | Durable documentation reviewable | Final or near-final visual artefact available for human visual review |
 | **G3** | Human code approval | Human acceptance of architectural substance | Human acceptance plus proportionate consumer compatibility assessment | Human acceptance of governance change | Human technical acceptance of tooling behaviour and fit with the governing control objective | Human acceptance of durable decision record | Human acceptance of the final intended documentation state | Human visual acceptance of final intended state; Architecture Diagram Standard conformity reviewed where applicable |
 | **G4** | Applicable tests/technical checks identified | Applicable architecture consistency and authority checks identified | Compatibility validation requirements identified | Governance structure/integrity checks identified | Applicable unit/integration/fixture and release/provenance checks identified | Identifier, ownership and supersession checks identified | Applicable integrity/document checks identified | Applicable integrity/provenance and standard-conformity checks identified |
 
@@ -2680,6 +2714,9 @@ The baseline is:
 ```text
 <Product>/
 │
+├── .github/
+│   └── workflows/
+│       └── central-gov-hook.yml
 ├── AGENTS.md
 ├── 00_Governance/
 ├── 01_Architecture/
@@ -2692,7 +2729,9 @@ The baseline is:
 └── 08_Deployment/
 ```
 
-Product-root `AGENTS.md` is the single centrally managed top-level file. Its central source, ownership and loader semantics are defined in Sections 2.3 and 3.1.
+`AGENTS.md` and `.github/workflows/central-gov-hook.yml` are the exact centrally managed paths outside `00_Governance/01_Central/**`. Their central sources and ownership are defined in Sections 3.1 and 22.1.
+
+The presence of the centrally managed hook does not make other `.github/**` content centrally owned; product repositories may retain other product-owned GitHub configuration subject to normal governance.
 
 A standard structural location need not physically exist in Git until it contains required content.
 
@@ -2721,7 +2760,7 @@ The standard structure is:
 └── AAR_REGISTER.md
 ```
 
-The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure. The separately managed product-root `AGENTS.md` is governed by the same central-ownership principle through its explicit exception in Sections 2.3 and 3.1.
+The ownership and mutation boundary for `00_Governance/01_Central/**` is defined in Section 3.1 and applies to this structure. The separately managed product-root `AGENTS.md` and `.github/workflows/central-gov-hook.yml` are governed by the same central-ownership principle through their explicit exceptions in Sections 3.1 and 22.1.
 
 #### E.3 `01_Architecture/`
 

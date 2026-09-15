@@ -9,7 +9,7 @@ Architecture Diagram Standard.
 ## Established MediaCat-local conventions
 
 - The diagram separates verified caller boundaries, the MediaCat product
-  boundary, the deployed Curated Media runtime boundary, and external sources.
+  boundary, the approved MediaCat runtime boundary, and external sources.
 - The deployed runtime is divided into catalogue load and storage, normalized
   lookup, and Home Assistant Media Source regions.
 - Yellow cylinder shapes are used for the catalogue source and immutable loaded
@@ -24,8 +24,8 @@ Architecture Diagram Standard.
 - External-owned ASTV, AdvMedia, Home Assistant, and Radio Browser elements are
   shown only at the MediaCat-facing boundary and are not expanded into unowned
   internals.
-- Current-production scope and evidence limitations are stated directly on the
-  diagram; historical and future topology is excluded.
+- Lifecycle scope and evidence limitations are stated directly on the diagram;
+  the approved target is distinguished from temporary legacy compatibility.
 
 Shared connector, variable-label, gateway, boundary, editing, and review rules
 remain defined only by

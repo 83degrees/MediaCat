@@ -1,17 +1,17 @@
-<mxfile host="Electron" modified="2026-08-26T01:00:00.000Z" agent="Codex" version="26.0.0" type="device">
-  <diagram id="mediacat-current-production" name="Current Production">
+<mxfile host="Electron" modified="2026-09-15T10:00:00.000Z" agent="Codex" version="26.0.0" type="device">
+  <diagram id="mediacat-approved-target" name="Approved Target">
     <mxGraphModel dx="1900" dy="1240" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1240" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <mxCell id="title" value="&lt;b&gt;MediaCat — Current Production Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
+        <mxCell id="title" value="&lt;b&gt;MediaCat — Approved Namespace Target&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
           <mxGeometry x="40" y="24" width="980" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Authoritative visual companion • schema-v3 current state • verified 2026-08-25" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="Authoritative visual companion • schema-v3 semantics unchanged • ASTV-221 proposed target" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
           <mxGeometry x="42" y="66" width="940" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; MediaCat product and deployed Curated Media implementation. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. No historical or future topology is shown." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Approved MediaCat namespace target. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Legacy curated_media remains parallel during phased migration and is not expanded here." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
           <mxGeometry x="1050" y="25" width="810" height="66" as="geometry" />
         </mxCell>
 
@@ -44,11 +44,11 @@
         <mxCell id="advmedia-caller" value="&lt;b&gt;AdvMedia standalone gateway boundary&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;script.advmedia_prepare_playback&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;Caller already selected method and endpoint.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="75" y="430" width="245" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="ha-browser" value="&lt;b&gt;Home Assistant Media Browser / Search&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;media-source://curated_media&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="ha-browser" value="&lt;b&gt;Home Assistant Media Browser / Search&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;media-source://mediacat&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="75" y="700" width="245" height="85" as="geometry" />
         </mxCell>
 
-        <mxCell id="runtime-boundary" value="DEPLOYED CURATED MEDIA IMPLEMENTATION • Home Assistant domain: curated_media • no separate mediacat runtime/domain" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+        <mxCell id="runtime-boundary" value="APPROVED MEDIACAT IMPLEMENTATION • Home Assistant domain: mediacat • logical catalogue_id remains curated_media" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="420" y="190" width="1045" height="805" as="geometry" />
         </mxCell>
 
@@ -62,24 +62,24 @@
           <mxGeometry x="1110" y="240" width="330" height="710" as="geometry" />
         </mxCell>
 
-        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v3 catalogue source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;curated_media/catalogue.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: curated_media&lt;br&gt;catalogue_schema_version: 3&lt;/span&gt;&lt;br&gt;17 items • 1 ordered radio category" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v3 catalogue source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat/catalogue.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: curated_media&lt;br&gt;catalogue_schema_version: 3&lt;/span&gt;&lt;br&gt;17 items • 1 ordered radio category" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="315" width="245" height="145" as="geometry" />
         </mxCell>
         <mxCell id="loader" value="&lt;b&gt;Integration setup and loader&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_setup&lt;br&gt;async_load_catalogue&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;read • validate • recursively freeze&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="530" width="245" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="snapshot" value="&lt;b&gt;Immutable loaded catalogue snapshot&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;hass.data[&amp;quot;curated_media&amp;quot;][&amp;quot;catalogue&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;shared by action and Media Source surfaces&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="snapshot" value="&lt;b&gt;Immutable loaded catalogue snapshot&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;hass.data[&amp;quot;mediacat&amp;quot;][&amp;quot;catalogue&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;shared by action and Media Source surfaces&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="715" width="245" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="lookup-action" value="&lt;b&gt;Normalized cross-product action&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;curated_media.resolve_media_record&lt;/span&gt;&lt;br&gt;&lt;br&gt;Required inputs:&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id&lt;br&gt;item_id&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;Registered only when CatalogueV3 is loaded.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="lookup-action" value="&lt;b&gt;Normalized cross-product action&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat.resolve_media_record&lt;/span&gt;&lt;br&gt;&lt;br&gt;Required inputs:&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id&lt;br&gt;item_id&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;Registered only when CatalogueV3 is loaded.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="480" y="315" width="230" height="180" as="geometry" />
         </mxCell>
         <mxCell id="normalized-record" value="&lt;b&gt;Unwrapped normalized returned record&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;returned_record_version: 1&lt;br&gt;catalogue_id • item_id&lt;br&gt;catalogue_label • type&lt;br&gt;type_metadata&lt;br&gt;execution_methods (all available)&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;No selected method, endpoint, fallback, or profile.&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#eaf7e8;strokeColor=#82b366;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="480" y="650" width="230" height="180" as="geometry" />
         </mxCell>
 
-        <mxCell id="media-source-surface" value="&lt;b&gt;Curated Media Media Source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_browse_media&lt;br&gt;async_search_media&lt;br&gt;async_resolve_media&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="media-source-surface" value="&lt;b&gt;MediaCat Media Source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_browse_media&lt;br&gt;async_search_media&lt;br&gt;async_resolve_media&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="315" width="260" height="130" as="geometry" />
         </mxCell>
         <mxCell id="browse-projection" value="&lt;b&gt;Browse / search projection&lt;/b&gt;&lt;br&gt;Radio records with usable&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;execution_methods.ha_mplayer.source&lt;/span&gt;&lt;br&gt;&lt;br&gt;14 playable items • stored order&lt;br&gt;label / description / tags search" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
@@ -89,14 +89,14 @@
           <mxGeometry x="1145" y="710" width="260" height="160" as="geometry" />
         </mxCell>
 
-        <mxCell id="direct-source" value="&lt;b&gt;Direct URL source facts&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;source_type: url&lt;br&gt;url&lt;br&gt;mime_type&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;No provider-resolution call by Curated Media.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="direct-source" value="&lt;b&gt;Direct URL source facts&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;source_type: url&lt;br&gt;url&lt;br&gt;mime_type&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;No provider-resolution call by MediaCat.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1575" y="610" width="240" height="130" as="geometry" />
         </mxCell>
         <mxCell id="radio-browser" value="&lt;b&gt;Radio Browser Media Source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;provider: radio_browser&lt;br&gt;async_resolve_media_source(uri)&lt;/span&gt;&lt;br&gt;Returns final non-recursive URL + MIME type&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;External Home Assistant Media Source domain&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1575" y="805" width="240" height="140" as="geometry" />
         </mxCell>
 
-        <mxCell id="edge-file-loader" value="read &amp;lt;config&amp;gt;/curated_media/catalogue.yaml" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="catalogue-file" target="loader">
+        <mxCell id="edge-file-loader" value="read &amp;lt;config&amp;gt;/mediacat/catalogue.yaml" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="catalogue-file" target="loader">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge-loader-snapshot" value="validate + recursively freeze + store" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="loader" target="snapshot">

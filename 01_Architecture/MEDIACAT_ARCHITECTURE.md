@@ -2,8 +2,10 @@
 
 ## Status
 
-This is the authoritative current-state MediaCat architecture. The normalized
-schema-v3 architecture became current through `ASTV-65` proof on
+This is the authoritative MediaCat architecture. It distinguishes the current
+implemented production state from the proposed `mediacat` namespace target
+under ASTV-221. The normalized schema-v3 architecture became current through
+`ASTV-65` proof on
 2026-08-24, and the permanent standalone AdvMedia gateway became a second direct
 lookup consumer through `ASTV-67` on 2026-08-25.
 
@@ -31,10 +33,10 @@ captured for `ASTV-25` / `ASTV-26`. They are not current production behavior.
 
 The authoritative current-production visual companion is
 [MEDIACAT_ARCHITECTURE.drawio](Diagrams/MEDIACAT_ARCHITECTURE.drawio). It shows the
-MediaCat product boundary and deployed Curated Media implementation at one
-logical level, with ASTV and AdvMedia only at their MediaCat-facing caller
-boundaries. This document remains the authoritative prose narrative, and the
-contracts listed above remain authoritative for precise interfaces.
+approved MediaCat namespace target at one logical level, with ASTV and AdvMedia
+only at their MediaCat-facing caller boundaries. This document remains the
+authoritative prose narrative, and the contracts listed above remain
+authoritative for precise interfaces.
 
 ---
 
@@ -44,10 +46,13 @@ contracts listed above remain authoritative for precise interfaces.
 available execution methods and the route-specific source facts returned to its
 consumers.
 
-**Curated Media** is the deployed Home Assistant catalogue integration under the
-`curated_media` domain. It is one catalogue within MediaCat, not a synonym for
-the MediaCat product. There is no separate deployed `mediacat` Home Assistant
-domain.
+**MediaCat** is the approved Home Assistant integration identity under the
+`mediacat` domain. **Curated Media** remains the logical catalogue identified by
+`catalogue_id: curated_media`; catalogue identity is not the integration domain.
+
+Current implemented production still exposes the legacy `curated_media` domain.
+ASTV-221 introduces `mediacat` in parallel and retains the legacy integration
+until consumer migration and retirement readiness have been proved.
 
 MediaCat is separate from:
 
@@ -56,13 +61,51 @@ MediaCat is separate from:
 - **AdvMedia**, which processes a caller-selected Home Assistant media method
   into endpoint/profile-specific playback data.
 
-The deployed MediaCat runtime is therefore the Curated Media integration and its
-loaded catalogue. Product ownership is broader than the current deployment and
-does not authorize uncontracted data movement or a new runtime.
+The approved runtime is the MediaCat integration and its loaded Curated Media
+catalogue. During migration, the new and legacy integrations load identical
+catalogue content into distinct Home Assistant domain-data namespaces. Product
+ownership is broader than the deployment and does not authorize uncontracted
+data movement.
 
 ---
 
-## Current Production Evidence
+## Approved Namespace Migration Architecture
+
+The approved target integration uses:
+
+- implementation directory `/config/custom_components/mediacat/`;
+- Home Assistant domain and service namespace `mediacat`;
+- user-facing integration and Media Source name `MediaCat`;
+- catalogue path `/config/mediacat/catalogue.yaml`; and
+- normalized lookup action `mediacat.resolve_media_record`.
+
+The stored catalogue continues to declare `catalogue_id: curated_media`, and
+lookup callers continue to pass that value. Request fields, returned-record
+version 1, response fields, failure behaviour, and Media Source projection
+semantics do not change.
+
+Parallel operation is isolated by Home Assistant domain. Each integration owns
+its own service registrations, Media Source domain, and
+`hass.data[<domain>]["catalogue"]` mapping. Neither implementation has a shared
+mutable cache or module-global catalogue state. Both read equivalent catalogue
+bytes from their respective configuration directories.
+
+Migration sequencing is:
+
+1. deploy and validate `mediacat` alongside `curated_media`;
+2. prove action and Media Source output parity;
+3. migrate AdvMedia and ASTV independently to `mediacat.resolve_media_record`;
+4. scan repositories and deployed configuration for remaining active legacy
+   dependencies; and
+5. remove the legacy integration and catalogue path only after retirement
+   readiness and rollback evidence are established.
+
+DDR-03-002 records the durable rationale for separating runtime namespace from
+catalogue identity and for using parallel migration.
+
+---
+
+## Current Implemented Production Evidence — Legacy Namespace
 
 ### Fresh live read-only verification
 
@@ -110,7 +153,7 @@ remains read-only evidence for the pre-cutover schema-v2 baseline only.
 
 ---
 
-## Current Curated Media Deployment
+## Current Implemented Curated Media Deployment
 
 ### Setup and storage
 
@@ -189,7 +232,7 @@ Assistant-command-only records are intentionally absent from browse and search.
 
 ---
 
-## Current Normalized Cross-Product Flow
+## Current Implemented Normalized Cross-Product Flow
 
 ### ASTV media path
 
@@ -314,9 +357,12 @@ pre-cutover evidence. They are not duplicated as current architecture here.
 
 ## Contract Alignment
 
-The MediaCat-owned item-lookup contract agrees with the current producer, live
-registered input schema, current normalized traces and architecture above. The
-three external consumer-owned contracts were reviewed for consistency:
+The MediaCat-owned item-lookup contract records the proposed `mediacat`
+producer namespace and the unchanged request/returned-record semantics. The
+current production evidence and external consumer contracts still identify the
+temporary legacy producer until the separately governed consumer migrations
+complete. The three external consumer-owned contracts were reviewed for
+current-state consistency:
 
 - the ASTV execution-dispatch contract owns current lookup-before-selection,
   complete-record transport and the ASTV assistant path;
@@ -325,8 +371,9 @@ three external consumer-owned contracts were reviewed for consistency:
 - the AdvMedia-MediaCat gateway contract owns the separate one-lookup/one-core
   standalone path.
 
-No field, requiredness, semantic, version, registry or ownership change is made
-by this architecture audit.
+ASTV-221 changes the producer endpoint namespace and therefore proposes lookup
+contract version 2.0.0. It does not change any request field, response field,
+requiredness, returned-record version, record semantic, or ownership boundary.
 
 ---
 
@@ -355,11 +402,14 @@ by this architecture audit.
 
 ## Current-State Conclusion
 
-Current production uses the normalized schema-v3 design. Curated Media produces
-the complete returned-record-v1 mapping, ASTV selects method and endpoint,
-AdvMedia processes only the selected Home Assistant method, and ASTV owns the
-assistant path and final execution actions. The standalone AdvMedia gateway is a
-second direct lookup consumer with its own contract.
+Current implemented production uses the normalized schema-v3 design through the
+legacy `curated_media` namespace. The approved target exposes the same design
+through `mediacat`, preserves `catalogue_id: curated_media`, and runs both
+domains in parallel until consumer migration and retirement readiness pass.
+MediaCat produces the complete returned-record-v1 mapping, ASTV selects method
+and endpoint, AdvMedia processes only the selected Home Assistant method, and
+ASTV owns the assistant path and final execution actions. The standalone
+AdvMedia gateway remains a second direct lookup consumer with its own contract.
 
 `curated_media.resolve_item` and schema-v2 loader/Media Source support are
 retained compatibility or historical material. The retired Mermaid source is

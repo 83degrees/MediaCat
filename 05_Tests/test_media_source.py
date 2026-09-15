@@ -1,4 +1,4 @@
-"""Interface-behaviour coverage for Curated Media's Media Source adapter."""
+"""Interface-behaviour coverage for MediaCat's Media Source adapter."""
 
 from __future__ import annotations
 
@@ -55,21 +55,21 @@ if not hasattr(media_player, "SearchMedia"):
     media_player.SearchMediaQuery = SearchMediaQuery
     media_source_component.BrowseMediaSource = BrowseMediaSource
 
-from custom_components.curated_media import media_source as media_source_module
-from custom_components.curated_media.catalogue import (
+from custom_components.mediacat import media_source as media_source_module
+from custom_components.mediacat.catalogue import (
     CatalogueV3,
     _freeze_mapping,
     _load_catalogue,
 )
-from custom_components.curated_media.const import DATA_CATALOGUE, DOMAIN
-from custom_components.curated_media.media_source import CuratedMediaSource
+from custom_components.mediacat.const import DATA_CATALOGUE, DOMAIN
+from custom_components.mediacat.media_source import MediaCatSource
 
 V2_FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
 V3_CATALOGUE = (
     Path(__file__).parents[1]
     / "04_Source"
     / "config"
-    / "curated_media"
+    / "mediacat"
     / "catalogue.yaml"
 )
 
@@ -99,9 +99,9 @@ class FakeHass:
     data: dict[str, Any]
 
 
-def _source(catalogue) -> tuple[FakeHass, CuratedMediaSource]:
+def _source(catalogue) -> tuple[FakeHass, MediaCatSource]:
     hass = FakeHass(data={DOMAIN: {DATA_CATALOGUE: catalogue}})
-    return hass, CuratedMediaSource(hass)
+    return hass, MediaCatSource(hass)
 
 
 def _item(
@@ -214,13 +214,13 @@ def test_schema_v2_resolution_and_failures_remain_unchanged() -> None:
         PlayMedia("https://streams.example.test/beta.mp3", "audio/mpeg")
     )
 
-    with pytest.raises(BrowseError, match="Unknown Curated Media category"):
+    with pytest.raises(BrowseError, match="Unknown MediaCat category"):
         _run(source.async_browse_media(_item(hass, "category/missing")))
-    with pytest.raises(BrowseError, match="Unknown Curated Media identifier"):
+    with pytest.raises(BrowseError, match="Unknown MediaCat identifier"):
         _run(source.async_browse_media(_item(hass, "unsupported/value")))
-    with pytest.raises(Unresolvable, match="Unknown Curated Media item"):
+    with pytest.raises(Unresolvable, match="Unknown MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "item/missing")))
-    with pytest.raises(Unresolvable, match="Not a playable Curated Media item"):
+    with pytest.raises(Unresolvable, match="Not a playable MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "category/favourites")))
 
 
@@ -354,8 +354,8 @@ def test_schema_v3_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
     self_catalogue = _v3_catalogue_with_source(
         {
             "source_type": "ha_media_source",
-            "provider": "curated_media",
-            "uri": "media-source://curated_media/item/test_radio",
+            "provider": "mediacat",
+            "uri": "media-source://mediacat/item/test_radio",
             "media_type": "station",
         }
     )
@@ -367,7 +367,7 @@ def test_schema_v3_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
         return PlayMedia("media-source://other/item/still-unresolved", "station")
 
     monkeypatch.setattr(media_source_module, "async_resolve_media_source", delegate)
-    with pytest.raises(Unresolvable, match="refers back to Curated Media"):
+    with pytest.raises(Unresolvable, match="refers back to MediaCat"):
         _run(source.async_resolve_media(_item(hass, "item/test_radio")))
     assert calls == []
 
@@ -405,9 +405,9 @@ def test_schema_v3_unplayable_items_have_no_method_fallback() -> None:
     ]
     category = _run(source.async_browse_media(_item(hass, "category/radio")))
     assert category.children == []
-    with pytest.raises(BrowseError, match="Unplayable Curated Media item"):
+    with pytest.raises(BrowseError, match="Unplayable MediaCat item"):
         _run(source.async_browse_media(_item(hass, "item/test_radio")))
-    with pytest.raises(Unresolvable, match="Unresolvable Curated Media item"):
+    with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "item/test_radio")))
 
 
@@ -429,7 +429,7 @@ def test_schema_v3_unusable_sources_are_explicitly_unresolvable(
     catalogue = _v3_catalogue_with_source(source_record)
     hass, source = _source(catalogue)
 
-    with pytest.raises(Unresolvable, match="Unresolvable Curated Media item"):
+    with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "item/test_radio")))
 
 
@@ -438,13 +438,13 @@ def test_schema_v3_unknown_and_assistant_only_items_fail_explicitly() -> None:
     catalogue = _load_catalogue(V3_CATALOGUE)
     hass, source = _source(catalogue)
 
-    with pytest.raises(BrowseError, match="Unknown Curated Media category"):
+    with pytest.raises(BrowseError, match="Unknown MediaCat category"):
         _run(source.async_browse_media(_item(hass, "category/missing")))
-    with pytest.raises(Unresolvable, match="Unknown Curated Media item"):
+    with pytest.raises(Unresolvable, match="Unknown MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "item/missing")))
 
     for item_id in ASSISTANT_ONLY_ITEM_IDS:
-        with pytest.raises(BrowseError, match="Unplayable Curated Media item"):
+        with pytest.raises(BrowseError, match="Unplayable MediaCat item"):
             _run(source.async_browse_media(_item(hass, f"item/{item_id}")))
-        with pytest.raises(Unresolvable, match="Unresolvable Curated Media item"):
+        with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
             _run(source.async_resolve_media(_item(hass, f"item/{item_id}")))

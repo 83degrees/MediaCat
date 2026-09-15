@@ -25,7 +25,8 @@ Architecture Diagram Standard.
   shown only at the MediaCat-facing boundary and are not expanded into unowned
   internals.
 - Lifecycle scope and evidence limitations are stated directly on the diagram;
-  the approved target is distinguished from temporary legacy compatibility.
+  approved post-retirement architecture is distinguished from pending live
+  deployment proof.
 
 Shared connector, variable-label, gateway, boundary, editing, and review rules
 remain defined only by

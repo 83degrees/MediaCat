@@ -11,12 +11,12 @@ import sys
 
 from homeassistant.util.yaml import load_yaml
 
-from custom_components.curated_media.catalogue import CatalogueV3, _load_catalogue
-from custom_components.curated_media.resolver import CatalogueResolver
+from custom_components.mediacat.catalogue import CatalogueV3, _load_catalogue
+from custom_components.mediacat.resolver import CatalogueResolver
 
 
 ROOT = Path(__file__).parents[1]
-TARGET = ROOT / "04_Source" / "config" / "curated_media" / "catalogue.yaml"
+TARGET = ROOT / "04_Source" / "config" / "mediacat" / "catalogue.yaml"
 ROLLBACK_ROOT = (
     ROOT
     / "0A_Historic"

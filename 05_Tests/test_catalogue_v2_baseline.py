@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from custom_components.curated_media.catalogue import _load_catalogue
-from custom_components.curated_media.resolver import CatalogueResolver
+from custom_components.mediacat.catalogue import _load_catalogue
+from custom_components.mediacat.resolver import CatalogueResolver
 
 FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
 

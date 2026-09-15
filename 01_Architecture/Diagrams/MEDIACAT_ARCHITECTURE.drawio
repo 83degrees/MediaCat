@@ -5,13 +5,13 @@
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <mxCell id="title" value="&lt;b&gt;MediaCat — Approved Namespace Target&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
+        <mxCell id="title" value="&lt;b&gt;MediaCat — Single-Domain Runtime Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
           <mxGeometry x="40" y="24" width="980" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Authoritative visual companion • schema-v3 semantics unchanged • ASTV-221 proposed target" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="Authoritative visual companion • post-retirement mediacat namespace • schema-v3 semantics unchanged" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
           <mxGeometry x="42" y="66" width="940" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Approved MediaCat namespace target. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Legacy curated_media remains parallel during phased migration and is not expanded here." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Current approved single-domain MediaCat architecture. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Retired namespace references remain historical or rollback evidence outside this map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
           <mxGeometry x="1050" y="25" width="810" height="66" as="geometry" />
         </mxCell>
 
@@ -48,7 +48,7 @@
           <mxGeometry x="75" y="700" width="245" height="85" as="geometry" />
         </mxCell>
 
-        <mxCell id="runtime-boundary" value="APPROVED MEDIACAT IMPLEMENTATION • Home Assistant domain: mediacat • logical catalogue_id remains curated_media" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+        <mxCell id="runtime-boundary" value="MEDIACAT IMPLEMENTATION • sole Home Assistant domain: mediacat • logical catalogue_id remains curated_media" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="420" y="190" width="1045" height="805" as="geometry" />
         </mxCell>
 
@@ -141,7 +141,7 @@
         <mxCell id="ownership-note" value="&lt;b&gt;Ownership guardrail&lt;/b&gt;&lt;br&gt;MediaCat reports identity, metadata, membership, and available execution-method source facts. ASTV owns selection and fallback policy. AdvMedia owns selected-method/profile processing. This map does not transfer those responsibilities." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#82b366;fontColor=#14532d;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="620" y="1060" width="630" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="evidence-note" value="&lt;b&gt;Recorded evidence limit&lt;/b&gt;&lt;br&gt;The live configuration-body search verified the two direct normalized lookup consumers shown here but was partial because six YAML-defined objects were not exposed. Absence of every possible external caller is not proven." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
+        <mxCell id="evidence-note" value="&lt;b&gt;Recorded evidence limit&lt;/b&gt;&lt;br&gt;ASTV-223 and ASTV-224 prove the two shown consumers migrated and passed representative playback. ASTV-225 live removal and post-removal checks remain required before this approved architecture is current implemented production." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="1275" y="1060" width="585" height="105" as="geometry" />
         </mxCell>
       </root>

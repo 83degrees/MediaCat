@@ -1,9 +1,11 @@
 # Source-baseline verification
 
-The regression suite verifies the source-controlled Curated Media schema-v2
-baseline without connecting to or changing a live Home Assistant system. It is
-not evidence of current production deployment, runtime activation, production
-Home Assistant version compatibility, or snapshot freshness.
+The regression suite verifies the source-controlled MediaCat implementation,
+including the retained Curated Media schema-v2 baseline and non-live parallel
+`curated_media` / `mediacat` registration and output-parity behaviour. It does
+not connect to or change a live Home Assistant system and is not evidence of
+production deployment, runtime activation, production Home Assistant version
+compatibility, or snapshot freshness.
 
 The recorded ASTV-71 verification environment is:
 

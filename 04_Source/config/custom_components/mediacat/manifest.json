@@ -1,0 +1,9 @@
+{
+  "domain": "mediacat",
+  "name": "MediaCat",
+  "version": "0.6.0",
+  "codeowners": [],
+  "dependencies": ["media_source"],
+  "integration_type": "service",
+  "requirements": []
+}

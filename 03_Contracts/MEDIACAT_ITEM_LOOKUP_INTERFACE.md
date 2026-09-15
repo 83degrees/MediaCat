@@ -5,11 +5,12 @@
 | Property | Value |
 | --- | --- |
 | Owner | MediaCat |
-| Producer | Home Assistant action `curated_media.resolve_media_record` |
+| Approved target producer | Home Assistant action `mediacat.resolve_media_record` |
+| Temporary legacy producer | Home Assistant action `curated_media.resolve_media_record` during phased consumer migration |
 | Consumers | ASTV; AdvMedia standalone gateway `script.advmedia_prepare_playback`; AdvMedia core as a downstream consumer of the complete normalized record supplied by ASTV or the standalone gateway |
-| Contract version | `1.0.0` |
+| Contract version | Proposed `2.0.0` namespace revision; current implemented production remains `1.0.0` until migration |
 | Returned-record version | `1` |
-| Status | Current deployed normalized lookup contract; standalone gateway consumer active after ASTV-67 proof |
+| Status | Proposed namespace revision under ASTV-221; returned-record semantics unchanged |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
 Under Governance 2.0, this provider-owned document is the single authoritative
@@ -25,15 +26,16 @@ locations:
 - `AdvMedia/03_Contracts/ASTV_ADVMEDIA_INTERFACE.md`; and
 - `ASTV/03_Contracts/ASTV_EXECUTION_DISPATCH_INTERFACE.md`.
 
-The central contract registry describes this deployed interface as current
-version `1.0.0`. ASTV-69 prepared its activation for the coordinated
+The central contract registry describes the currently deployed legacy namespace
+as version `1.0.0`. ASTV-69 prepared its activation for the coordinated
 [ASTV-65](https://linear.app/83degrees/issue/ASTV-65/prove-and-coordinate-mediacat-v3-cross-product-cutover)
 cutover. ASTV-77 later revalidated the registry entry at
 `2026-08-25T10:40:23.614Z` for the current standalone AdvMedia gateway consumer
 without changing any lookup field or semantic meaning.
 
-ASTV-67 made the AdvMedia standalone gateway a current direct consumer of this
-action after deployment, proof, and legacy-wrapper retirement on 2026-08-25.
+ASTV-67 made the AdvMedia standalone gateway a current direct consumer of the
+legacy-namespaced action after deployment, proof, and legacy-wrapper retirement
+on 2026-08-25.
 Its separate request/result boundary is defined by
 `ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md`;
 this contract continues to own the lookup request and complete normalized
@@ -80,10 +82,15 @@ The current lookup retrieves one known logical media item using its
 catalogue-scoped identity. MediaCat returns one complete, flat, player-independent
 record containing every execution method available for that item.
 
-The concrete producer is the Home Assistant action
-`curated_media.resolve_media_record`. The existing
-`curated_media.resolve_item` action is a separate legacy raw-item lookup and is
-not the normalized cross-product interface defined by this contract.
+The approved target producer is the Home Assistant action
+`mediacat.resolve_media_record`. During the phased migration,
+`curated_media.resolve_media_record` remains available as a functionally
+equivalent temporary compatibility producer. Consumers migrate to the target
+producer independently while the legacy action remains available for rollback.
+
+`mediacat.resolve_item` and `curated_media.resolve_item` are separate raw-item
+lookups and are not the normalized cross-product interface defined by this
+contract.
 
 This contract does not define search or discovery by title, type, tags, provider,
 or other metadata. It does not expose the stored catalogue schema, categories,
@@ -289,6 +296,27 @@ This is execution-boundary behaviour, not preventative catalogue data-entry
 validation.
 
 ## Compatibility Policy
+
+### Namespace migration
+
+Changing the producer action from `curated_media.resolve_media_record` to
+`mediacat.resolve_media_record` is a breaking endpoint-name change and is the
+reason for proposed contract version `2.0.0`. It does not change request fields,
+response fields, their meanings, failure behaviour, or
+`returned_record_version: 1`.
+
+During migration both action domains accept the same exact request and promise
+the same response and failure behaviour. A consumer changes only the Home
+Assistant action domain; it continues to send the logical
+`catalogue_id: curated_media`. Consumers must not substitute `mediacat` for the
+catalogue identifier.
+
+The legacy action remains a compatibility and rollback surface until all active
+consumers have independently migrated and retirement readiness has been proved.
+Its eventual removal completes the endpoint migration and is not a
+returned-record-version change.
+
+### Returned-record compatibility
 
 Consumers of returned-record version `1` must ignore unknown additive fields.
 Adding such a field without changing existing meaning is compatible.

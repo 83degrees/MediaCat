@@ -287,9 +287,19 @@ def test_normalized_lookup_preserves_all_three_representative_source_shapes() ->
 def test_preserved_v2_package_loads_with_its_compatible_implementation() -> None:
     """Rehearse the rollback lookup in an isolated Python subprocess."""
     expected_hash = "5fd55cd35b89b8d1958954173b49c94e3429130aff9766a767b4a223d28f02a8"
-    assert hashlib.sha256(ROLLBACK_CATALOGUE.read_bytes()).hexdigest() == (
-        expected_hash
-    )
+    repository_path = ROLLBACK_CATALOGUE.relative_to(ROOT).as_posix()
+    governed_blob = subprocess.run(
+        ["git", "show", f"HEAD:{repository_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+    ).stdout
+    assert hashlib.sha256(governed_blob).hexdigest() == expected_hash
+    assert subprocess.run(
+        ["git", "diff", "--quiet", "--", repository_path],
+        cwd=ROOT,
+        check=False,
+    ).returncode == 0
 
     script = """
 import json

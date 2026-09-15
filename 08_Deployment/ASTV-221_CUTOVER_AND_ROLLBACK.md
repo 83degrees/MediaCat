@@ -1,8 +1,14 @@
-# ASTV-221 MediaCat Namespace Cutover and Rollback
+# ASTV-221 MediaCat Namespace Migration Record
 
 ## Authority and boundary
 
-This procedure describes the approved phased route. It does not itself
+This document retains the phased migration and rollback route used by ASTV-221,
+ASTV-223, and ASTV-224. Phases 1–4 are historical migration context; they are
+not current deployment instructions and do not authorize reintroducing the
+legacy runtime. ASTV-225 legacy removal and post-removal rollback are governed
+by `ASTV-225_RETIREMENT_AND_ROLLBACK.md`.
+
+This record does not itself
 authorize a Home Assistant deployment, restart, configuration mutation,
 consumer deployment, or legacy removal. Perform each state-changing phase only
 at the applicable WF-01 gate with explicit user authority and record the exact
@@ -101,9 +107,11 @@ Do not treat `catalogue_id: curated_media`, historical evidence, or retained
 rollback records as active legacy runtime dependencies solely because the text
 matches.
 
-## Phase 5 — legacy removal
+## Phase 5 — legacy removal (completed under ASTV-225)
 
-Only after the retirement-readiness gate passes:
+ASTV-225 records that production-first retirement and the required live
+validation completed successfully. The following steps are retained as the
+historical migration sequence:
 
 1. remove the active legacy integration/configuration entry and
    `/config/custom_components/curated_media/`;
@@ -114,7 +122,7 @@ Only after the retirement-readiness gate passes:
    Media Source operations succeed, and no legacy action/Media Source remains;
 5. rerun ASTV, AdvMedia, and end-to-end validation; and
 6. record exact final state, results, post-change actions, limitations, and
-   rollback disposition in the ASTV-221 closure evidence.
+   rollback disposition in the ASTV-225 evidence.
 
 ## Rollback
 

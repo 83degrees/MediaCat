@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from custom_components.curated_media.catalogue import (
+from custom_components.mediacat.catalogue import (
     CatalogueError,
     CatalogueV3,
     _load_catalogue,

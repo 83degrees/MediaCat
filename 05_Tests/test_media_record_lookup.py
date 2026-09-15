@@ -12,16 +12,16 @@ import voluptuous as vol
 
 from homeassistant.exceptions import ServiceValidationError
 
-from custom_components.curated_media import (
+from custom_components.mediacat import (
     RESOLVE_MEDIA_RECORD_SCHEMA,
     async_setup,
 )
-from custom_components.curated_media.catalogue import (
+from custom_components.mediacat.catalogue import (
     CatalogueV3,
     _load_catalogue,
     _parse_catalogue,
 )
-from custom_components.curated_media.resolver import CatalogueResolver
+from custom_components.mediacat.resolver import CatalogueResolver
 
 FIXTURE_DIRECTORY = Path(__file__).parent / "fixtures"
 
@@ -54,7 +54,7 @@ def _setup_with_catalogue(catalogue):
     """Run integration setup against an already loaded non-live catalogue."""
     hass = FakeHass()
     with patch(
-        "custom_components.curated_media.async_load_catalogue",
+        "custom_components.mediacat.async_load_catalogue",
         new=AsyncMock(return_value=catalogue),
     ):
         assert asyncio.run(async_setup(hass, {})) is True

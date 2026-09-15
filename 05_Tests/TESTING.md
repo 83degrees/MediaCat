@@ -1,9 +1,11 @@
 # Source-baseline verification
 
 The regression suite verifies the source-controlled MediaCat implementation,
-including the retained Curated Media schema-v2 baseline and non-live parallel
-`curated_media` / `mediacat` registration and output-parity behaviour. It does
-not connect to or change a live Home Assistant system and is not evidence of
+including schema-v2 model compatibility, the active schema-v3 catalogue, and
+the post-retirement single-domain `mediacat` registration and Media Source
+behaviour. It also asserts that active legacy `curated_media` component and
+catalogue paths are absent while logical `catalogue_id: curated_media` remains.
+It does not connect to or change a live Home Assistant system and is not evidence of
 production deployment, runtime activation, production Home Assistant version
 compatibility, or snapshot freshness.
 

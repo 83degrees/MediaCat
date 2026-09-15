@@ -81,10 +81,14 @@ configuration checks and representative end-to-end playback passed after each
 deployment. Their repository validation preserved the exact lookup request,
 response, failure, and returned-record-version semantics defined here.
 
-ASTV-225 retires the temporary `curated_media` producer after those consumer
-migrations. Post-retirement, `mediacat.resolve_media_record` is the sole current
-producer. Historical evidence and rollback material retain the former namespace
-without granting it current contract status.
+ASTV-225 records that the temporary `curated_media` producer was subsequently
+removed from production, Home Assistant validation passed, both `mediacat`
+actions remained registered, the legacy actions were absent, and representative
+ASTV and AdvMedia playback passed. `mediacat.resolve_media_record` is therefore
+the sole current implemented producer. This repository candidate aligns the
+provider-owned contract with that proven production-first retirement.
+Historical evidence and rollback material retain the former namespace without
+granting it current contract status.
 
 ## Purpose and Scope
 
@@ -349,7 +353,7 @@ Separate work instructions owned implementation and proof:
 - [ASTV-69](https://linear.app/83degrees/issue/ASTV-69/governance-cr-activate-mediacat-contracts-in-the-central-registry-at) — prepared registry, manifest, index, and governance-validation activation for cutover.
 - [ASTV-221](https://linear.app/83degrees/issue/ASTV-221/rename-curated-media-integration-and-domain-to-mediacat-mediacat) — introduced and validated the `mediacat` namespace in parallel.
 - [ASTV-223](https://linear.app/83degrees/issue/ASTV-223/migrate-advmedia-mediacat-lookup-from-curated-media-to-mediacat) and [ASTV-224](https://linear.app/83degrees/issue/ASTV-224/migrate-astv-mediacat-references-from-curated-media-to-mediacat) — migrated and validated the active consumers.
-- [ASTV-225](https://linear.app/83degrees/issue/ASTV-225/retire-legacy-curated-media-compatibility-surface) — retired the legacy producer and completed the namespace migration.
+- [ASTV-225](https://linear.app/83degrees/issue/ASTV-225/retire-legacy-curated-media-compatibility-surface) — recorded the production-first legacy-producer retirement and aligned repository source and governed knowledge with the resulting single-domain state.
 
 ## Design Provenance
 

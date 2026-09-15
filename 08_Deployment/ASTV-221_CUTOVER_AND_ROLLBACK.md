@@ -107,9 +107,11 @@ Do not treat `catalogue_id: curated_media`, historical evidence, or retained
 rollback records as active legacy runtime dependencies solely because the text
 matches.
 
-## Phase 5 — legacy removal (continued under ASTV-225)
+## Phase 5 — legacy removal (completed under ASTV-225)
 
-Only after the retirement-readiness gate passes:
+ASTV-225 records that production-first retirement and the required live
+validation completed successfully. The following steps are retained as the
+historical migration sequence:
 
 1. remove the active legacy integration/configuration entry and
    `/config/custom_components/curated_media/`;

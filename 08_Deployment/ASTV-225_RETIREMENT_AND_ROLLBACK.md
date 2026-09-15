@@ -1,14 +1,20 @@
-# ASTV-225 Legacy Namespace Retirement and Rollback
+# ASTV-225 Legacy Namespace Retirement and Rollback Record
 
-## Authority and intended final state
+## Authority and current implemented state
 
-This procedure defines the controlled Beta deployment and rollback route for
-ASTV-225. It does not itself authorize a Home Assistant configuration change,
-file removal, restart, or deployment. Perform live actions only after the
-reviewed candidate is accepted, integrated into persistent `beta`, and the user
-has authorized that exact Beta deployment.
+This record retains the controlled retirement and rollback route for ASTV-225.
+The user completed the live retirement on `ha-starburst` before the repository
+candidate: the legacy component, configuration entry, and catalogue directory
+were removed, Home Assistant validation and restart/reload completed, the
+`mediacat` actions remained registered, the legacy actions were absent, and
+representative ASTV and AdvMedia playback passed. The repository candidate now
+aligns governed source and documentation with that proven production state.
 
-The intended final state loads only:
+The procedure below is retained as execution and rollback evidence. It does not
+authorize repeating the completed Home Assistant changes or performing any new
+production mutation.
+
+The current implemented production state loads only:
 
 - `/config/custom_components/mediacat/`;
 - `/config/mediacat/catalogue.yaml`;
@@ -19,9 +25,9 @@ Logical `catalogue_id: curated_media` and `returned_record_version: 1` remain
 unchanged. Historical and rollback evidence is retained without loading the
 legacy runtime.
 
-## Pre-removal gate and rollback capture
+## Recorded pre-removal gate and rollback capture
 
-Before deleting any live legacy path:
+The governed pre-removal gate and retained rollback requirements are:
 
 1. Record the exact accepted MediaCat `beta` commit and the deployed ASTV and
    AdvMedia candidate identities.
@@ -43,9 +49,13 @@ Before deleting any live legacy path:
 7. Run the environment's Home Assistant configuration check and stop on
    failure.
 
-## Beta removal and validation
+## Production-first removal and validation record
 
-1. Deploy the accepted candidate's `/config/custom_components/mediacat/` and
+The following sequence records the completed live actions and the validation
+required to establish the resulting state:
+
+1. Confirm the accepted `mediacat` deployment under
+   `/config/custom_components/mediacat/` and
    `/config/mediacat/catalogue.yaml` without changing catalogue contents.
 2. Remove the live `curated_media:` configuration entry if present.
 3. Remove `/config/custom_components/curated_media/`.
@@ -99,5 +109,5 @@ Roll back if any of the following occurs after legacy removal:
    resulting exact environment state. File restoration alone is not proof of a
    successful rollback.
 
-Do not delete the rollback capture until ASTV-225 Beta validation, human
-acceptance, promotion-equivalence checks, and closure obligations are complete.
+Retain the rollback capture until ASTV-225 human acceptance,
+promotion-equivalence checks, and closure obligations are complete.

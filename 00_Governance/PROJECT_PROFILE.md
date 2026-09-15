@@ -76,7 +76,7 @@ not define the current normalized architecture.
 
 | Contract | Status/version | Authoritative provider-owned location | Consumers | Notes |
 | --- | --- | --- | --- | --- |
-| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current deployed v1.0.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | Normalized catalogue/item lookup and complete returned-record v1. |
+| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.0.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` namespace with unchanged normalized returned-record v1. |
 
 The provider-owned file above is the sole operational authority. The former
 shared Governance 1.2 copy under `Home_Assistant/contracts/` is retired and
@@ -128,14 +128,17 @@ source.
 
 ## Production and evidence route
 
-- Approved post-retirement production route: MediaCat runs in the Home Assistant
+- Current implemented production route: MediaCat runs in the Home Assistant
   `starburst` instance under `/config/custom_components/mediacat/` with its
   catalogue at `/config/mediacat/catalogue.yaml`; `mediacat` is the only active
   integration/action and Media Source namespace.
 - Pre-retirement evidence: ASTV-221 established parallel `mediacat` and
   `curated_media` deployment; ASTV-223 and ASTV-224 then migrated and validated
-  the active AdvMedia and ASTV consumers. ASTV-225 governs removal of the legacy
-  live paths and final post-removal proof.
+  the active AdvMedia and ASTV consumers. ASTV-225 subsequently recorded the
+  production-first removal of the legacy component, configuration entry, and
+  catalogue path plus successful Home Assistant checks and representative ASTV
+  and AdvMedia playback. The repository change under ASTV-225 aligns source and
+  governed knowledge with that proven live state.
 - Evidence route: sibling read-only evidence under
   `Production_ReadOnly/starburst/`, supplemented where authorized by verified
   live read-only Home Assistant inspection.

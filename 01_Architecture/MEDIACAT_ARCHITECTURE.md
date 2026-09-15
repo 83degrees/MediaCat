@@ -2,20 +2,20 @@
 
 ## Status
 
-This is the authoritative MediaCat architecture. It defines the approved
-post-retirement `mediacat` runtime and preserves the earlier dual-domain state
-only as migration evidence. The normalized schema-v3 architecture became
-current through `ASTV-65` proof on
+This is the authoritative current implemented MediaCat architecture. Production
+uses only the post-retirement `mediacat` runtime; the earlier dual-domain state
+is preserved only as migration evidence. The normalized schema-v3 architecture
+became current through `ASTV-65` proof on
 2026-08-24, and the permanent standalone AdvMedia gateway became a second direct
 lookup consumer through `ASTV-67` on 2026-08-25.
 
-Fresh read-only Home Assistant verification was performed through the Home
-Assistant MCP between `2026-08-25T15:04:29.407605+01:00` and
-`2026-08-25T15:12:23.884728+01:00`. It confirmed the current registered actions,
-schema-v3 activation boundary, Media Source behavior, direct lookup consumers,
-consumer definitions and recent completed traces. No Home Assistant action or
-service was invoked, and no reload, restart, configuration change, catalogue
-change, playback request or other production mutation occurred.
+The retained pre-migration baseline came from read-only Home Assistant
+verification performed through the Home Assistant MCP between
+`2026-08-25T15:04:29.407605+01:00` and `2026-08-25T15:12:23.884728+01:00`.
+It established the then-current registered actions, schema-v3 activation
+boundary, Media Source behavior, direct lookup consumers, consumer definitions,
+and completed traces. The later current production state is established by the
+ASTV-221 through ASTV-225 evidence summarized below.
 
 The precise cross-product interfaces have these sole operational,
 provider-owned locations:
@@ -67,7 +67,7 @@ authorize uncontracted data movement.
 
 ---
 
-## Current Approved Runtime Architecture
+## Current Implemented Runtime Architecture
 
 The integration uses:
 
@@ -113,10 +113,13 @@ The repository reviews proved that both consumers call
 `mediacat.resolve_media_record` while retaining logical
 `catalogue_id: curated_media` and their existing request/result semantics.
 
-This evidence establishes the dependency state for ASTV-225 source retirement.
-It does not prove that the legacy live component, configuration entry, catalogue
-path, actions, or Media Source have already been removed; that remains ASTV-225
-Beta deployment and validation work.
+ASTV-225 then recorded a production-first retirement on `ha-starburst`: the
+legacy component, configuration entry, and catalogue path were removed; Home
+Assistant configuration validation and the required restart/reload completed;
+the two `mediacat` actions remained registered; the `curated_media` actions were
+absent; and representative ASTV and AdvMedia playback passed. The repository
+candidate brings source, tests, and governed knowledge into alignment with that
+already-proven live state. It performs no further production mutation.
 
 ---
 
@@ -169,7 +172,7 @@ remains read-only evidence for the pre-cutover schema-v2 baseline only.
 
 ---
 
-## Approved Post-Retirement MediaCat Deployment
+## Current Implemented Post-Retirement MediaCat Deployment
 
 ### Setup and storage
 
@@ -417,7 +420,7 @@ semantic, or ownership boundary.
 
 ## Current-State Conclusion
 
-The approved post-retirement architecture uses the normalized schema-v3 design
+Current implemented production uses the normalized schema-v3 design
 only through the `mediacat` runtime namespace and preserves logical
 `catalogue_id: curated_media`. MediaCat produces the complete
 returned-record-v1 mapping, ASTV selects method and endpoint, AdvMedia processes

@@ -24,9 +24,9 @@ Architecture Diagram Standard.
 - External-owned ASTV, AdvMedia, Home Assistant, and Radio Browser elements are
   shown only at the MediaCat-facing boundary and are not expanded into unowned
   internals.
-- Lifecycle scope and evidence limitations are stated directly on the diagram;
-  approved post-retirement architecture is distinguished from pending live
-  deployment proof.
+- Lifecycle scope and production evidence are stated directly on the diagram;
+  current implemented architecture is distinguished from retained historical
+  and rollback evidence.
 
 Shared connector, variable-label, gateway, boundary, editing, and review rules
 remain defined only by

@@ -128,7 +128,8 @@ execution endpoints.
 | `mediacat` | owned | MediaCat | Integration, action, Media Source, and configuration-directory namespace | Architecture, DDR-03-002, and repository source |
 | `mediacat.resolve_media_record` | owned | MediaCat | Sole normalized lookup producer namespace | Provider-owned lookup contract |
 | `catalogue_id: curated_media` | owned | MediaCat | Logical catalogue identity; unchanged by the runtime namespace migration | Provider-owned lookup contract and catalogue source |
-| `mediacat.resolve_item` and schema-v2 branches | owned compatibility | MediaCat | Retained raw/model compatibility; not the normalized cross-product interface | Architecture and historical evidence |
+| `mediacat.resolve_item` | owned historical | MediaCat | Retired action retained only in historical and rollback evidence | Architecture and historical evidence |
+| Schema-v2 branches | owned compatibility | MediaCat | Retained local model and Media Source compatibility; no current lookup action | Architecture and historical evidence |
 | `astv_` and `script.astv_*` | external | ASTV | Governed caller boundary only | ASTV-owned architecture and contracts |
 | `advmedia_` and `script.advmedia_*` | external | AdvMedia | Governed caller/processing boundary only | AdvMedia-owned architecture and contracts |
 | Home Assistant and delegated provider identities | external | Respective platform/provider owners | Configured platform use | Architecture and production evidence |

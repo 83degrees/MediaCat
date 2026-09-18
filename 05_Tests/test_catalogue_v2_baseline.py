@@ -7,7 +7,6 @@ from pathlib import Path
 import pytest
 
 from custom_components.mediacat.catalogue import _load_catalogue
-from custom_components.mediacat.resolver import CatalogueResolver
 
 FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
 
@@ -51,9 +50,9 @@ def test_loaded_data_is_recursively_immutable(catalogue) -> None:
         ].append("changed")
 
 
-def test_resolver_returns_known_complete_item(catalogue) -> None:
-    """Resolve a known ID through the current catalogue model."""
-    resolved = CatalogueResolver(catalogue).resolve_item("station_alpha")
+def test_model_exposes_known_complete_item(catalogue) -> None:
+    """Preserve a known complete item in the retained schema-v2 model."""
+    resolved = catalogue.items["station_alpha"]
 
     assert resolved is catalogue.items["station_alpha"]
     assert resolved.item_id == "station_alpha"

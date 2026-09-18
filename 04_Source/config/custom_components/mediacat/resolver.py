@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any
 
-from .catalogue import Catalogue, CatalogueItem, CatalogueV3
+from .catalogue import CatalogueV3
 
 
 RETURNED_RECORD_VERSION = 1
@@ -22,24 +22,9 @@ class CatalogueItemNotFoundError(LookupError):
 class CatalogueResolver:
     """Resolve canonical item IDs from a loaded catalogue snapshot."""
 
-    def __init__(self, catalogue: Catalogue | CatalogueV3) -> None:
+    def __init__(self, catalogue: CatalogueV3) -> None:
         """Initialize the resolver with an existing loaded catalogue."""
         self._catalogue = catalogue
-
-    def resolve_item(self, item_id: str) -> CatalogueItem | Mapping[Any, Any]:
-        """Return the matching stored item or raise a clear lookup error."""
-        item = self._catalogue.items.get(item_id)
-        if item is None:
-            raise CatalogueItemNotFoundError(
-                f"MediaCat item {item_id!r} was not found in the catalogue"
-            )
-        return item
-
-    def resolve_item_record(self, item_id: str) -> dict[Any, Any]:
-        """Return a response-safe copy of the matching stored item mapping."""
-        item = self.resolve_item(item_id)
-        record = item.record if isinstance(item, CatalogueItem) else item
-        return _response_safe_mapping(record)
 
     def resolve_media_record(
         self, catalogue_id: str, item_id: str

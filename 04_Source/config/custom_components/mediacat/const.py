@@ -7,7 +7,6 @@ CATALOGUE_FILENAME = "catalogue.yaml"
 
 DATA_CATALOGUE = "catalogue"
 
-SERVICE_RESOLVE_ITEM = "resolve_item"
 ATTR_ITEM_ID = "item_id"
 
 CATALOGUE_VERSION = 2

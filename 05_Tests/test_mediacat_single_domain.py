@@ -60,6 +60,7 @@ ROOT = Path(__file__).parents[1]
 SOURCE_CONFIG = ROOT / "04_Source" / "config"
 CATALOGUE = SOURCE_CONFIG / "mediacat" / "catalogue.yaml"
 MANIFEST = SOURCE_CONFIG / "custom_components" / "mediacat" / "manifest.json"
+SERVICES = SOURCE_CONFIG / "custom_components" / "mediacat" / "services.yaml"
 LEGACY_COMPONENT = SOURCE_CONFIG / "custom_components" / "curated_media"
 LEGACY_CATALOGUE = SOURCE_CONFIG / "curated_media" / "catalogue.yaml"
 
@@ -96,6 +97,7 @@ def test_source_contains_only_the_mediacat_runtime_namespace() -> None:
     assert DOMAIN == CATALOGUE_DIRECTORY == "mediacat"
     assert manifest["domain"] == "mediacat"
     assert manifest["name"] == "MediaCat"
+    assert set(load_yaml(SERVICES)) == {"resolve_media_record"}
     assert CATALOGUE.is_file()
     assert not LEGACY_COMPONENT.exists()
     assert not LEGACY_CATALOGUE.exists()
@@ -103,7 +105,7 @@ def test_source_contains_only_the_mediacat_runtime_namespace() -> None:
 
 
 def test_only_mediacat_registers_actions_and_domain_state() -> None:
-    """Register both supported actions in the sole active runtime domain."""
+    """Register only normalized lookup in the sole active runtime domain."""
     catalogue = _load_catalogue(CATALOGUE)
     hass = FakeHass()
     loader = AsyncMock(return_value=catalogue)
@@ -114,7 +116,6 @@ def test_only_mediacat_registers_actions_and_domain_state() -> None:
     loader.assert_awaited_once_with(hass, str(Path("mediacat", "catalogue.yaml")))
     assert set(hass.data) == {"mediacat"}
     assert set(hass.services.registrations) == {
-        ("mediacat", "resolve_item"),
         ("mediacat", "resolve_media_record"),
     }
 

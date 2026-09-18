@@ -66,51 +66,21 @@ def _call(handler, **data):
     return asyncio.run(handler(SimpleNamespace(data=data)))
 
 
-def test_schema_v2_registers_only_legacy_raw_item_action() -> None:
-    """Keep the current schema-v2 action and response behaviour unchanged."""
+def test_schema_v2_registers_no_lookup_action() -> None:
+    """Do not expose a lookup action for the retained schema-v2 model."""
     catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v2.yaml")
     hass = _setup_with_catalogue(catalogue)
 
-    assert set(hass.services.registrations) == {"resolve_item"}
-    response = _call(
-        hass.services.registrations["resolve_item"]["handler"],
-        item_id="station_alpha",
-    )
-    assert set(response) == set(catalogue.items["station_alpha"].record)
-    assert response["title"] == "Station Alpha"
-    assert response["tags"] == ["news", "local"]
-    assert response["providers"]["radio_music"]["service"]["data"][
-        "features"
-    ] == ["live", "regional"]
-    assert "returned_record_version" not in response
-    assert "catalogue_id" not in response
-    assert "item_id" not in response
+    assert hass.services.registrations == {}
 
 
-def test_schema_v3_registers_legacy_and_normalized_actions() -> None:
-    """Expose both actions while keeping the legacy v3 response raw."""
+def test_schema_v3_registers_only_normalized_action() -> None:
+    """Expose only the normalized catalogue-scoped lookup action."""
     catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
     assert isinstance(catalogue, CatalogueV3)
     hass = _setup_with_catalogue(catalogue)
 
-    assert set(hass.services.registrations) == {
-        "resolve_item",
-        "resolve_media_record",
-    }
-    response = _call(
-        hass.services.registrations["resolve_item"]["handler"],
-        item_id="station_alpha",
-    )
-    assert set(response) == set(catalogue.items["station_alpha"])
-    assert response["catalogue_label"] == "Station Alpha"
-    assert response["tags"] == ["radio", "live"]
-    assert response["providers"]["legacy_radio"]["service"]["features"] == [
-        "live",
-        "regional",
-    ]
-    assert "returned_record_version" not in response
-    assert "catalogue_id" not in response
-    assert "item_id" not in response
+    assert set(hass.services.registrations) == {"resolve_media_record"}
 
 
 @pytest.mark.parametrize(

@@ -17,6 +17,7 @@ from custom_components.mediacat import (
     async_setup,
 )
 from custom_components.mediacat.catalogue import (
+    CatalogueError,
     CatalogueV3,
     _load_catalogue,
     _parse_catalogue,
@@ -66,11 +67,28 @@ def _call(handler, **data):
     return asyncio.run(handler(SimpleNamespace(data=data)))
 
 
-def test_schema_v2_registers_no_lookup_action() -> None:
-    """Do not expose a lookup action for the retained schema-v2 model."""
-    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v2.yaml")
-    hass = _setup_with_catalogue(catalogue)
+def test_schema_v2_is_rejected_as_an_active_catalogue() -> None:
+    """Reject the historical schema rather than loading a compatibility model."""
+    with pytest.raises(
+        CatalogueError,
+        match="expected catalogue_schema_version: 3",
+    ):
+        _parse_catalogue(
+            {"version": 2, "items": {}, "categories": {}},
+            Path("historical-v2.yaml"),
+        )
 
+
+def test_rejected_schema_prevents_setup_and_action_registration() -> None:
+    """Keep catalogue-load failure atomic when the active schema is unsupported."""
+    hass = FakeHass()
+    with patch(
+        "custom_components.mediacat.async_load_catalogue",
+        new=AsyncMock(side_effect=CatalogueError("unsupported catalogue schema")),
+    ):
+        assert asyncio.run(async_setup(hass, {})) is False
+
+    assert hass.data == {}
     assert hass.services.registrations == {}
 
 

@@ -61,22 +61,33 @@ governed consumers.
 | Home Assistant runtime and Media Source framework | external | Home Assistant | Runtime truth remains external to this repository. |
 | Radio Browser Media Source provider | external | Radio Browser / Home Assistant integration | MediaCat may delegate an opaque URI once; it does not own the provider. |
 
-## Approved architecture location
+## Approved architecture authorities
 
-- Approved architecture location: `01_Architecture/MEDIACAT_ARCHITECTURE.md`
+| Scope | Authoritative location | State |
+| --- | --- | --- |
+| General MediaCat product and runtime architecture | `01_Architecture/MEDIACAT_ARCHITECTURE.md` | Current approved |
+| Stored catalogue schema-v3 authoring and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Current approved |
+
+Detailed runtime enforcement of the schema-v3 architecture remains an
+implementation concern. Any enforcement lag does not qualify the architecture's
+current-approved authority.
+
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
-- Architecture state: current approved
 - Material DDRs: `DDR-03-001`; proposed `DDR-03-002`
 
-The Markdown file is the semantic architecture authority. The diagram is its
-governed representation. Historical `schema-v2` / `resolve_item` material does
+`MEDIACAT_ARCHITECTURE.md` owns general product responsibilities, runtime
+boundaries, flows, and current implementation state. The catalogue schema
+architecture owns the schema-v3 stored YAML vocabulary, authoring semantics,
+requiredness, preventative-validation rules, and schema evolution. The diagram
+is the governed representation of the general architecture and does not replace
+either prose authority. Historical `schema-v2` / `resolve_item` material does
 not define the current normalized architecture.
 
 ## Contracts provided
 
 | Contract | Status/version | Authoritative provider-owned location | Consumers | Notes |
 | --- | --- | --- | --- | --- |
-| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.0.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` namespace with unchanged normalized returned-record v1. |
+| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.1.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` namespace with unchanged normalized returned-record v1. |
 
 The provider-owned file above is the sole operational authority. The former
 shared Governance 1.2 copy under `Home_Assistant/contracts/` is retired and

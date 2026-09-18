@@ -185,6 +185,15 @@ The catalogue is loaded off the event loop, validated, recursively frozen and
 stored at `hass.data["mediacat"]["catalogue"]`. A load or validation failure
 logs an error, causes setup to return `False` and prevents action registration.
 
+The authoritative field-level authoring and preventative-validation policy for
+stored `catalogue_schema_version: 3` data is
+[MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md](MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md).
+That authority defines a closed stored vocabulary, requiredness, value rules,
+ordering, and atomic failure behavior. Detailed enforcement remains an approved
+target requiring separately authorized runtime implementation: the current
+implemented schema-v3 loader still performs only minimum root checks and
+recursively preserves the supplied mapping.
+
 The maintained stored root declares
 `catalogue_id: curated_media` and `catalogue_schema_version: 3`. That catalogue
 contains 17 items and one ordered `radio` category. Fourteen records have a
@@ -392,6 +401,12 @@ The completed namespace migration changes the producer endpoint namespace and
 therefore establishes lookup contract version 2.0.0. It does not change any
 request field, response field, requiredness, returned-record version, record
 semantic, or ownership boundary.
+
+The current contract version 2.1.0 provides a backward-compatible clarification
+of consumer-facing presence promises. It leaves returned-record
+version 1 and the namespace-migration meaning above unchanged. Stored authoring
+and preventative-validation policy remains in the catalogue schema
+architecture rather than the lookup contract.
 
 ---
 

@@ -7,9 +7,9 @@
 | Owner | MediaCat |
 | Current producer | Home Assistant action `mediacat.resolve_media_record` |
 | Consumers | ASTV; AdvMedia standalone gateway `script.advmedia_prepare_playback`; AdvMedia core as a downstream consumer of the complete normalized record supplied by ASTV or the standalone gateway |
-| Contract version | `2.1.0` candidate under `ASTV-52` |
+| Contract version | `2.1.0` |
 | Returned-record version | `1` |
-| Status | Current producer and returned-record v1; proposed backward-compatible presence clarification under `ASTV-52` |
+| Status | Current producer, returned-record v1, and backward-compatible presence clarification |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
 Under Governance 2.0, this provider-owned document is the single authoritative
@@ -333,7 +333,7 @@ endpoint migration and did not change the returned-record version.
 
 ### Returned-record compatibility
 
-The `2.1.0` candidate under `ASTV-52` strengthens producer guarantees for
+Contract version `2.1.0` strengthens producer guarantees for
 already modelled returned-record-v1 fields: the applicable semantic title/name
 is required, optional absence is omission rather than `null`, artwork is
 non-empty when present, and at least one execution method is returned. It does

@@ -402,8 +402,8 @@ therefore establishes lookup contract version 2.0.0. It does not change any
 request field, response field, requiredness, returned-record version, record
 semantic, or ownership boundary.
 
-`ASTV-52` separately proposes contract version 2.1.0 as a backward-compatible
-clarification of consumer-facing presence promises. It leaves returned-record
+The current contract version 2.1.0 provides a backward-compatible clarification
+of consumer-facing presence promises. It leaves returned-record
 version 1 and the namespace-migration meaning above unchanged. Stored authoring
 and preventative-validation policy remains in the catalogue schema
 architecture rather than the lookup contract.

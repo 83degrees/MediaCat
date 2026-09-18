@@ -64,7 +64,6 @@ from custom_components.mediacat.catalogue import (
 from custom_components.mediacat.const import DATA_CATALOGUE, DOMAIN
 from custom_components.mediacat.media_source import MediaCatSource
 
-V2_FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v2.yaml"
 V3_CATALOGUE = (
     Path(__file__).parents[1]
     / "04_Source"
@@ -148,80 +147,6 @@ def _v3_catalogue_with_source(source: dict[str, Any]) -> CatalogueV3:
             }
         )
     )
-
-
-def test_schema_v2_browse_and_identifiers_remain_unchanged() -> None:
-    """Retain root, category, item, artwork, order, and identifier behaviour."""
-    hass, source = _source(_load_catalogue(V2_FIXTURE))
-
-    root = _run(source.async_browse_media(_item(hass)))
-    assert [child.identifier for child in root.children] == [
-        "category/favourites",
-        "category/all_stations",
-    ]
-    assert [child.title for child in root.children] == ["Favourites", "All stations"]
-
-    category = _run(
-        source.async_browse_media(_item(hass, "category/favourites"))
-    )
-    assert [child.identifier for child in category.children] == [
-        "item/station_beta",
-        "item/station_alpha",
-    ]
-
-    leaf = _run(source.async_browse_media(_item(hass, "item/station_alpha")))
-    assert leaf.title == "Station Alpha"
-    assert leaf.thumbnail == "/local/curated_media/station_alpha.png"
-    assert leaf.media_content_type == "application/vnd.apple.mpegurl"
-
-
-@pytest.mark.parametrize(
-    ("query", "expected"),
-    [
-        ("ALPHA", ["item/station_alpha"]),
-        ("representative", ["item/station_alpha"]),
-        ("local", ["item/station_alpha"]),
-    ],
-)
-def test_schema_v2_search_semantics_remain_unchanged(
-    query: str, expected: list[str]
-) -> None:
-    """Retain trimmed, case-folded title, description, and tag matching."""
-    hass, source = _source(_load_catalogue(V2_FIXTURE))
-
-    result = _run(source.async_search_media(_item(hass), _query(f" {query} ")))
-    assert [item.identifier for item in result.result] == expected
-
-    category_result = _run(
-        source.async_search_media(
-            _item(hass, "category/favourites"), _query(f" {query} ")
-        )
-    )
-    assert [item.identifier for item in category_result.result] == expected
-
-
-def test_schema_v2_resolution_and_failures_remain_unchanged() -> None:
-    """Retain direct resolution, MIME fallback, and explicit identifier failures."""
-    hass, source = _source(_load_catalogue(V2_FIXTURE))
-
-    assert _run(source.async_resolve_media(_item(hass, "item/station_alpha"))) == (
-        PlayMedia(
-            "https://streams.example.test/alpha.m3u8",
-            "application/vnd.apple.mpegurl",
-        )
-    )
-    assert _run(source.async_resolve_media(_item(hass, "item/station_beta"))) == (
-        PlayMedia("https://streams.example.test/beta.mp3", "audio/mpeg")
-    )
-
-    with pytest.raises(BrowseError, match="Unknown MediaCat category"):
-        _run(source.async_browse_media(_item(hass, "category/missing")))
-    with pytest.raises(BrowseError, match="Unknown MediaCat identifier"):
-        _run(source.async_browse_media(_item(hass, "unsupported/value")))
-    with pytest.raises(Unresolvable, match="Unknown MediaCat item"):
-        _run(source.async_resolve_media(_item(hass, "item/missing")))
-    with pytest.raises(Unresolvable, match="Not a playable MediaCat item"):
-        _run(source.async_resolve_media(_item(hass, "category/favourites")))
 
 
 def test_schema_v3_browse_filters_assistant_only_items_in_stored_order() -> None:

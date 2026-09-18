@@ -12,7 +12,7 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
-from .catalogue import CatalogueError, CatalogueV3, async_load_catalogue
+from .catalogue import CatalogueError, async_load_catalogue
 from .const import (
     ATTR_ITEM_ID,
     CATALOGUE_DIRECTORY,
@@ -61,25 +61,24 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     domain_data: dict[str, Any] = hass.data.setdefault(DOMAIN, {})
     domain_data[DATA_CATALOGUE] = catalogue
 
-    if isinstance(catalogue, CatalogueV3):
-        resolver = CatalogueResolver(catalogue)
+    resolver = CatalogueResolver(catalogue)
 
-        async def async_resolve_media_record(call: ServiceCall) -> dict[str, Any]:
-            """Return the normalized v1 record for a catalogue-scoped item."""
-            catalogue_id: str = call.data[ATTR_CATALOGUE_ID]
-            item_id: str = call.data[ATTR_ITEM_ID]
-            try:
-                return resolver.resolve_media_record(catalogue_id, item_id)
-            except (CatalogueNotFoundError, CatalogueItemNotFoundError) as err:
-                raise ServiceValidationError(str(err)) from err
+    async def async_resolve_media_record(call: ServiceCall) -> dict[str, Any]:
+        """Return the normalized v1 record for a catalogue-scoped item."""
+        catalogue_id: str = call.data[ATTR_CATALOGUE_ID]
+        item_id: str = call.data[ATTR_ITEM_ID]
+        try:
+            return resolver.resolve_media_record(catalogue_id, item_id)
+        except (CatalogueNotFoundError, CatalogueItemNotFoundError) as err:
+            raise ServiceValidationError(str(err)) from err
 
-        hass.services.async_register(
-            DOMAIN,
-            SERVICE_RESOLVE_MEDIA_RECORD,
-            async_resolve_media_record,
-            schema=RESOLVE_MEDIA_RECORD_SCHEMA,
-            supports_response=SupportsResponse.ONLY,
-        )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_RESOLVE_MEDIA_RECORD,
+        async_resolve_media_record,
+        schema=RESOLVE_MEDIA_RECORD_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
 
     _LOGGER.info(
         "Loaded MediaCat catalogue with %d items and %d categories",

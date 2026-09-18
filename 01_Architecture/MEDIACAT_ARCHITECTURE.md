@@ -229,12 +229,12 @@ the MediaCat item-lookup contract.
 It remains traceable only in historical and rollback evidence and is not a
 current compatibility surface or cross-product boundary.
 
-The maintained loader and Media Source adapter retain schema-v2 branches for
-rollback compatibility, and the live ASTV Media Intent Engine definition retains
-a legacy `request.params.sources` branch for requests without a MediaCat
-reference. Current migrated media requests take the normalized branch. These
-separate compatibility paths do not expose `resolve_item` or reclassify schema v2
-as the current MediaCat architecture.
+The maintained loader and Media Source adapter accept only schema v3. Schema-v2
+code and data remain available solely in the read-only historical rollback
+package; they are not an operationally maintained compatibility path. The live
+ASTV Media Intent Engine separately retains a legacy `request.params.sources`
+branch for requests without a MediaCat reference. Current migrated media
+requests take the normalized branch.
 
 The rationale for excluding the legacy schema-v2 top-level `providers` mapping
 from schema v3 while preserving a complete schema-v2 rollback package is
@@ -442,7 +442,7 @@ only the selected Home Assistant method, and ASTV owns the assistant path and
 final execution actions. The standalone AdvMedia gateway remains a second
 direct lookup consumer with its own contract.
 
-Schema-v2 loader and Media Source support remain local compatibility surfaces;
-`mediacat.resolve_item` is retired from the maintained runtime. The retired
-action, the retired `curated_media` runtime and the former Mermaid source remain
+Schema-v2 loader and Media Source support and `mediacat.resolve_item` are retired
+from the maintained runtime. The complete schema-v2 package, the retired action,
+the retired `curated_media` runtime and the former Mermaid source remain
 traceable only in historical or rollback evidence.

@@ -30,10 +30,7 @@ class CatalogueResolver:
         self, catalogue_id: str, item_id: str
     ) -> dict[Any, Any]:
         """Return normalized record v1 for an item in the loaded v3 catalogue."""
-        if (
-            not isinstance(self._catalogue, CatalogueV3)
-            or self._catalogue.catalogue_id != catalogue_id
-        ):
+        if self._catalogue.catalogue_id != catalogue_id:
             raise CatalogueNotFoundError(
                 f"MediaCat catalogue {catalogue_id!r} was not found"
             )

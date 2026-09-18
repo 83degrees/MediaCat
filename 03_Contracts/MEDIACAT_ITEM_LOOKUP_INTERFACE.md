@@ -7,9 +7,9 @@
 | Owner | MediaCat |
 | Current producer | Home Assistant action `mediacat.resolve_media_record` |
 | Consumers | ASTV; AdvMedia standalone gateway `script.advmedia_prepare_playback`; AdvMedia core as a downstream consumer of the complete normalized record supplied by ASTV or the standalone gateway |
-| Contract version | `2.0.0` |
+| Contract version | `2.1.0` |
 | Returned-record version | `1` |
-| Status | Current; namespace migration completed without returned-record semantic change |
+| Status | Current producer, returned-record v1, and backward-compatible presence clarification |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
 Under Governance 2.0, this provider-owned document is the single authoritative
@@ -136,10 +136,14 @@ Within this contract, **required** means that the producer promises to supply th
 field on the applicable successful interface path and a consumer may rely on it.
 **Optional** means that the interface permits omission.
 
-These presence rules are cross-product promises. They do not introduce catalogue
-data-entry checks, defaults, null handling, controlled vocabularies, or broader
-preventative validation. Those concerns remain with
-[ASTV-52](https://linear.app/83degrees/issue/ASTV-52/define-mediacat-schema-requiredness-fallback-and-validation-rules).
+These presence rules are cross-product promises. On success, required fields are
+present and non-null. Optional fields are either present with their applicable
+value or omitted; the producer does not represent an absent optional value as
+`null` or an empty placeholder.
+
+These promises do not define stored catalogue authoring, value-level validation,
+defaults, or preventative validation. Those subjects are owned by
+[`MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md`](../01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md).
 
 ## Lookup Request
 
@@ -168,7 +172,7 @@ an ASTV-selected method.
 | `item_id` | Item identity supplied in the request and resolved within `catalogue_id`. |
 | `catalogue_label` | MediaCat-owned human-readable label for browsing, searching, administration, and disambiguation. It is not automatically player metadata. |
 | `type` | Player-independent media classification. The initial vocabulary is `radio`, `music_track`, `podcast_episode`, `live_tv`, `tv_episode`, `movie`, and `photo`. |
-| `type_metadata` | Mapping of semantic fields selected by `type`. Type-specific field presence remains governed by the separately authorised requiredness work in ASTV-52. |
+| `type_metadata` | Non-empty mapping of semantic fields selected by `type`. It contains the required semantic title/name for the selected type and any applicable optional fields listed below. |
 | `execution_methods` | Mapping of every execution method available for the item, keyed by the contracted ASTV execution-method name. MediaCat reports availability; ASTV selects a method. |
 
 ### Optional top-level fields
@@ -177,7 +181,7 @@ an ASTV-selected method.
 | --- | --- |
 | `description` | General player-independent description of the item. |
 | `tags` | List of free-text catalogue discovery and search terms. |
-| `artwork` | Player-independent artwork mapping. Its modelled children are `local` and `external`; child presence and missing-artwork behaviour remain under ASTV-52. |
+| `artwork` | Player-independent artwork mapping. When present, it contains at least one of `local` or `external`; either child may be omitted. Missing artwork is represented by omission of `artwork`, not by `null` or an empty mapping. |
 | `content_rating` | Free-text audience or content classification. |
 
 When present, `artwork.local` is a Home Assistant-local artwork reference and
@@ -186,21 +190,23 @@ not decide which reference a particular player can use.
 
 ### Type-metadata vocabulary
 
-The initial `type_metadata` field vocabulary is:
+The initial `type_metadata` field vocabulary and producer presence promises are:
 
-| `type` | Modelled fields |
-| --- | --- |
-| `radio` | `station_name` |
-| `music_track` | `track_title`, `artist`, `album_artist`, `album_title`, `composer`, `disc_number`, `track_number`, `release_date` |
-| `podcast_episode` | `episode_title`, `podcast_title`, `creator`, `publisher`, `publication_date`, `episode_number` |
-| `live_tv` | `channel_name` |
-| `tv_episode` | `episode_title`, `series_title`, `season_number`, `episode_number`, `first_broadcast_date` |
-| `movie` | `movie_title`, `secondary_title`, `studio`, `release_date` |
-| `photo` | `image_title`, `creator`, `creation_datetime`, `location`, `latitude`, `longitude`, `width_pixels`, `height_pixels` |
+| `type` | Required fields | Optional fields |
+| --- | --- | --- |
+| `radio` | `station_name` | None |
+| `music_track` | `track_title` | `artist`, `album_artist`, `album_title`, `composer`, `disc_number`, `track_number`, `release_date` |
+| `podcast_episode` | `episode_title` | `podcast_title`, `creator`, `publisher`, `publication_date`, `episode_number` |
+| `live_tv` | `channel_name` | None |
+| `tv_episode` | `episode_title` | `series_title`, `season_number`, `episode_number`, `first_broadcast_date` |
+| `movie` | `movie_title` | `secondary_title`, `studio`, `release_date` |
+| `photo` | `image_title` | `creator`, `creation_datetime`, `location`, `latitude`, `longitude`, `width_pixels`, `height_pixels` |
 
-These fields express media semantics, not player-specific names. Their
-per-type presence, empty-value, and null rules are intentionally not defined by
-this contract package and remain with ASTV-52.
+These fields express media semantics, not player-specific names. The required
+semantic title/name is not replaced by or derived from `catalogue_label`.
+Optional type-metadata fields are omitted when absent and are not returned as
+`null` or empty placeholders. Detailed stored-value formats and validation are
+owned by the schema architecture.
 
 ### Execution-method structure
 
@@ -208,6 +214,8 @@ Each `execution_methods.<execution_method>` entry contains exactly one `source`.
 The mapping key is the contracted ASTV execution-method name and is not duplicated
 inside the entry. MediaCat returns every available method and does not attach ASTV
 preference, fallback order, or endpoint data.
+
+`execution_methods` contains at least one entry on every successful record.
 
 The initial source vocabulary and presence promises are:
 
@@ -325,8 +333,22 @@ endpoint migration and did not change the returned-record version.
 
 ### Returned-record compatibility
 
+Contract version `2.1.0` strengthens producer guarantees for
+already modelled returned-record-v1 fields: the applicable semantic title/name
+is required, optional absence is omission rather than `null`, artwork is
+non-empty when present, and at least one execution method is returned. It does
+not add, remove, rename, move, or reinterpret a returned field, and it does not
+change the returned-record version. Current catalogue records already satisfy
+these guarantees; detailed preventative enforcement remains separate
+MediaCat implementation work.
+
 Consumers of returned-record version `1` must ignore unknown additive fields.
 Adding such a field without changing existing meaning is compatible.
+
+This additive compatibility rule applies to the consumer-facing returned record
+only. It does not permit arbitrary unknown fields in a stored schema-v3
+catalogue; stored vocabulary and extension policy are owned by the schema
+architecture.
 
 Removing, renaming, moving, changing the type of, changing the presence promise
 of, or reinterpreting a returned field is breaking. A breaking change requires a
@@ -361,5 +383,6 @@ This contract records the approved decisions from
 [ASTV-24](https://linear.app/83degrees/issue/ASTV-24/define-curated-media-types-field-completeness-and-schema-structure),
 [ASTV-23](https://linear.app/83degrees/issue/ASTV-23/design-mediacat-returned-record-mapping-into-google-cast-metadata), and
 [ASTV-54](https://linear.app/83degrees/issue/ASTV-54/define-mediacat-assistant-command-source-for-g-home-device).
-It does not expand their scope into runtime implementation or the broader
-requiredness and validation policy deferred to ASTV-52.
+`ASTV-52` adds the consumer-facing presence promises above while leaving stored
+authoring and preventative validation with the schema architecture. It does not
+authorize runtime validation implementation.

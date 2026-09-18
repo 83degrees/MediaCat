@@ -48,40 +48,22 @@ before it can serve as a strict-validation fixture.
 
 ## 3. Complete Catalogue Skeleton
 
-The stored YAML is traversed in the order shown below. Bracketed names describe
-dynamic mapping keys; they are not literal field names.
+The stored document begins with this root skeleton. Nested mappings are
+collapsed here and expanded only in the sections that own them.
 
 ```yaml
-catalogue_id: <catalogue_id>
+catalogue_id: curated_media
 catalogue_schema_version: 3
 items:
-  <item_id>:
-    catalogue_label: <label>
-    type: <media_type>
-    description: <description>
-    tags:
-      - <tag>
-    artwork:
-      local: /local/<path>
-      external: https://<host>/<path>
-    content_rating: <rating>
-    type_metadata:
-      <type-specific fields>: <values>
-    execution_methods:
-      <execution_method>:
-        source:
-          source_type: <source_type>
-          <source-specific fields>: <values>
+  example_station: {...}
 categories:
-  <category_id>:
-    category_label: <label>
-    items:
-      - <item_id>
+  featured: {...}
 ```
 
-Optional fields shown in this skeleton are omitted when they do not apply. The
-following sections define each structural level, beginning at the root and
-ending at category records.
+The following sections traverse those mappings from top to bottom. In opening
+examples, `{...}` defers a nested mapping to its owning subsection and `[...]`
+summarizes a nested list. Optional fields are marked with `# optional` where
+they appear.
 
 ## 4. Root Catalogue Object
 
@@ -90,9 +72,8 @@ ending at category records.
 ```yaml
 catalogue_id: curated_media
 catalogue_schema_version: 3
-items:
-  example_station: {}
-categories: {}
+items: {...}
+categories: {...}
 ```
 
 The root has exactly four fields:
@@ -104,8 +85,7 @@ The root has exactly four fields:
 | `items` | Required | Non-empty ordered mapping of item ID to item record. |
 | `categories` | Required | Ordered mapping of category ID to category record; it may be empty. |
 
-The empty item object above illustrates root shape only; it is not a valid
-complete item. Section 5 defines the required item fields.
+Section 5 expands `items`; section 6 expands `categories`.
 
 ### 4.2 Catalogue-Scoped Identity
 
@@ -119,74 +99,47 @@ The `items` and `categories` mappings are authored ordered data. Validation and
 loading must preserve their YAML mapping order. Root category order defines
 category browse order.
 
-## 5. `items` Mapping and Item Objects
-
-### 5.1 `items` Mapping
+## 5. `items` and Item Objects
 
 ```yaml
 items:
   example_station:
-    catalogue_label: Example Station
+    catalogue_label: Example Station — London
     type: radio
-    type_metadata:
-      station_name: Example Station
-    execution_methods:
-      ha_mplayer:
-        source:
-          source_type: url
-          url: https://streams.example.test/live.aac
-          mime_type: audio/aac
+    description: Independent live radio  # optional
+    tags: [...]                           # optional
+    artwork: {...}                        # optional
+    content_rating: general              # optional
+    type_metadata: {...}
+    execution_methods: {...}
 ```
 
 `items` is a required, non-empty ordered mapping. Every mapping key is an item
-ID satisfying the identifier rule in section 7.2. Every value is an item object
-defined in section 5.2. Duplicate item keys are invalid.
-
-### 5.2 Item Object
-
-```yaml
-catalogue_label: Example Station — London
-type: radio
-description: Independent live radio
-tags:
-  - radio
-  - london
-artwork:
-  local: /local/mediacat/example-station.png
-  external: https://images.example.test/example-station.png
-content_rating: general
-type_metadata:
-  station_name: Example Station
-execution_methods:
-  ha_mplayer:
-    source:
-      source_type: url
-      url: https://streams.example.test/live.aac
-      mime_type: audio/aac
-```
-
-Each `items.<item_id>` value contains only these fields:
+ID satisfying the identifier rule in section 7.2. Duplicate item keys are
+invalid. Each `items.<item_id>` value contains only these fields:
 
 | Field | Presence | Type and meaning |
 | --- | --- | --- |
 | `catalogue_label` | Required | Non-blank MediaCat browse, search, administration, and disambiguation label. It is not player metadata. |
-| `type` | Required | One of the seven supported media types in section 5.4. |
+| `type` | Required | One of the seven supported media types in section 5.2. |
 | `description` | Optional | Non-blank player-independent description. |
 | `tags` | Optional | Non-empty ordered list of unique, non-blank free-text strings. No controlled vocabulary is imposed. |
-| `artwork` | Optional | Artwork object defined in section 5.3. |
+| `artwork` | Optional | Artwork object defined in section 5.1. |
 | `content_rating` | Optional | Non-blank free-text classification. No rating-system vocabulary is imposed. |
-| `type_metadata` | Required | Type-selected object defined in section 5.4. |
-| `execution_methods` | Required | Non-empty mapping defined in section 5.5. |
+| `type_metadata` | Required | Type-selected object defined in section 5.2. |
+| `execution_methods` | Required | Non-empty mapping defined in section 5.3. |
 
 Required fields must be present and valid. Optional fields are omitted rather
 than stored as null, blank, or empty placeholders.
 
-### 5.3 `artwork` Object
+The item ID exists only as the `items` mapping key and is not repeated inside
+the object. Item mapping order is authored data and must be preserved.
+
+### 5.1 `artwork`
 
 ```yaml
-artwork:
-  local: /local/mediacat/example-station.png
-  external: https://images.example.test/example-station.png
+local: /local/mediacat/example-station.png                # optional
+external: https://images.example.test/example-station.png # optional
 ```
 
 `artwork` contains only `local` and `external`. Each child is optional, but at
@@ -200,15 +153,13 @@ least one must be present when `artwork` exists.
 A local-only object is valid:
 
 ```yaml
-artwork:
-  local: /local/mediacat/example-station.png
+local: /local/mediacat/example-station.png  # optional
 ```
 
 An external-only object is also valid:
 
 ```yaml
-artwork:
-  external: https://images.example.test/example-station.png
+external: https://images.example.test/example-station.png  # optional
 ```
 
 Missing artwork is valid. MediaCat does not synthesize a placeholder or copy
@@ -217,17 +168,15 @@ Known consumers retain their governed behavior: the Media Source projection
 uses `local`, while the current Google Cast mapping prefers `external` and then
 uses `local`. Those consumer behaviors do not make artwork required here.
 
-### 5.4 `type_metadata` Object
+### 5.2 `type_metadata`
 
 ```yaml
-type: music_track
-type_metadata:
-  track_title: Example Track
-  artist: Example Artist
-  album_title: Example Album
-  disc_number: 1
-  track_number: 2
-  release_date: "2026-09-18"
+track_title: Example Track
+artist: Example Artist          # optional
+album_title: Example Album      # optional
+disc_number: 1                  # optional
+track_number: 2                 # optional
+release_date: "2026-09-18"      # optional
 ```
 
 `type_metadata` contains only the fields listed for the selected `type`. The
@@ -249,65 +198,57 @@ omitted, but no unlisted field may be added.
 
 ```yaml
 # radio
-type: radio
-type_metadata:
-  station_name: Example Station
+station_name: Example Station
 
+---
 # music_track
-type: music_track
-type_metadata:
-  track_title: Example Track
-  artist: Example Artist
-  album_artist: Example Album Artist
-  album_title: Example Album
-  composer: Example Composer
-  disc_number: 1
-  track_number: 2
-  release_date: "2026-09-18"
+track_title: Example Track
+artist: Example Artist                    # optional
+album_artist: Example Album Artist        # optional
+album_title: Example Album                # optional
+composer: Example Composer                # optional
+disc_number: 1                            # optional
+track_number: 2                           # optional
+release_date: "2026-09-18"                # optional
 
+---
 # podcast_episode
-type: podcast_episode
-type_metadata:
-  episode_title: Example Episode
-  podcast_title: Example Podcast
-  creator: Example Creator
-  publisher: Example Publisher
-  publication_date: "2026-09-18"
-  episode_number: 3
+episode_title: Example Episode
+podcast_title: Example Podcast             # optional
+creator: Example Creator                   # optional
+publisher: Example Publisher               # optional
+publication_date: "2026-09-18"             # optional
+episode_number: 3                          # optional
 
+---
 # live_tv
-type: live_tv
-type_metadata:
-  channel_name: Example Channel
+channel_name: Example Channel
 
+---
 # tv_episode
-type: tv_episode
-type_metadata:
-  episode_title: Example Episode
-  series_title: Example Series
-  season_number: 1
-  episode_number: 4
-  first_broadcast_date: "2026-09-18"
+episode_title: Example Episode
+series_title: Example Series               # optional
+season_number: 1                           # optional
+episode_number: 4                          # optional
+first_broadcast_date: "2026-09-18"         # optional
 
+---
 # movie
-type: movie
-type_metadata:
-  movie_title: Example Movie
-  secondary_title: An Example Subtitle
-  studio: Example Studio
-  release_date: "2026-09-18"
+movie_title: Example Movie
+secondary_title: An Example Subtitle       # optional
+studio: Example Studio                     # optional
+release_date: "2026-09-18"                 # optional
 
+---
 # photo
-type: photo
-type_metadata:
-  image_title: Example Photograph
-  creator: Example Photographer
-  creation_datetime: "2026-09-18T12:00:00Z"
-  location: London
-  latitude: 51.5072
-  longitude: -0.1276
-  width_pixels: 1920
-  height_pixels: 1080
+image_title: Example Photograph
+creator: Example Photographer              # optional
+creation_datetime: "2026-09-18T12:00:00Z"  # optional
+location: London                           # optional
+latitude: 51.5072                          # optional; pair with longitude
+longitude: -0.1276                         # optional; pair with latitude
+width_pixels: 1920                         # optional; pair with height_pixels
+height_pixels: 1080                        # optional; pair with width_pixels
 ```
 
 The title/name fields and all other textual metadata are non-blank strings.
@@ -325,26 +266,21 @@ The temporary current `news_briefing` classification remains `type: radio` with
 `station_name: My News Briefing` until `ASTV-66` authorizes a replacement type.
 This compatibility record does not broaden the media-type vocabulary.
 
-### 5.5 `execution_methods` Mapping
+### 5.3 `execution_methods`
 
 ```yaml
 execution_methods:
   ha_mplayer:
-    source:
-      source_type: url
-      url: https://streams.example.test/live.aac
-      mime_type: audio/aac
+    source: {...}
   g_home_device:
-    source:
-      source_type: assistant_command
-      provider: google_assistant
-      command: Play Example Station
-      append_target: true
+    source: {...}
 ```
 
 `execution_methods` is a required, non-empty mapping. Each key is a current
-contracted ASTV execution-method name and each value is the entry defined in
-section 5.5.1.
+contracted ASTV execution-method name. Each
+`execution_methods.<method>` value contains exactly one required field,
+`source`. It may not contain configuration, priority, fallback, endpoint, or
+other fields.
 
 | Execution method | Permitted `source_type` |
 | --- | --- |
@@ -357,28 +293,13 @@ preference and selection; MediaCat returns all authored methods. Adding another
 method name or changing a method/source pairing requires separately approved
 cross-product design and compatibility assessment.
 
-#### 5.5.1 Execution-Method Entry
+#### 5.3.1 `source` Variants
 
 ```yaml
-ha_mplayer:
-  source:
-    source_type: url
-    url: https://streams.example.test/live.aac
-    mime_type: audio/aac
-```
-
-Every `execution_methods.<method>` value contains exactly one required field,
-`source`. It may not contain configuration, priority, fallback, endpoint, or
-other fields. The `source` object is selected by `source_type` as described in
-section 5.5.2.
-
-#### 5.5.2 `source` Object
-
-```yaml
-source:
-  source_type: url
-  url: https://streams.example.test/live.aac
-  mime_type: audio/aac
+source_type: url
+url: https://streams.example.test/live.aac
+mime_type: audio/aac
+provider: example_streams  # optional
 ```
 
 Every `execution_methods.<method>.source` is a mapping selected by required
@@ -390,16 +311,15 @@ Every `execution_methods.<method>.source` is a mapping selected by required
 | `ha_media_source` | `source_type`, `provider`, `uri`, `media_type` | None |
 | `assistant_command` | `source_type`, `provider`, `command`, `append_target` | None |
 
-The source type must be permitted for its parent method by section 5.5.
+The source type must be permitted for its parent method by section 5.3.
 
-##### 5.5.2.1 `url` Source
+##### 5.3.1.1 `url`
 
 ```yaml
-source:
-  source_type: url
-  url: https://streams.example.test/live.aac
-  mime_type: audio/aac
-  provider: example_streams
+source_type: url
+url: https://streams.example.test/live.aac
+mime_type: audio/aac
+provider: example_streams  # optional
 ```
 
 | Field | Presence | Rule |
@@ -412,14 +332,13 @@ source:
 MediaCat does not connect to the URL, test stream availability, infer a MIME
 type, or retry another source during catalogue loading or lookup.
 
-##### 5.5.2.2 `ha_media_source` Source
+##### 5.3.1.2 `ha_media_source`
 
 ```yaml
-source:
-  source_type: ha_media_source
-  provider: radio_browser
-  uri: media-source://radio_browser/example-station
-  media_type: station
+source_type: ha_media_source
+provider: radio_browser
+uri: media-source://radio_browser/example-station
+media_type: station
 ```
 
 | Field | Presence | Rule |
@@ -433,14 +352,13 @@ The URI remains opaque after these structural checks. MediaCat does not
 dereference it during catalogue loading or normalized lookup. Runtime provider
 failure remains at the Home Assistant Media Source execution boundary.
 
-##### 5.5.2.3 `assistant_command` Source
+##### 5.3.1.3 `assistant_command`
 
 ```yaml
-source:
-  source_type: assistant_command
-  provider: google_assistant
-  command: Play Example Station
-  append_target: true
+source_type: assistant_command
+provider: google_assistant
+command: Play Example Station
+append_target: true
 ```
 
 | Field | Presence | Rule |
@@ -453,42 +371,35 @@ source:
 MediaCat does not append an endpoint, construct a final assistant command, or
 execute it. Those remain ASTV responsibilities.
 
-## 6. `categories` Mapping and Category Objects
-
-### 6.1 `categories` Mapping
+## 6. `categories` and Category Objects
 
 ```yaml
 categories:
   featured:
     category_label: Featured
-    items:
-      - example_station
+    items: [...]
 ```
 
 `categories` is a required ordered mapping and may be empty. Each mapping key
-is a category ID satisfying the identifier rule in section 7.2. Every value is
-a category object defined in section 6.2. Duplicate category keys are invalid.
-
-The category model is flat. Categories have no parent, child, priority, or
-separate order field. Root mapping order defines category browse order.
-
-### 6.2 Category Object
-
-```yaml
-featured:
-  category_label: Featured
-  items:
-    - example_station
-    - another_station
-```
-
-Each `categories.<category_id>` value contains exactly:
+is a category ID satisfying the identifier rule in section 7.2. Duplicate
+category keys are invalid. Each `categories.<category_id>` value contains
+exactly:
 
 | Field | Presence | Rule |
 | --- | --- | --- |
 | `category_label` | Required | Non-blank catalogue and Media Browser label. |
 | `items` | Required | Non-empty ordered list of unique item IDs. Every reference must exist in root `items`. |
 
+The category item list is authored at this level. For example:
+
+```yaml
+items:
+  - example_station
+  - another_station
+```
+
+The category model is flat. Categories have no parent, child, priority, or
+separate order field. Root mapping order defines category browse order.
 The `items` list defines membership display order. An item may appear in
 multiple categories or in none. Absence from all categories does not prevent
 catalogue-scoped lookup. Category membership also does not guarantee Media
@@ -641,8 +552,8 @@ field; it must not treat it as an additive extension or silently lose the label.
 ### 10.2 Explicit Null and Empty Optional Collection
 
 ```yaml
-description: null
-tags: []
+description: null  # optional field, but explicit null is invalid
+tags: []           # optional field, but an empty list is invalid
 ```
 
 Optional unknown values are omitted. Explicit null and an empty optional list
@@ -690,7 +601,7 @@ The URI authority does not match `provider`.
 type: photo
 type_metadata:
   image_title: Example Photograph
-  latitude: 51.5072
+  latitude: 51.5072  # optional; invalid without longitude
 ```
 
 `longitude` is required whenever `latitude` is present.
@@ -708,7 +619,29 @@ categories:
 
 The reference is unknown and duplicated. Both violate the category rules.
 
-## 11. Complete Worked Catalogue
+## 11. Assembled Catalogue Examples
+
+### 11.1 Minimal Valid Catalogue
+
+```yaml
+catalogue_id: curated_media
+catalogue_schema_version: 3
+items:
+  example_station:
+    catalogue_label: Example Station
+    type: radio
+    type_metadata:
+      station_name: Example Station
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://streams.example.test/live.aac
+          mime_type: audio/aac
+categories: {}
+```
+
+### 11.2 Complete Worked Catalogue
 
 This assembled example covers ordered category membership, optional item data,
 all three source types, and an item with multiple execution methods.
@@ -720,14 +653,14 @@ items:
   station_alpha:
     catalogue_label: Station Alpha — London
     type: radio
-    description: Independent live radio
-    tags:
+    description: Independent live radio  # optional
+    tags:                                 # optional
       - radio
       - london
-    artwork:
-      local: /local/mediacat/station-alpha.png
-      external: https://images.example.test/station-alpha.png
-    content_rating: general
+    artwork:                              # optional
+      local: /local/mediacat/station-alpha.png                 # optional
+      external: https://images.example.test/station-alpha.png  # optional
+    content_rating: general              # optional
     type_metadata:
       station_name: Station Alpha
     execution_methods:
@@ -736,7 +669,7 @@ items:
           source_type: url
           url: https://streams.example.test/station-alpha.m3u8
           mime_type: application/vnd.apple.mpegurl
-          provider: example_streams
+          provider: example_streams  # optional
       g_home_device:
         source:
           source_type: assistant_command
@@ -746,8 +679,8 @@ items:
   station_beta:
     catalogue_label: Station Beta
     type: radio
-    artwork:
-      local: /local/mediacat/station-beta.png
+    artwork:  # optional
+      local: /local/mediacat/station-beta.png  # optional
     type_metadata:
       station_name: Station Beta
     execution_methods:

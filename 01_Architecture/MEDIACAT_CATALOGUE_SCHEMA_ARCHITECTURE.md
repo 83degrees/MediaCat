@@ -566,6 +566,25 @@ defined item record into a new flat response and adds:
 - root `catalogue_id`; and
 - `item_id` from the selected `items` mapping key.
 
+```yaml
+returned_record_version: 1
+catalogue_id: curated_media
+item_id: example_station
+catalogue_label: Example Station — London
+type: radio
+description: Independent live radio  # optional
+tags: [...]                           # optional
+artwork: {...}                        # optional
+content_rating: general              # optional
+type_metadata: {...}
+execution_methods: {...}
+```
+
+The first three fields are returned-record context added by lookup. From
+`catalogue_label` onward, the response uses the same item-object structure
+defined in section 4.1 and its nested subsections; this section does not
+duplicate those definitions.
+
 It does not return `catalogue_schema_version`, `categories`, the root `items`
 mapping, or lookup/selection context. The lookup contract, not this document,
 defines the resulting consumer promises.

@@ -66,7 +66,11 @@ governed consumers.
 | Scope | Authoritative location | State |
 | --- | --- | --- |
 | General MediaCat product and runtime architecture | `01_Architecture/MEDIACAT_ARCHITECTURE.md` | Current approved |
-| Stored catalogue schema-v3 authoring and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Proposed authority under ASTV-52; intended current approved after acceptance and merge; detailed runtime enforcement remains an approved target |
+| Stored catalogue schema-v3 authoring and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Current approved |
+
+Detailed runtime enforcement of the schema-v3 architecture remains an
+implementation concern. Any enforcement lag does not qualify the architecture's
+current-approved authority.
 
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
 - Material DDRs: `DDR-03-001`; proposed `DDR-03-002`

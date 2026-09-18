@@ -61,15 +61,22 @@ governed consumers.
 | Home Assistant runtime and Media Source framework | external | Home Assistant | Runtime truth remains external to this repository. |
 | Radio Browser Media Source provider | external | Radio Browser / Home Assistant integration | MediaCat may delegate an opaque URI once; it does not own the provider. |
 
-## Approved architecture location
+## Approved architecture authorities
 
-- Approved architecture location: `01_Architecture/MEDIACAT_ARCHITECTURE.md`
+| Scope | Authoritative location | State |
+| --- | --- | --- |
+| General MediaCat product and runtime architecture | `01_Architecture/MEDIACAT_ARCHITECTURE.md` | Current approved |
+| Stored catalogue schema-v3 authoring and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Proposed authority under ASTV-52; intended current approved after acceptance and merge; detailed runtime enforcement remains an approved target |
+
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
-- Architecture state: current approved
 - Material DDRs: `DDR-03-001`; proposed `DDR-03-002`
 
-The Markdown file is the semantic architecture authority. The diagram is its
-governed representation. Historical `schema-v2` / `resolve_item` material does
+`MEDIACAT_ARCHITECTURE.md` owns general product responsibilities, runtime
+boundaries, flows, and current implementation state. The catalogue schema
+architecture owns the schema-v3 stored YAML vocabulary, authoring semantics,
+requiredness, preventative-validation rules, and schema evolution. The diagram
+is the governed representation of the general architecture and does not replace
+either prose authority. Historical `schema-v2` / `resolve_item` material does
 not define the current normalized architecture.
 
 ## Contracts provided

@@ -223,19 +223,18 @@ The producer does not choose a method, endpoint, fallback or media-player
 profile. Exact success, failure and compatibility behavior is defined only by
 the MediaCat item-lookup contract.
 
-#### Retained legacy raw lookup
+#### Retired legacy raw lookup
 
-`mediacat.resolve_item` remains registered as a separate compatibility
-action. It accepts only `item_id` and returns a response-safe copy of the stored
-item mapping without adding catalogue identity or returned-record version. It is
-not the normalized cross-product boundary.
+`mediacat.resolve_item` is not registered or exposed by the maintained runtime.
+It remains traceable only in historical and rollback evidence and is not a
+current compatibility surface or cross-product boundary.
 
 The maintained loader and Media Source adapter retain schema-v2 branches for
 rollback compatibility, and the live ASTV Media Intent Engine definition retains
 a legacy `request.params.sources` branch for requests without a MediaCat
-reference. Current migrated media requests take the normalized branch. None of
-these retained compatibility paths reclassifies `resolve_item` or schema v2 as
-the current MediaCat architecture.
+reference. Current migrated media requests take the normalized branch. These
+separate compatibility paths do not expose `resolve_item` or reclassify schema v2
+as the current MediaCat architecture.
 
 The rationale for excluding the legacy schema-v2 top-level `providers` mapping
 from schema v3 while preserving a complete schema-v2 rollback package is
@@ -443,7 +442,7 @@ only the selected Home Assistant method, and ASTV owns the assistant path and
 final execution actions. The standalone AdvMedia gateway remains a second
 direct lookup consumer with its own contract.
 
-`mediacat.resolve_item` and schema-v2 loader/Media Source support remain local
-compatibility surfaces and are not the normalized cross-product boundary. The
-retired `curated_media` runtime and former Mermaid source remain only in
-historical or rollback evidence.
+Schema-v2 loader and Media Source support remain local compatibility surfaces;
+`mediacat.resolve_item` is retired from the maintained runtime. The retired
+action, the retired `curated_media` runtime and the former Mermaid source remain
+traceable only in historical or rollback evidence.

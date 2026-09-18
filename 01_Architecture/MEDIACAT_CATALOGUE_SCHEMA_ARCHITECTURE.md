@@ -2,14 +2,22 @@
 
 ## 1. Status and Authority
 
-### 1.1 Document State
+### 1.1 Document Authority and Control
 
-- Candidate state: proposed under `ASTV-52` pending governed human review.
-- Intended accepted state: authoritative current-approved stored-catalogue
-  architecture for `catalogue_schema_version: 3`.
-- Implementation state: detailed enforcement is an approved target only. The
-  current implemented loader enforces schema-version dispatch and the minimum
-  root shape but does not yet enforce all rules in this document.
+This document is the definitive stored-catalogue schema-v3 architecture and
+authoring/validation reference established by `ASTV-52`. It governs every
+MediaCat catalogue declaring `catalogue_schema_version: 3`. Its governed
+authority takes effect with acceptance and merge of `ASTV-52`; runtime
+enforcement status does not qualify or weaken the rules defined here.
+
+This document has no independent document-version number. Git and pull-request
+history provide its revision trail. Stored `catalogue_schema_version` and
+consumer-facing `returned_record_version` remain the compatibility controls.
+
+Detailed runtime enforcement may lag the authoritative architecture. The
+current implemented loader enforces schema-version dispatch and the minimum
+root shape but does not yet enforce every rule in this document. That is an
+implementation gap, not provisional schema design.
 
 ### 1.2 Authority Boundary
 
@@ -26,25 +34,19 @@ returned record. The general runtime architecture remains in
 transfer ASTV method or endpoint selection, AdvMedia processing, or external
 provider ownership to MediaCat.
 
-## 2. Design and Evidence Basis
+## 2. Contents
 
-The policy was assessed against:
-
-- the schema-v3 field inventory and normalized-record design accepted in
-  `ASTV-24`;
-- the `assistant_command` design accepted in `ASTV-54`;
-- the direct-URL, Radio Browser, Google Home, and Media Source proof completed
-  by `ASTV-65`;
-- the current maintained catalogue at
-  `04_Source/config/mediacat/catalogue.yaml`;
-- the current MediaCat runtime architecture and lookup contract; and
-- the material policy choices approved by Graham in `ASTV-52` on 2026-09-18.
-
-The maintained catalogue's 17 current records conform to the policy defined
-here. The representative seven-type fixture contains fields that were
-deliberately accepted by the earlier permissive model but are not part of this
-closed schema; it must be aligned by separately authorized implementation work
-before it can serve as a strict-validation fixture.
+- [1. Status and Authority](#1-status-and-authority)
+- [2. Contents](#2-contents)
+- [3. Root Catalogue Object](#3-root-catalogue-object)
+- [4. `items` Collection](#4-items-collection)
+- [5. `categories` Collection](#5-categories-collection)
+- [6. Cross-Cutting Authoring and Validation Rules](#6-cross-cutting-authoring-and-validation-rules)
+- [7. Validation Ownership and Failure Behavior](#7-validation-ownership-and-failure-behavior)
+- [8. Relationship to Returned Record Version 1](#8-relationship-to-returned-record-version-1)
+- [9. Compatibility and Schema Evolution](#9-compatibility-and-schema-evolution)
+- [Appendix A — Complete Catalogue Examples](#appendix-a--complete-catalogue-examples)
+- [Appendix B — Representative Invalid Examples](#appendix-b--representative-invalid-examples)
 
 ## 3. Root Catalogue Object
 
@@ -334,10 +336,7 @@ cross-product design and compatibility assessment.
 
 ```yaml
 source:
-  source_type: url
-  url: https://streams.example.test/live.aac
-  mime_type: audio/aac
-  provider: example_streams  # optional
+  source_type: <source_type>
 ```
 
 Every `execution_methods.<method>.source` is a mapping selected by required
@@ -583,101 +582,27 @@ returned-record version may add a contract-compatible returned field through
 governed work, and version-1 consumers remain required to ignore unknown
 additive returned fields.
 
-## 9. Representative Invalid Examples
+## 9. Compatibility and Schema Evolution
 
-Each fragment is invalid at catalogue-load time.
+- The maintained 17-item Curated Media catalogue conforms to schema v3 and
+  requires no data migration for this policy.
+- Schema v3 is a closed stored vocabulary. Unknown stored fields are invalid
+  unless an approved schema-architecture change defines an explicit extension
+  point.
+- Stored `catalogue_schema_version` and consumer-facing
+  `returned_record_version` evolve independently. A change to one does not
+  automatically change the other.
+- Consumers of returned-record version 1 must ignore unknown additive returned
+  fields. This consumer rule does not make unknown stored fields valid.
+- Adding or changing a stored field, media type, source type, execution method,
+  validation rule, or extension point requires an approved change to this
+  architecture.
+- Every stored-schema evolution must assess normalized-returned-record impact
+  separately against the provider-owned lookup contract.
 
-### 9.1 Unknown Field
+## Appendix A — Complete Catalogue Examples
 
-```yaml
-items:
-  example_station:
-    catalogue_lable: Example Station
-```
-
-`catalogue_lable` is not a defined field. The loader must report the unknown
-field; it must not treat it as an additive extension or silently lose the label.
-
-### 9.2 Explicit Null and Empty Optional Collection
-
-```yaml
-items:
-  <item_id>:
-    description: null  # optional field, but explicit null is invalid
-    tags: []           # optional field, but an empty list is invalid
-```
-
-Optional unknown values are omitted. Explicit null and an empty optional list
-are both invalid.
-
-### 9.3 Missing Semantic Title
-
-```yaml
-items:
-  <item_id>:
-    catalogue_label: Example Movie
-    type: movie
-    type_metadata: {}
-```
-
-`movie_title` is required. `catalogue_label` is not a fallback.
-
-### 9.4 Invalid Method/Source Pairing
-
-```yaml
-execution_methods:
-  ha_mplayer:
-    source:
-      source_type: assistant_command
-      provider: google_assistant
-      command: Play Example Station
-      append_target: true
-```
-
-`ha_mplayer` permits only `url` or `ha_media_source`; MediaCat must reject the
-record rather than allow a downstream dispatch failure.
-
-### 9.5 Invalid Media Source Identity
-
-```yaml
-source:
-  source_type: ha_media_source
-  provider: radio_browser
-  uri: media-source://another_provider/example-station
-  media_type: station
-```
-
-The URI authority does not match `provider`.
-
-### 9.6 Unpaired Coordinates
-
-```yaml
-items:
-  <item_id>:
-    type: photo
-    type_metadata:
-      image_title: Example Photograph
-      latitude: 51.5072  # optional; invalid without longitude
-```
-
-`longitude` is required whenever `latitude` is present.
-
-### 9.7 Invalid Category Membership
-
-```yaml
-categories:
-  featured:
-    category_label: Featured
-    items:
-      - missing_item
-      - missing_item
-```
-
-The reference is unknown and duplicated. Both violate the category rules.
-
-## 10. Assembled Catalogue Examples
-
-### 10.1 Minimal Valid Catalogue
+### A.1 Minimal Valid Catalogue
 
 ```yaml
 catalogue_id: curated_media
@@ -697,7 +622,7 @@ items:
 categories: {}
 ```
 
-### 10.2 Complete Worked Catalogue
+### A.2 Complete Worked Catalogue
 
 This assembled example covers ordered category membership, optional item data,
 all three source types, and an item with multiple execution methods.
@@ -759,45 +684,94 @@ categories:
       - station_beta
 ```
 
-## 11. Compatibility and Schema Evolution
+## Appendix B — Representative Invalid Examples
 
-- The maintained 17-item Curated Media catalogue already uses only the defined
-  schema vocabulary and requires no data migration for this policy.
-- The current schema-v3 loader is intentionally more permissive than this
-  approved target. It preserves unknown fields and performs only minimum root
-  checks. That is an implementation gap, not permission to author such fields.
-- The current broad fixture contains deliberate additive root, item, source,
-  and category fields used to prove earlier preservation behavior. Strict
-  validation implementation must replace or relocate those cases and add
-  rejection coverage.
-- Enforcing this document in production is out of scope for `ASTV-52` and
-  requires separately authorized `Change: Code` work, tests, Beta deployment,
-  and validation.
-- The normalized response remains returned-record version 1. Required semantic
-  titles and non-null presence strengthen the producer guarantee without
-  changing the response shape used by current consumers.
-- Returned-record consumers retain additive compatibility and must ignore
-  unknown additive returned fields. This rule does not make unknown stored
-  fields valid.
-- A new stored field, media type, source type, execution method, or defined
-  extension point requires an approved change to this architecture. Any impact
-  on the returned record must be assessed independently against its contract.
+Each fragment is invalid at catalogue-load time.
 
-## 12. Required Follow-Up Implementation
+### B.1 Unknown Field
 
-`ASTV-52` changes governed architecture and the lookup contract only.
-`ASTV-235` is the separately authorized MediaCat implementation issue and is
-required to:
+```yaml
+items:
+  example_station:
+    catalogue_lable: Example Station
+```
 
-1. implement closed-vocabulary schema-v3 validation, duplicate-key detection,
-   path-specific errors, and all structural/value constraints in MediaCat;
-2. replace permissive additive-field tests with strict rejection and complete
-   valid/invalid fixture coverage;
-3. prove current catalogue conformance and schema-v2 compatibility;
-4. validate Home Assistant setup failure and atomic non-activation for invalid
-   schema-v3 catalogues; and
-5. deploy and prove the accepted implementation through the code workflow and
-   Beta gates.
+`catalogue_lable` is not a defined field. The loader must report the unknown
+field; it must not treat it as an additive extension or silently lose the label.
 
-No runtime, catalogue data, Home Assistant deployment, or consumer
-implementation is changed by `ASTV-52`.
+### B.2 Explicit Null and Empty Optional Collection
+
+```yaml
+items:
+  <item_id>:
+    description: null  # optional field, but explicit null is invalid
+    tags: []           # optional field, but an empty list is invalid
+```
+
+Optional unknown values are omitted. Explicit null and an empty optional list
+are both invalid.
+
+### B.3 Missing Semantic Title
+
+```yaml
+items:
+  <item_id>:
+    catalogue_label: Example Movie
+    type: movie
+    type_metadata: {}
+```
+
+`movie_title` is required. `catalogue_label` is not a fallback.
+
+### B.4 Invalid Method/Source Pairing
+
+```yaml
+execution_methods:
+  ha_mplayer:
+    source:
+      source_type: assistant_command
+      provider: google_assistant
+      command: Play Example Station
+      append_target: true
+```
+
+`ha_mplayer` permits only `url` or `ha_media_source`; MediaCat must reject the
+record rather than allow a downstream dispatch failure.
+
+### B.5 Invalid Media Source Identity
+
+```yaml
+source:
+  source_type: ha_media_source
+  provider: radio_browser
+  uri: media-source://another_provider/example-station
+  media_type: station
+```
+
+The URI authority does not match `provider`.
+
+### B.6 Unpaired Coordinates
+
+```yaml
+items:
+  <item_id>:
+    type: photo
+    type_metadata:
+      image_title: Example Photograph
+      latitude: 51.5072  # optional; invalid without longitude
+```
+
+`longitude` is required whenever `latitude` is present.
+
+### B.7 Invalid Category Membership
+
+```yaml
+categories:
+  featured:
+    category_label: Featured
+    items:
+      - missing_item
+      - missing_item
+```
+
+The reference is unknown and duplicated. Both violate the category rules.

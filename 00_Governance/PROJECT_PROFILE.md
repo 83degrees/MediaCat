@@ -76,7 +76,7 @@ not define the current normalized architecture.
 
 | Contract | Status/version | Authoritative provider-owned location | Consumers | Notes |
 | --- | --- | --- | --- | --- |
-| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.0.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` namespace with unchanged normalized returned-record v1. |
+| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.0.0; v2.1.0 presence-clarification candidate under ASTV-52 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` namespace with unchanged normalized returned-record v1. |
 
 The provider-owned file above is the sole operational authority. The former
 shared Governance 1.2 copy under `Home_Assistant/contracts/` is retired and

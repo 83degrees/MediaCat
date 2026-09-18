@@ -65,8 +65,8 @@ marked with `# optional`.
 | --- | --- | --- | --- | --- |
 | `catalogue_id` | Required | String | — | Catalogue identifier. The maintained catalogue value is `curated_media`; the identifier rules in section 6.2 apply. |
 | `catalogue_schema_version` | Required | Integer | `3` | Stored catalogue schema version. It is not the integration version or returned-record version. |
-| `items` | Required | Object/mapping | — | Non-empty ordered mapping of item ID to item object, defined in section 4. |
-| `categories` | Required | Object/mapping | — | Ordered mapping of category ID to category object, defined in section 5; it may be empty. |
+| `items` | Required | Object | — | Non-empty ordered mapping of item ID to item object, defined in section 4. |
+| `categories` | Required | Object | — | Ordered mapping of category ID to category object, defined in section 5; it may be empty. |
 
 ### 3.2 Catalogue-Scoped Identity
 
@@ -80,44 +80,50 @@ The `items` and `categories` mappings are authored ordered data. Validation and
 loading must preserve their YAML mapping order. Root category order defines
 category browse order.
 
-## 4. `items` and Item Objects
+## 4. `items` Collection
 
 ```yaml
 items:
-  <item_id>:
-    catalogue_label: Example Station — London
-    type: radio
-    description: Independent live radio  # optional
-    tags: [...]                           # optional
-    artwork: {...}                        # optional
-    content_rating: general              # optional
-    type_metadata: {...}
-    execution_methods: {...}
+  <item_id>: {...}
 ```
 
 `items` is a required, non-empty ordered mapping. `<item_id>` represents the
 string mapping key; its indented value is the item object. Every item ID
 satisfies the identifier rule in section 6.2. Duplicate item keys are
-invalid. Each `items.<item_id>` value contains only these fields:
+invalid. Item mapping order is authored data and must be preserved. The item ID
+exists only as the mapping key and is not repeated inside its object.
+
+### 4.1 `<item_id>`
+
+```yaml
+<item_id>:
+  catalogue_label: Example Station — London
+  type: radio
+  description: Independent live radio  # optional
+  tags: [...]                           # optional
+  artwork: {...}                        # optional
+  content_rating: general              # optional
+  type_metadata: {...}
+  execution_methods: {...}
+```
+
+Each item object contains only these fields:
 
 | Field | Presence | Data type | Options | Definition |
 | --- | --- | --- | --- | --- |
 | `catalogue_label` | Required | String | — | Non-blank MediaCat browse, search, administration, and disambiguation label. It is not player metadata. |
-| `type` | Required | String | `radio`, `music_track`, `podcast_episode`, `live_tv`, `tv_episode`, `movie`, `photo` | Selects the exact `type_metadata` vocabulary in section 4.2. |
+| `type` | Required | String | `radio`, `music_track`, `podcast_episode`, `live_tv`, `tv_episode`, `movie`, `photo` | Selects the exact `type_metadata` vocabulary in section 4.3. |
 | `description` | Optional | String | — | Non-blank player-independent description. |
 | `tags` | Optional | List of strings | — | Non-empty ordered list of unique, non-blank free-text tags. No controlled vocabulary is imposed. |
-| `artwork` | Optional | Object/mapping | — | Artwork references defined in section 4.1. |
+| `artwork` | Optional | Object | — | Artwork references defined in section 4.2. |
 | `content_rating` | Optional | String | — | Non-blank free-text classification. No rating-system vocabulary is imposed. |
-| `type_metadata` | Required | Object/mapping | — | Type-selected metadata object defined in section 4.2. |
-| `execution_methods` | Required | Object/mapping | — | Non-empty mapping of available execution methods defined in section 4.3. |
+| `type_metadata` | Required | Object | — | Type-selected metadata object defined in section 4.3. |
+| `execution_methods` | Required | Object | — | Non-empty mapping of available execution methods defined in section 4.4. |
 
 Required fields must be present and valid. Optional fields are omitted rather
 than stored as null, blank, or empty placeholders.
 
-The item ID exists only as the `items` mapping key and is not repeated inside
-the object. Item mapping order is authored data and must be preserved.
-
-### 4.1 `artwork`
+### 4.2 `<item_id>.artwork`
 
 ```yaml
 artwork:
@@ -153,14 +159,14 @@ Known consumers retain their governed behavior: the Media Source projection
 uses `local`, while the current Google Cast mapping prefers `external` and then
 uses `local`. Those consumer behaviors do not make artwork required here.
 
-### 4.2 `type_metadata`
+### 4.3 `<item_id>.type_metadata`
 
 `type_metadata` contains exactly the fields defined by the selected item
 `type`. Each supported type has a required semantic title or name, which is
 never derived from `catalogue_label`. Optional fields are omitted when unknown
 or inapplicable; no unlisted field may be added.
 
-#### 4.2.1 `radio`
+#### 4.3.1 `radio`
 
 ```yaml
 type_metadata:
@@ -175,7 +181,7 @@ The temporary current `news_briefing` classification remains `type: radio` with
 `station_name: My News Briefing` until `ASTV-66` authorizes a replacement type.
 This compatibility record does not broaden the media-type vocabulary.
 
-#### 4.2.2 `music_track`
+#### 4.3.2 `music_track`
 
 ```yaml
 type_metadata:
@@ -200,7 +206,7 @@ type_metadata:
 | `track_number` | Optional | Integer | — | Track sequence number greater than zero. |
 | `release_date` | Optional | String | — | Quoted valid calendar date in `YYYY-MM-DD` form. |
 
-#### 4.2.3 `podcast_episode`
+#### 4.3.3 `podcast_episode`
 
 ```yaml
 type_metadata:
@@ -221,7 +227,7 @@ type_metadata:
 | `publication_date` | Optional | String | — | Quoted valid calendar date in `YYYY-MM-DD` form. |
 | `episode_number` | Optional | Integer | — | Episode sequence number greater than zero. |
 
-#### 4.2.4 `live_tv`
+#### 4.3.4 `live_tv`
 
 ```yaml
 type_metadata:
@@ -232,7 +238,7 @@ type_metadata:
 | --- | --- | --- | --- | --- |
 | `channel_name` | Required | String | — | Non-blank player-facing channel name. |
 
-#### 4.2.5 `tv_episode`
+#### 4.3.5 `tv_episode`
 
 ```yaml
 type_metadata:
@@ -251,7 +257,7 @@ type_metadata:
 | `episode_number` | Optional | Integer | — | Episode sequence number greater than zero. |
 | `first_broadcast_date` | Optional | String | — | Quoted valid calendar date in `YYYY-MM-DD` form. |
 
-#### 4.2.6 `movie`
+#### 4.3.6 `movie`
 
 ```yaml
 type_metadata:
@@ -268,7 +274,7 @@ type_metadata:
 | `studio` | Optional | String | — | Non-blank studio name. |
 | `release_date` | Optional | String | — | Quoted valid calendar date in `YYYY-MM-DD` form. |
 
-#### 4.2.7 `photo`
+#### 4.3.7 `photo`
 
 ```yaml
 type_metadata:
@@ -293,7 +299,7 @@ type_metadata:
 | `width_pixels` | Optional | Integer | — | Pixel width greater than zero; present if and only if `height_pixels` is present. |
 | `height_pixels` | Optional | Integer | — | Pixel height greater than zero; present if and only if `width_pixels` is present. |
 
-### 4.3 `execution_methods`
+### 4.4 `<item_id>.execution_methods`
 
 ```yaml
 execution_methods:
@@ -311,7 +317,7 @@ other fields.
 
 | Field | Presence | Data type | Options | Definition |
 | --- | --- | --- | --- | --- |
-| `source` | Required | Object/mapping | — | Method-specific source object selected by `source_type` and defined in section 4.3.1. |
+| `source` | Required | Object | — | Method-specific source object selected by `source_type` and defined in section 4.4.1. |
 
 | Execution method | Permitted `source_type` |
 | --- | --- |
@@ -324,7 +330,7 @@ preference and selection; MediaCat returns all authored methods. Adding another
 method name or changing a method/source pairing requires separately approved
 cross-product design and compatibility assessment.
 
-#### 4.3.1 `source` Variants
+#### 4.4.1 `source` Variants
 
 ```yaml
 source:
@@ -343,9 +349,9 @@ Every `execution_methods.<method>.source` is a mapping selected by required
 | `ha_media_source` | `source_type`, `provider`, `uri`, `media_type` | None |
 | `assistant_command` | `source_type`, `provider`, `command`, `append_target` | None |
 
-The source type must be permitted for its parent method by section 4.3.
+The source type must be permitted for its parent method by section 4.4.
 
-##### 4.3.1.1 `url`
+##### 4.4.1.1 `url`
 
 ```yaml
 source:
@@ -365,7 +371,7 @@ source:
 MediaCat does not connect to the URL, test stream availability, infer a MIME
 type, or retry another source during catalogue loading or lookup.
 
-##### 4.3.1.2 `ha_media_source`
+##### 4.4.1.2 `ha_media_source`
 
 ```yaml
 source:
@@ -386,7 +392,7 @@ The URI remains opaque after these structural checks. MediaCat does not
 dereference it during catalogue loading or normalized lookup. Runtime provider
 failure remains at the Home Assistant Media Source execution boundary.
 
-##### 4.3.1.3 `assistant_command`
+##### 4.4.1.3 `assistant_command`
 
 ```yaml
 source:
@@ -406,42 +412,48 @@ source:
 MediaCat does not append an endpoint, construct a final assistant command, or
 execute it. Those remain ASTV responsibilities.
 
-## 5. `categories` and Category Objects
+## 5. `categories` Collection
 
 ```yaml
 categories:
-  <category_id>:
-    category_label: Featured
-    items: [...]
+  <category_id>: {...}
 ```
 
 `categories` is a required ordered mapping and may be empty. Each mapping key
 is a category ID satisfying the identifier rule in section 6.2. Duplicate
-category keys are invalid. Each `categories.<category_id>` value contains
-exactly:
+category keys are invalid. Root mapping order defines category browse order.
+Each mapping value is a category object.
+
+### 5.1 `<category_id>`
+
+```yaml
+<category_id>:
+  category_label: Featured
+  items: [...]
+```
+
+Each category object contains exactly:
 
 | Field | Presence | Data type | Options | Definition |
 | --- | --- | --- | --- | --- |
 | `category_label` | Required | String | — | Non-blank catalogue and Media Browser label. |
 | `items` | Required | List of strings | — | Non-empty ordered list of unique item IDs; every reference must exist in root `items`. |
 
-The category item list is authored at this level. For example:
+The category item list is authored within the category object. For example:
 
 ```yaml
-categories:
-  <category_id>:
-    items:
-      - example_station
-      - another_station
+<category_id>:
+  items:
+    - example_station
+    - another_station
 ```
 
 The category model is flat. Categories have no parent, child, priority, or
-separate order field. Root mapping order defines category browse order.
-The `items` list defines membership display order. An item may appear in
-multiple categories or in none. Absence from all categories does not prevent
-catalogue-scoped lookup. Category membership also does not guarantee Media
-Source visibility: that projection applies its separately documented playable-
-item rules.
+separate order field. The `items` list defines membership display order. An
+item may appear in multiple categories or in none. Absence from all categories
+does not prevent catalogue-scoped lookup. Category membership also does not
+guarantee Media Source visibility: that projection applies its separately
+documented playable-item rules.
 
 ## 6. Cross-Cutting Authoring and Validation Rules
 

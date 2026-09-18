@@ -19,7 +19,6 @@ from .const import (
     CATALOGUE_FILENAME,
     DATA_CATALOGUE,
     DOMAIN,
-    SERVICE_RESOLVE_ITEM,
 )
 from .resolver import (
     CatalogueItemNotFoundError,
@@ -40,10 +39,6 @@ def _non_empty_string(value: Any) -> str:
         raise vol.Invalid("value must be a non-empty string")
     return value
 
-
-RESOLVE_ITEM_SCHEMA = vol.Schema(
-    {vol.Required(ATTR_ITEM_ID): _non_empty_string}
-)
 
 RESOLVE_MEDIA_RECORD_SCHEMA = vol.Schema(
     {
@@ -66,25 +61,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     domain_data: dict[str, Any] = hass.data.setdefault(DOMAIN, {})
     domain_data[DATA_CATALOGUE] = catalogue
 
-    resolver = CatalogueResolver(catalogue)
-
-    async def async_resolve_item(call: ServiceCall) -> dict[str, Any]:
-        """Return the complete canonical item record directly."""
-        item_id: str = call.data[ATTR_ITEM_ID]
-        try:
-            return resolver.resolve_item_record(item_id)
-        except CatalogueItemNotFoundError as err:
-            raise ServiceValidationError(str(err)) from err
-
-    hass.services.async_register(
-        DOMAIN,
-        SERVICE_RESOLVE_ITEM,
-        async_resolve_item,
-        schema=RESOLVE_ITEM_SCHEMA,
-        supports_response=SupportsResponse.ONLY,
-    )
-
     if isinstance(catalogue, CatalogueV3):
+        resolver = CatalogueResolver(catalogue)
 
         async def async_resolve_media_record(call: ServiceCall) -> dict[str, Any]:
             """Return the normalized v1 record for a catalogue-scoped item."""

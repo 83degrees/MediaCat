@@ -99,8 +99,8 @@ record containing every execution method available for that item.
 The sole current producer is the Home Assistant action
 `mediacat.resolve_media_record`.
 
-`mediacat.resolve_item` is a separate raw-item lookup and is not the normalized
-cross-product interface defined by this contract.
+The retired `mediacat.resolve_item` raw lookup is historical/rollback evidence
+only and is not the normalized cross-product interface defined by this contract.
 
 This contract does not define search or discovery by title, type, tags, provider,
 or other metadata. It does not expose the stored catalogue schema, categories,

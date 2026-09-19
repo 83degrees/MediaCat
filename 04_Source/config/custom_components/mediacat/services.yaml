@@ -4,14 +4,14 @@ resolve_media_record:
   fields:
     catalogue_id:
       name: Catalogue ID
-      description: Exact identity of the loaded schema-v3 catalogue.
+      description: Exact identity of the loaded schema-v3 catalogue. Must match ^[a-z0-9][a-z0-9_-]*$.
       required: true
       example: curated_media
       selector:
         text:
     item_id:
       name: Item ID
-      description: Item identifier within the requested catalogue.
+      description: Item identifier within the requested catalogue. Must match ^[a-z0-9][a-z0-9_-]*$.
       required: true
       example: bbc_radio_2
       selector:

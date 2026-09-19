@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, patch
@@ -121,16 +122,47 @@ def test_schema_v3_registers_only_normalized_action() -> None:
         },
     ],
 )
-def test_normalized_action_accepts_exactly_two_non_blank_inputs(
+def test_normalized_action_accepts_exactly_two_identifier_inputs(
     request_data,
 ) -> None:
-    """Reject missing, blank, additional, and compatibility-alias inputs."""
+    """Reject missing, malformed, additional, and compatibility-alias inputs."""
     with pytest.raises(vol.Invalid):
         RESOLVE_MEDIA_RECORD_SCHEMA(request_data)
 
     assert RESOLVE_MEDIA_RECORD_SCHEMA(
         {"catalogue_id": "curated_media", "item_id": "station_alpha"}
     ) == {"catalogue_id": "curated_media", "item_id": "station_alpha"}
+
+
+@pytest.mark.parametrize(
+    "identifier",
+    [
+        "a",
+        "0",
+        "curated_media",
+        "station-alpha_2",
+        "a" * 1024,
+    ],
+)
+def test_normalized_action_accepts_every_documented_identifier_shape(
+    identifier,
+) -> None:
+    """Accept the complete policy vocabulary without adding a length limit."""
+    assert RESOLVE_MEDIA_RECORD_SCHEMA(
+        {"catalogue_id": identifier, "item_id": identifier}
+    ) == {"catalogue_id": identifier, "item_id": identifier}
+
+
+@pytest.mark.parametrize(
+    "identifier",
+    ["", " ", "Uppercase", "-prefix", "_prefix", "has/slash", "has.dot"],
+)
+def test_normalized_action_rejects_malformed_identifiers(identifier) -> None:
+    """Reject only identifiers outside the authoritative lexical rule."""
+    with pytest.raises(vol.Invalid, match="value must match"):
+        RESOLVE_MEDIA_RECORD_SCHEMA(
+            {"catalogue_id": identifier, "item_id": "station_alpha"}
+        )
 
 
 @pytest.mark.parametrize(
@@ -266,4 +298,29 @@ def test_normalized_action_reports_lookup_failures_without_a_record(
     handler = hass.services.registrations["resolve_media_record"]["handler"]
 
     with pytest.raises(ServiceValidationError, match=message):
+        _call(handler, **request_data)
+
+
+@pytest.mark.parametrize(
+    ("request_data", "message"),
+    [
+        (
+            {"catalogue_id": "Invalid", "item_id": "station_alpha"},
+            "MediaCat catalogue_id 'Invalid' is invalid",
+        ),
+        (
+            {"catalogue_id": "curated_media", "item_id": "bad/item"},
+            "MediaCat item_id 'bad/item' is invalid",
+        ),
+    ],
+)
+def test_normalized_action_distinguishes_malformed_identifiers(
+    request_data, message
+) -> None:
+    """Report malformed input separately from a valid identifier not found."""
+    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
+    hass = _setup_with_catalogue(catalogue)
+    handler = hass.services.registrations["resolve_media_record"]["handler"]
+
+    with pytest.raises(ServiceValidationError, match=re.escape(message)):
         _call(handler, **request_data)

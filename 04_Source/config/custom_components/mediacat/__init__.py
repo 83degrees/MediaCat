@@ -21,9 +21,11 @@ from .const import (
     DOMAIN,
 )
 from .resolver import (
+    IDENTIFIER_PATTERN,
     CatalogueItemNotFoundError,
     CatalogueNotFoundError,
     CatalogueResolver,
+    InvalidIdentifierError,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,18 +34,20 @@ ATTR_CATALOGUE_ID = "catalogue_id"
 SERVICE_RESOLVE_MEDIA_RECORD = "resolve_media_record"
 
 
-def _non_empty_string(value: Any) -> str:
-    """Validate a string containing at least one non-whitespace character."""
+def _identifier(value: Any) -> str:
+    """Validate a lookup identifier against schema-v3 policy."""
     value = cv.string(value)
-    if not value.strip():
-        raise vol.Invalid("value must be a non-empty string")
+    if IDENTIFIER_PATTERN.fullmatch(value) is None:
+        raise vol.Invalid(
+            f"value must match {IDENTIFIER_PATTERN.pattern!r}"
+        )
     return value
 
 
 RESOLVE_MEDIA_RECORD_SCHEMA = vol.Schema(
     {
-        vol.Required(ATTR_CATALOGUE_ID): _non_empty_string,
-        vol.Required(ATTR_ITEM_ID): _non_empty_string,
+        vol.Required(ATTR_CATALOGUE_ID): _identifier,
+        vol.Required(ATTR_ITEM_ID): _identifier,
     }
 )
 
@@ -69,7 +73,11 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         item_id: str = call.data[ATTR_ITEM_ID]
         try:
             return resolver.resolve_media_record(catalogue_id, item_id)
-        except (CatalogueNotFoundError, CatalogueItemNotFoundError) as err:
+        except (
+            CatalogueNotFoundError,
+            CatalogueItemNotFoundError,
+            InvalidIdentifierError,
+        ) as err:
             raise ServiceValidationError(str(err)) from err
 
     hass.services.async_register(

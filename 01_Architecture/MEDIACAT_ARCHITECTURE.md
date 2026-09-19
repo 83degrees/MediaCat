@@ -68,9 +68,12 @@ evidence and does not define current runtime behaviour.
 `mediacat.resolve_media_record` is the sole current normalized cross-product
 lookup producer.
 
-It accepts exact `catalogue_id` and `item_id` inputs and returns one complete
-normalized record containing the item identity, player-independent metadata and
-all execution methods available for that item.
+It accepts exact `catalogue_id` and `item_id` inputs matching the schema-v3
+identifier rule and returns one complete normalized record containing the item
+identity, player-independent metadata and all execution methods available for
+that item. The maintained action schema and resolver validate both identifiers
+before lookup, so malformed input fails separately from a conforming identifier
+that is not found.
 
 MediaCat reports available execution methods; it does not select one. It does
 not attach endpoint, fallback or playback-profile context.

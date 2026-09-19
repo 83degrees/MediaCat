@@ -165,6 +165,19 @@ def test_normalized_action_rejects_malformed_identifiers(identifier) -> None:
         )
 
 
+@pytest.mark.parametrize("field", ["catalogue_id", "item_id"])
+@pytest.mark.parametrize("identifier", [1, True, 1.5, None])
+def test_normalized_action_rejects_non_string_identifiers(
+    field, identifier
+) -> None:
+    """Reject scalar values rather than coercing them to strings."""
+    request = {"catalogue_id": "curated_media", "item_id": "station_alpha"}
+    request[field] = identifier
+
+    with pytest.raises(vol.Invalid, match="value must be a string"):
+        RESOLVE_MEDIA_RECORD_SCHEMA(request)
+
+
 @pytest.mark.parametrize(
     ("item_id", "method", "expected_source"),
     [

@@ -9,7 +9,6 @@ import voluptuous as vol
 
 from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
 from homeassistant.exceptions import ServiceValidationError
-from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
 from .catalogue import CatalogueError, async_load_catalogue
@@ -36,7 +35,8 @@ SERVICE_RESOLVE_MEDIA_RECORD = "resolve_media_record"
 
 def _identifier(value: Any) -> str:
     """Validate a lookup identifier against schema-v3 policy."""
-    value = cv.string(value)
+    if not isinstance(value, str):
+        raise vol.Invalid("value must be a string")
     if IDENTIFIER_PATTERN.fullmatch(value) is None:
         raise vol.Invalid(
             f"value must match {IDENTIFIER_PATTERN.pattern!r}"

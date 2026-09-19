@@ -189,7 +189,6 @@ def test_normalized_action_rejects_non_string_identifiers(
                 "url": "https://streams.example.test/station_alpha.m3u8",
                 "mime_type": "application/vnd.apple.mpegurl",
                 "provider": "example_streams",
-                "transport_hint": "live",
             },
         ),
         (
@@ -244,29 +243,35 @@ def test_normalized_action_preserves_complete_items_and_sources(
     assert "fixture_note" not in response
 
 
-def test_response_owned_fields_override_item_fields_and_copy_is_independent() -> None:
-    """Protect response identity and catalogue immutability from caller mutation."""
+def test_response_copy_is_independent_from_validated_catalogue() -> None:
+    """Protect catalogue immutability from caller mutation of a response."""
     catalogue = _parse_catalogue(
         {
             "catalogue_id": "curated_media",
             "catalogue_schema_version": 3,
             "items": {
                 "station_alpha": {
-                    "returned_record_version": 99,
-                    "catalogue_id": "falsified",
-                    "item_id": "falsified",
+                    "catalogue_label": "Station Alpha",
+                    "type": "radio",
+                    "tags": ["radio", "live"],
+                    "type_metadata": {"station_name": "Station Alpha"},
                     "execution_methods": {
                         "ha_mplayer": {
                             "source": {
                                 "source_type": "url",
                                 "url": "https://example.test/live",
+                                "mime_type": "audio/aac",
                             }
                         }
                     },
-                    "additive": {"values": ["retained"]},
                 }
             },
-            "categories": {"all": {"items": ["station_alpha"]}},
+            "categories": {
+                "all": {
+                    "category_label": "All",
+                    "items": ["station_alpha"],
+                }
+            },
         },
         Path("non-live-v3.yaml"),
     )
@@ -278,12 +283,9 @@ def test_response_owned_fields_override_item_fields_and_copy_is_independent() ->
     assert response["returned_record_version"] == 1
     assert response["catalogue_id"] == "curated_media"
     assert response["item_id"] == "station_alpha"
-    assert response["additive"] == {"values": ["retained"]}
-    response["additive"]["values"].append("caller change")
+    response["tags"].append("caller-change")
     response["execution_methods"]["ha_mplayer"]["source"]["url"] = "changed"
-    assert catalogue.items["station_alpha"]["additive"]["values"] == (
-        "retained",
-    )
+    assert catalogue.items["station_alpha"]["tags"] == ("radio", "live")
     assert catalogue.items["station_alpha"]["execution_methods"][
         "ha_mplayer"
     ]["source"]["url"] == "https://example.test/live"

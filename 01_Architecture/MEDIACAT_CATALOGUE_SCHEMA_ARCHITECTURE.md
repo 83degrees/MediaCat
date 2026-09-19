@@ -14,10 +14,11 @@ This document has no independent document-version number. Git and pull-request
 history provide its revision trail. Stored `catalogue_schema_version` and
 consumer-facing `returned_record_version` remain the compatibility controls.
 
-Detailed runtime enforcement may lag the authoritative architecture. The
-current implemented loader enforces schema-version dispatch and the minimum
-root shape but does not yet enforce every rule in this document. That is an
-implementation gap, not provisional schema design.
+The current implemented loader enforces this complete closed schema-v3
+vocabulary during catalogue loading, including duplicate-key detection,
+requiredness, value constraints, method/source pairings, references, and
+ordering preservation. Invalid input rejects the complete candidate catalogue
+before runtime surfaces are registered.
 
 ### 1.2 Authority Boundary
 

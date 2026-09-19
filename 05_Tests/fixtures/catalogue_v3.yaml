@@ -1,7 +1,5 @@
 catalogue_id: curated_media
 catalogue_schema_version: 3
-fixture_note:
-  purpose: non-live schema-v3 model coverage
 items:
   station_alpha:
     catalogue_label: Station Alpha
@@ -23,22 +21,12 @@ items:
           url: https://streams.example.test/station_alpha.m3u8
           mime_type: application/vnd.apple.mpegurl
           provider: example_streams
-          transport_hint: live
       g_home_device:
         source:
           source_type: assistant_command
           provider: google_assistant
           command: Play Station Alpha
           append_target: true
-    providers:
-      legacy_radio:
-        service:
-          domain: media_player
-          features:
-            - live
-            - regional
-    extension_metadata:
-      editorial_note: retained additive item field
   example_track:
     catalogue_label: Example Track — studio recording
     type: music_track
@@ -192,7 +180,6 @@ categories:
       - example_movie
       - station_alpha
       - example_photo
-    display_hint: hero
   audio:
     category_label: Audio
     items:

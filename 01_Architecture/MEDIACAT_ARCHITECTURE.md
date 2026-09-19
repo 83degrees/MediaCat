@@ -50,11 +50,13 @@ The maintained runtime uses:
 Runtime namespace and logical catalogue identity are deliberately separate.
 DDR-03-002 records the durable rationale for that decision.
 
-During setup, MediaCat loads the schema-v3 catalogue, validates the active
-stored format, recursively freezes the loaded mapping and stores the immutable
-snapshot under `hass.data["mediacat"]["catalogue"]`. Setup failure is atomic:
-if the catalogue cannot be loaded or accepted, MediaCat does not expose a
-partially initialized lookup surface.
+During setup, MediaCat loads the schema-v3 catalogue, rejects duplicate YAML
+mapping keys, validates the complete closed vocabulary and all governed
+structural, value, pairing and reference rules, recursively freezes the loaded
+mapping, and stores the immutable snapshot under
+`hass.data["mediacat"]["catalogue"]`. Authored mapping and category-membership
+order are preserved. Setup failure is atomic: if the catalogue cannot be loaded
+or accepted, MediaCat does not expose a partially initialized lookup surface.
 
 The maintained runtime accepts only `catalogue_schema_version: 3`.
 Schema-v2 runtime compatibility and the raw `mediacat.resolve_item` action are

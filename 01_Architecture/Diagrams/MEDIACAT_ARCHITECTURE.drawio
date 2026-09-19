@@ -1,5 +1,5 @@
-<mxfile host="Electron" modified="2026-09-15T10:00:00.000Z" agent="Codex" version="26.0.0" type="device">
-  <diagram id="mediacat-approved-target" name="Approved Target">
+<mxfile host="Electron" modified="2026-09-18T22:28:00.000Z" agent="ChatGPT" version="26.0.0" type="device">
+  <diagram id="mediacat-approved-target" name="Current Architecture">
     <mxGraphModel dx="1900" dy="1240" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1240" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -8,10 +8,10 @@
         <mxCell id="title" value="&lt;b&gt;MediaCat — Single-Domain Runtime Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
           <mxGeometry x="40" y="24" width="980" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Authoritative visual companion • post-retirement mediacat namespace • schema-v3 semantics unchanged" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="Authoritative visual companion • mediacat runtime namespace • schema-v3 current architecture" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
           <mxGeometry x="42" y="66" width="940" height="28" as="geometry" />
         </mxCell>
-        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Current implemented single-domain MediaCat architecture. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Retired namespace references remain historical or rollback evidence outside this map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
+        <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Current implemented MediaCat architecture. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Historical and rollback material sits outside this map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
           <mxGeometry x="1050" y="25" width="810" height="66" as="geometry" />
         </mxCell>
 
@@ -28,7 +28,7 @@
           <mxGeometry relative="1" as="geometry"><mxPoint x="490" y="113" as="sourcePoint" /><mxPoint x="565" y="113" as="targetPoint" /></mxGeometry>
         </mxCell>
 
-        <mxCell id="callers-band" value="VERIFIED CALLER BOUNDARIES" style="swimlane;html=1;horizontal=0;startSize=28;rounded=1;collapsible=0;recursiveResize=0;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+        <mxCell id="callers-band" value="CALLER BOUNDARIES" style="swimlane;html=1;horizontal=0;startSize=28;rounded=1;collapsible=0;recursiveResize=0;fillColor=#f8fafc;strokeColor=#64748b;fontColor=#334155;fontStyle=1;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="40" y="145" width="315" height="890" as="geometry" />
         </mxCell>
         <mxCell id="mediacat-boundary" value="MEDIACAT PRODUCT BOUNDARY" style="swimlane;html=1;horizontal=0;startSize=32;rounded=1;collapsible=0;recursiveResize=0;fillColor=#eef5ff;strokeColor=#3b82f6;strokeWidth=2;fontColor=#1e40af;fontStyle=1;fontSize=15;" vertex="1" parent="1">
@@ -62,7 +62,7 @@
           <mxGeometry x="1110" y="240" width="330" height="710" as="geometry" />
         </mxCell>
 
-        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v3 catalogue source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat/catalogue.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: curated_media&lt;br&gt;catalogue_schema_version: 3&lt;/span&gt;&lt;br&gt;17 items • 1 ordered radio category" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v3 catalogue source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat/catalogue.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: curated_media&lt;br&gt;catalogue_schema_version: 3&lt;/span&gt;&lt;br&gt;Current schema-v3 catalogue" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="315" width="245" height="145" as="geometry" />
         </mxCell>
         <mxCell id="loader" value="&lt;b&gt;Integration setup and loader&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_setup&lt;br&gt;async_load_catalogue&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;read • validate • recursively freeze&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
@@ -82,7 +82,7 @@
         <mxCell id="media-source-surface" value="&lt;b&gt;MediaCat Media Source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_browse_media&lt;br&gt;async_search_media&lt;br&gt;async_resolve_media&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="315" width="260" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="browse-projection" value="&lt;b&gt;Browse / search projection&lt;/b&gt;&lt;br&gt;Radio records with usable&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;execution_methods.ha_mplayer.source&lt;/span&gt;&lt;br&gt;&lt;br&gt;14 playable items • stored order&lt;br&gt;label / description / tags search" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="browse-projection" value="&lt;b&gt;Browse / search projection&lt;/b&gt;&lt;br&gt;Radio records with usable&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;execution_methods.ha_mplayer.source&lt;/span&gt;&lt;br&gt;&lt;br&gt;Stored order&lt;br&gt;label / description / tags search" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="505" width="260" height="145" as="geometry" />
         </mxCell>
         <mxCell id="resolution" value="&lt;b&gt;Playable item resolution&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;item/&amp;lt;item_id&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;url&lt;/b&gt; — return stored URL + MIME type unchanged&lt;br&gt;&lt;b&gt;ha_media_source&lt;/b&gt; — delegate once; reject self-reference or recursive result" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
@@ -141,7 +141,7 @@
         <mxCell id="ownership-note" value="&lt;b&gt;Ownership guardrail&lt;/b&gt;&lt;br&gt;MediaCat reports identity, metadata, membership, and available execution-method source facts. ASTV owns selection and fallback policy. AdvMedia owns selected-method/profile processing. This map does not transfer those responsibilities." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#82b366;fontColor=#14532d;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="620" y="1060" width="630" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="evidence-note" value="&lt;b&gt;Production evidence&lt;/b&gt;&lt;br&gt;ASTV-225 records successful production-first legacy removal, Home Assistant validation, retained mediacat actions, absent curated_media actions, and representative ASTV and AdvMedia playback. This repository candidate aligns governed source with that proven state." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
+        <mxCell id="evidence-note" value="&lt;b&gt;Current-state guardrail&lt;/b&gt;&lt;br&gt;Historical migration, deployment and rollback evidence is retained outside this current architecture map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="1275" y="1060" width="585" height="105" as="geometry" />
         </mxCell>
       </root>

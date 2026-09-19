@@ -7,9 +7,9 @@
 | Owner | MediaCat |
 | Current producer | Home Assistant action `mediacat.resolve_media_record` |
 | Consumers | ASTV; AdvMedia standalone gateway `script.advmedia_prepare_playback`; AdvMedia core as a downstream consumer of the complete normalized record supplied by ASTV or the standalone gateway |
-| Contract version | `2.1.0` |
+| Contract version | `2.1.1` |
 | Returned-record version | `1` |
-| Status | Current producer, returned-record v1, and backward-compatible presence clarification |
+| Status | Current producer, returned-record v1, and backward-compatible presence and identifier-validation clarifications |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
 Under Governance 2.0, this provider-owned document is the single authoritative
@@ -151,8 +151,8 @@ The current lookup has exactly these required inputs:
 
 | Field | Presence | Meaning |
 | --- | --- | --- |
-| `catalogue_id` | Required | Identifies the catalogue that owns or supplies the requested item. |
-| `item_id` | Required | Identifies the item within `catalogue_id`. |
+| `catalogue_id` | Required | Identifies the catalogue that owns or supplies the requested item. Must match `^[a-z0-9][a-z0-9_-]*$`. |
+| `item_id` | Required | Identifies the item within `catalogue_id`. Must match `^[a-z0-9][a-z0-9_-]*$`. |
 
 The lookup resolves one known item. MediaCat does not infer an alternative
 catalogue or item and does not perform execution-method selection.
@@ -299,7 +299,12 @@ The separate ASTV-owned media and Google Home paths are defined in
 
 ## Failure Contract
 
-If MediaCat cannot resolve the requested `catalogue_id` or `item_id`:
+MediaCat validates `catalogue_id` and `item_id` against the schema-v3 identifier
+rule before lookup. A malformed identifier produces an explicit validation
+failure distinct from a well-formed identifier that is not found.
+
+If MediaCat cannot validate or resolve the requested `catalogue_id` or
+`item_id`:
 
 - MediaCat stops the lookup with an explicit error identifying the requested
   reference;
@@ -359,6 +364,20 @@ Stored `catalogue_schema_version` evolves independently and is not exposed throu
 this interface. Consumers must not use stored catalogue structure as a substitute
 for this contract.
 
+### Identifier-validation compatibility
+
+Contract version `2.1.1` makes the existing schema-v3 identifier policy explicit
+at the lookup request boundary and records its runtime enforcement. This is a
+backward-compatible hardening change for successful lookups: every stored
+catalogue and item identifier already satisfies the same rule, no maximum length
+or additional naming convention is introduced, and the request fields,
+successful response, and `returned_record_version: 1` are unchanged.
+
+ASTV and the AdvMedia standalone gateway already supply conforming identifiers,
+so no consumer migration is required. Previously accepted malformed input now
+fails validation before lookup instead of being reported as an unknown
+catalogue or item; such input could not identify a valid schema-v3 record.
+
 ## Implementation and Cutover History
 
 This contract did not authorize runtime or catalogue-data change by itself.
@@ -376,6 +395,7 @@ Separate work instructions owned implementation and proof:
 - [ASTV-221](https://linear.app/83degrees/issue/ASTV-221/rename-curated-media-integration-and-domain-to-mediacat-mediacat) — introduced and validated the `mediacat` namespace in parallel.
 - [ASTV-223](https://linear.app/83degrees/issue/ASTV-223/migrate-advmedia-mediacat-lookup-from-curated-media-to-mediacat) and [ASTV-224](https://linear.app/83degrees/issue/ASTV-224/migrate-astv-mediacat-references-from-curated-media-to-mediacat) — migrated and validated the active consumers.
 - [ASTV-225](https://linear.app/83degrees/issue/ASTV-225/retire-legacy-curated-media-compatibility-surface) — recorded the production-first legacy-producer retirement and aligned repository source and governed knowledge with the resulting single-domain state.
+- [ASTV-30](https://linear.app/83degrees/issue/ASTV-30/implement-mediacat-lookup-identifier-validation-from-schema-v3-policy) — enforces the approved schema-v3 identifier rule at the lookup boundary and distinguishes malformed input from a well-formed identifier that is not found.
 
 ## Design Provenance
 
@@ -384,5 +404,6 @@ This contract records the approved decisions from
 [ASTV-23](https://linear.app/83degrees/issue/ASTV-23/design-mediacat-returned-record-mapping-into-google-cast-metadata), and
 [ASTV-54](https://linear.app/83degrees/issue/ASTV-54/define-mediacat-assistant-command-source-for-g-home-device).
 `ASTV-52` adds the consumer-facing presence promises above while leaving stored
-authoring and preventative validation with the schema architecture. It does not
-authorize runtime validation implementation.
+authoring and preventative validation with the schema architecture. ASTV-30
+separately authorizes only the lookup-boundary identifier enforcement described
+by this contract.

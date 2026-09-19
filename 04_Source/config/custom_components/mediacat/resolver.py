@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+import re
 from typing import Any
 
 from .catalogue import CatalogueV3
 
 
 RETURNED_RECORD_VERSION = 1
+IDENTIFIER_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 
 
 class CatalogueNotFoundError(LookupError):
@@ -17,6 +19,23 @@ class CatalogueNotFoundError(LookupError):
 
 class CatalogueItemNotFoundError(LookupError):
     """Raised when an item ID is not present in the loaded catalogue."""
+
+
+class InvalidIdentifierError(ValueError):
+    """Raised when a lookup identifier violates schema-v3 policy."""
+
+
+def validate_lookup_identifier(identifier: str, field_name: str) -> str:
+    """Return an identifier after applying the schema-v3 lexical rule."""
+    if (
+        not isinstance(identifier, str)
+        or IDENTIFIER_PATTERN.fullmatch(identifier) is None
+    ):
+        raise InvalidIdentifierError(
+            f"MediaCat {field_name} {identifier!r} is invalid; identifiers "
+            f"must match {IDENTIFIER_PATTERN.pattern!r}"
+        )
+    return identifier
 
 
 class CatalogueResolver:
@@ -30,6 +49,9 @@ class CatalogueResolver:
         self, catalogue_id: str, item_id: str
     ) -> dict[Any, Any]:
         """Return normalized record v1 for an item in the loaded v3 catalogue."""
+        catalogue_id = validate_lookup_identifier(catalogue_id, "catalogue_id")
+        item_id = validate_lookup_identifier(item_id, "item_id")
+
         if self._catalogue.catalogue_id != catalogue_id:
             raise CatalogueNotFoundError(
                 f"MediaCat catalogue {catalogue_id!r} was not found"

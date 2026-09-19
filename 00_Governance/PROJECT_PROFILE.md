@@ -85,7 +85,7 @@ define the current architecture.
 
 | Contract | Status/version | Authoritative provider-owned location | Consumers | Notes |
 | --- | --- | --- | --- | --- |
-| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.1.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` with returned-record version 1. |
+| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.1.1 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` with returned-record version 1. |
 
 The provider-owned file above is the sole operational interface authority.
 

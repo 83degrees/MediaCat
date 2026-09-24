@@ -124,6 +124,29 @@ independent compatibility lifecycles. Stored authoring and preventative
 validation are governed by the catalogue schema architecture; consumer-facing
 record compatibility is governed by the lookup contract.
 
+## Public artwork delivery
+
+MediaCat may store both Home Assistant-local and public artwork references for an
+item. The stored schema and exact field rules remain owned by the catalogue
+schema architecture.
+
+Where an Internet-reachable artwork URL is required, MediaCat uses a public
+Cloudflare R2 delivery surface and stores the resulting absolute HTTPS URL in
+`artwork.external`. Stable object keys are grouped by media type, for example
+`radio/classic-fm.png` and `tv/bbc-iplayer.png`.
+
+The public asset host is a delivery dependency, not part of the Home Assistant
+runtime. MediaCat catalogue loading and normalized lookup do not fetch the
+artwork object. Consumers retrieve the published URL independently.
+
+Home Assistant-local artwork may continue to be represented separately through
+`artwork.local`. Public artwork hosting must not require exposing a Home
+Assistant instance to the public Internet.
+
+DDR-03-003 records the hosting decision and trade-offs. Operational publication
+and replacement steps are documented in
+`08_Deployment/MEDIACAT_ARTWORK_HOSTING.md`.
+
 ## Responsibilities and ownership boundaries
 
 | Capability | Owner | MediaCat boundary |

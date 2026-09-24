@@ -103,6 +103,7 @@ create a dependency on another product's undocumented internals.
 | --- | --- | --- | --- | --- | --- |
 | Home Assistant | platform | Home Assistant | Current production evidence and runtime integration surface | MediaCat integration/action and Media Source framework available | Failure stops at the affected MediaCat integration/interface boundary. |
 | Curated Media catalogue data | data | MediaCat | `04_Source/config/mediacat/catalogue.yaml`, schema architecture, and lookup contract | Current schema-v3 catalogue loads successfully | Setup fails explicitly; no partial normalized record is returned. |
+| Public artwork delivery | external service | Cloudflare R2 | `artwork.external`, `DDR-03-003`, and `08_Deployment/MEDIACAT_ARTWORK_HOSTING.md` | Referenced objects publicly reachable over HTTPS where external artwork is configured | Artwork retrieval may fail for the affected consumer; MediaCat catalogue loading and lookup remain available. |
 | Delegated Home Assistant Media Source providers | external service | Respective provider owners | Opaque provider URI and provider-owned Media Source interface | Selected provider can resolve its URI | Provider failure surfaces without MediaCat route fallback. |
 
 ASTV and AdvMedia are governed consumers of MediaCat, not dependencies required

@@ -66,14 +66,14 @@ governed consumers.
 | Scope | Authoritative location | State |
 | --- | --- | --- |
 | General MediaCat product and runtime architecture | `01_Architecture/MEDIACAT_ARCHITECTURE.md` | Current approved |
-| Stored catalogue schema-v3 authoring and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Current approved |
+| Stored catalogue schema-v4 authoring, artwork-source resolution and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Proposed under ASTV-267 |
 
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
-- Material DDRs: `DDR-03-001`; `DDR-03-002`
+- Material DDRs: `DDR-03-001`; `DDR-03-002`; `DDR-03-003` (Proposed under ASTV-267)
 
 `MEDIACAT_ARCHITECTURE.md` owns general product responsibilities, runtime
 boundaries, interfaces and current architectural meaning. The catalogue schema
-architecture owns the schema-v3 stored YAML vocabulary, authoring semantics,
+architecture owns the schema-v4 stored YAML vocabulary, authoring semantics,
 requiredness, preventative-validation rules, and schema evolution. The diagram
 is the governed representation of the general architecture and does not replace
 either prose authority.
@@ -102,7 +102,7 @@ create a dependency on another product's undocumented internals.
 | Dependency | Type | Owner | Governed interface/evidence | Required state | Failure boundary |
 | --- | --- | --- | --- | --- | --- |
 | Home Assistant | platform | Home Assistant | Current production evidence and runtime integration surface | MediaCat integration/action and Media Source framework available | Failure stops at the affected MediaCat integration/interface boundary. |
-| Curated Media catalogue data | data | MediaCat | `04_Source/config/mediacat/catalogue.yaml`, schema architecture, and lookup contract | Current schema-v3 catalogue loads successfully | Setup fails explicitly; no partial normalized record is returned. |
+| Curated Media catalogue data | data | MediaCat | `04_Source/config/mediacat/catalogue.yaml`, schema architecture, and lookup contract | Current schema-v4 catalogue loads successfully | Setup fails explicitly; no partial normalized record is returned. |
 | Delegated Home Assistant Media Source providers | external service | Respective provider owners | Opaque provider URI and provider-owned Media Source interface | Selected provider can resolve its URI | Provider failure surfaces without MediaCat route fallback. |
 
 ASTV and AdvMedia are governed consumers of MediaCat, not dependencies required

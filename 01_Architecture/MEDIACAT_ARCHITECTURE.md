@@ -50,15 +50,16 @@ The maintained runtime uses:
 Runtime namespace and logical catalogue identity are deliberately separate.
 DDR-03-002 records the durable rationale for that decision.
 
-During setup, MediaCat loads the schema-v3 catalogue, rejects duplicate YAML
+During setup, MediaCat loads the schema-v4 catalogue, rejects duplicate YAML
 mapping keys, validates the complete closed vocabulary and all governed
-structural, value, pairing and reference rules, recursively freezes the loaded
-mapping, and stores the immutable snapshot under
-`hass.data["mediacat"]["catalogue"]`. Authored mapping and category-membership
+structural, value, pairing and reference rules, resolves authored artwork
+sources into the common runtime `artwork.local` / `artwork.external` shape,
+recursively freezes the resulting mapping, and stores the immutable snapshot
+under `hass.data["mediacat"]["catalogue"]`. Authored mapping and category-membership
 order are preserved. Setup failure is atomic: if the catalogue cannot be loaded
 or accepted, MediaCat does not expose a partially initialized lookup surface.
 
-The maintained runtime accepts only `catalogue_schema_version: 3`.
+The maintained runtime accepts only `catalogue_schema_version: 4`.
 Schema-v2 runtime compatibility and the raw `mediacat.resolve_item` action are
 retired. Their retained code/data exists only as historical or rollback
 evidence and does not define current runtime behaviour.
@@ -70,7 +71,7 @@ evidence and does not define current runtime behaviour.
 `mediacat.resolve_media_record` is the sole current normalized cross-product
 lookup producer.
 
-It accepts exact `catalogue_id` and `item_id` inputs matching the schema-v3
+It accepts exact `catalogue_id` and `item_id` inputs matching the schema-v4
 identifier rule and returns one complete normalized record containing the item
 identity, player-independent metadata and all execution methods available for
 that item. The maintained action schema and resolver validate both identifiers
@@ -108,7 +109,7 @@ therefore remain outside the Media Source browse/search projection.
 The loaded catalogue snapshot is the common source for both current MediaCat
 interfaces:
 
-1. setup loads and freezes the current schema-v3 catalogue;
+1. setup loads and freezes the current schema-v4 catalogue;
 2. normalized lookup resolves a catalogue-scoped item and emits the complete
    consumer-facing record;
 3. Media Source projects the playable subset for Home Assistant browse/search
@@ -144,18 +145,18 @@ implementation details or other undocumented runtime internals.
 
 ## Compatibility and evolution boundaries
 
-The current implemented architecture is schema v3 under the `mediacat`
+The current implemented architecture is schema v4 under the `mediacat`
 runtime namespace with logical `catalogue_id: curated_media`.
 
 The following are separate governed compatibility concerns:
 
-- stored catalogue evolution — owned by the catalogue schema architecture;
+- stored catalogue evolution — owned by the catalogue schema architecture, including artwork-source authoring and load-time resolution;
 - normalized consumer-record evolution — owned by the item lookup contract;
 - runtime namespace identity — durable rationale recorded in DDR-03-002; and
 - historical schema-v2 / retired-action recovery evidence — preserved outside
   the maintained runtime.
 
-DDR-03-001 records the rationale for the schema-v3 transition and the preserved
+DDR-03-001 records the rationale for the schema-v4 transition and the preserved
 historical schema-v2 rollback package.
 
 A material change to MediaCat responsibilities, ownership boundaries or current
@@ -166,8 +167,8 @@ through this document.
 ## Authoritative references
 
 - `00_Governance/PROJECT_PROFILE.md` — product identity, scope and declared dependencies.
-- `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` — stored schema-v3 authoring and preventative-validation architecture.
+- `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` — stored schema-v4 authoring and preventative-validation architecture.
 - `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio` — governed visual representation of this architecture.
 - `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` — normalized lookup interface.
-- `02_Decisions/DDR-03-001.md` — schema-v3 transition and historical rollback rationale.
+- `02_Decisions/DDR-03-001.md` — schema-v4 transition and historical rollback rationale.
 - `02_Decisions/DDR-03-002.md` — runtime namespace and catalogue-identity separation rationale.

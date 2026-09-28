@@ -57,14 +57,14 @@ if not hasattr(media_player, "SearchMedia"):
 
 from custom_components.mediacat import media_source as media_source_module
 from custom_components.mediacat.catalogue import (
-    CatalogueV3,
+    CatalogueV4,
     _freeze_mapping,
     _load_catalogue,
 )
 from custom_components.mediacat.const import DATA_CATALOGUE, DOMAIN
 from custom_components.mediacat.media_source import MediaCatSource
 
-V3_CATALOGUE = (
+V4_CATALOGUE = (
     Path(__file__).parents[1]
     / "04_Source"
     / "config"
@@ -72,7 +72,7 @@ V3_CATALOGUE = (
     / "catalogue.yaml"
 )
 
-PLAYABLE_V3_ITEM_IDS = [
+PLAYABLE_V4_ITEM_IDS = [
     "bbc_radio_1",
     "bbc_radio_1xtra",
     "bbc_radio_2",
@@ -117,12 +117,12 @@ def _query(search_query: str):
     return media_player.SearchMediaQuery(search_query=search_query)
 
 
-def _v3_catalogue_with_source(source: dict[str, Any]) -> CatalogueV3:
-    return CatalogueV3(
+def _v4_catalogue_with_source(source: dict[str, Any]) -> CatalogueV4:
+    return CatalogueV4(
         record=_freeze_mapping(
             {
                 "catalogue_id": "curated_media",
-                "catalogue_schema_version": 3,
+                "catalogue_schema_version": 4,
                 "items": {
                     "test_radio": {
                         "type": "radio",
@@ -149,10 +149,10 @@ def _v3_catalogue_with_source(source: dict[str, Any]) -> CatalogueV3:
     )
 
 
-def test_schema_v3_browse_filters_assistant_only_items_in_stored_order() -> None:
+def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None:
     """Expose the completed Radio category and its 14 playable members."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
-    assert isinstance(catalogue, CatalogueV3)
+    catalogue = _load_catalogue(V4_CATALOGUE)
+    assert isinstance(catalogue, CatalogueV4)
     hass, source = _source(catalogue)
 
     root = _run(source.async_browse_media(_item(hass)))
@@ -162,7 +162,7 @@ def test_schema_v3_browse_filters_assistant_only_items_in_stored_order() -> None
 
     category = _run(source.async_browse_media(_item(hass, "category/radio")))
     assert [child.identifier.removeprefix("item/") for child in category.children] == (
-        PLAYABLE_V3_ITEM_IDS
+        PLAYABLE_V4_ITEM_IDS
     )
     assert len(category.children) == 14
     assert not ASSISTANT_ONLY_ITEM_IDS.intersection(
@@ -179,9 +179,9 @@ def test_schema_v3_browse_filters_assistant_only_items_in_stored_order() -> None
     assert classic.media_content_type == "station"
 
 
-def test_schema_v3_search_uses_only_agreed_fields_and_preserves_order() -> None:
+def test_schema_v4_search_uses_only_agreed_fields_and_preserves_order() -> None:
     """Search labels, descriptions, and tags while excluding unplayable items."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
+    catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
 
     cases = {
@@ -201,7 +201,7 @@ def test_schema_v3_search_uses_only_agreed_fields_and_preserves_order() -> None:
     assert [item.identifier.removeprefix("item/") for item in ordered.result] == (
         [
             item_id
-            for item_id in PLAYABLE_V3_ITEM_IDS
+            for item_id in PLAYABLE_V4_ITEM_IDS
             if item_id not in {"classic_fm", "lbc_news"}
         ]
     )
@@ -219,9 +219,9 @@ def test_schema_v3_search_uses_only_agreed_fields_and_preserves_order() -> None:
         )
 
 
-def test_schema_v3_direct_url_returns_exact_stored_values() -> None:
+def test_schema_v4_direct_url_returns_exact_stored_values() -> None:
     """Resolve only the stored ha_mplayer URL and MIME without inference."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
+    catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
 
     resolved = _run(
@@ -233,9 +233,9 @@ def test_schema_v3_direct_url_returns_exact_stored_values() -> None:
     assert resolved == PlayMedia(stored["url"], stored["mime_type"])
 
 
-def test_schema_v3_media_source_delegates_exactly_once(monkeypatch) -> None:
+def test_schema_v4_media_source_delegates_exactly_once(monkeypatch) -> None:
     """Pass the opaque URI and target through once and return the exact result."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
+    catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
     calls = []
     delegated_result = PlayMedia("https://streams.example.test/classic", "audio/aac")
@@ -258,9 +258,9 @@ def test_schema_v3_media_source_delegates_exactly_once(monkeypatch) -> None:
     assert resolved is delegated_result
 
 
-def test_schema_v3_delegated_failure_is_surfaced(monkeypatch) -> None:
+def test_schema_v4_delegated_failure_is_surfaced(monkeypatch) -> None:
     """Surface the owning Media Source failure without fallback or retry."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
+    catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
     calls = []
 
@@ -274,9 +274,9 @@ def test_schema_v3_delegated_failure_is_surfaced(monkeypatch) -> None:
     assert len(calls) == 1
 
 
-def test_schema_v3_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
+def test_schema_v4_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
     """Reject self-reference and unresolved delegated Media Source output."""
-    self_catalogue = _v3_catalogue_with_source(
+    self_catalogue = _v4_catalogue_with_source(
         {
             "source_type": "ha_media_source",
             "provider": "mediacat",
@@ -296,7 +296,7 @@ def test_schema_v3_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
         _run(source.async_resolve_media(_item(hass, "item/test_radio")))
     assert calls == []
 
-    delegated_catalogue = _v3_catalogue_with_source(
+    delegated_catalogue = _v4_catalogue_with_source(
         {
             "source_type": "ha_media_source",
             "provider": "stored_provider_name",
@@ -314,9 +314,9 @@ def test_schema_v3_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
     assert len(calls) == 1
 
 
-def test_schema_v3_unplayable_items_have_no_method_fallback() -> None:
+def test_schema_v4_unplayable_items_have_no_method_fallback() -> None:
     """Do not browse or resolve an unsupported ha_mplayer source via another method."""
-    catalogue = _v3_catalogue_with_source(
+    catalogue = _v4_catalogue_with_source(
         {
             "source_type": "assistant_command",
             "command": "Play Test Radio",
@@ -347,20 +347,20 @@ def test_schema_v3_unplayable_items_have_no_method_fallback() -> None:
         },
     ],
 )
-def test_schema_v3_unusable_sources_are_explicitly_unresolvable(
+def test_schema_v4_unusable_sources_are_explicitly_unresolvable(
     source_record: dict[str, Any]
 ) -> None:
     """Reject missing direct MIME and unusable delegated URI without inference."""
-    catalogue = _v3_catalogue_with_source(source_record)
+    catalogue = _v4_catalogue_with_source(source_record)
     hass, source = _source(catalogue)
 
     with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
         _run(source.async_resolve_media(_item(hass, "item/test_radio")))
 
 
-def test_schema_v3_unknown_and_assistant_only_items_fail_explicitly() -> None:
+def test_schema_v4_unknown_and_assistant_only_items_fail_explicitly() -> None:
     """Reject missing identifiers and the three stored assistant-only records."""
-    catalogue = _load_catalogue(V3_CATALOGUE)
+    catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
 
     with pytest.raises(BrowseError, match="Unknown MediaCat category"):

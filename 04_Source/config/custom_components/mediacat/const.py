@@ -3,9 +3,11 @@
 DOMAIN = "mediacat"
 
 CATALOGUE_DIRECTORY = "mediacat"
-CATALOGUE_FILENAME = "catalogue.yaml"
+CATALOGUES_DIRECTORY = "catalogues"
+CATALOGUE_FILE_EXTENSIONS = (".yaml", ".yml")
 
-DATA_CATALOGUE = "catalogue"
+DATA_CATALOGUES = "catalogues"
+DATA_RELOAD_LOCK = "reload_lock"
 
 ATTR_ITEM_ID = "item_id"
 

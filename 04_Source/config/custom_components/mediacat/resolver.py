@@ -6,7 +6,7 @@ from collections.abc import Mapping
 import re
 from typing import Any
 
-from .catalogue import CatalogueV4
+from .catalogue import CatalogueRegistry, CatalogueV4
 
 
 RETURNED_RECORD_VERSION = 1
@@ -41,23 +41,31 @@ def validate_lookup_identifier(identifier: str, field_name: str) -> str:
 class CatalogueResolver:
     """Resolve canonical item IDs from a loaded catalogue snapshot."""
 
-    def __init__(self, catalogue: CatalogueV4) -> None:
-        """Initialize the resolver with an existing loaded catalogue."""
-        self._catalogue = catalogue
+    def __init__(
+        self, registry: CatalogueRegistry | Mapping[str, CatalogueV4] | CatalogueV4
+    ) -> None:
+        """Initialize the resolver with an immutable catalogue registry."""
+        if isinstance(registry, CatalogueRegistry):
+            self._catalogues = registry.catalogues
+        elif isinstance(registry, CatalogueV4):
+            self._catalogues = {registry.catalogue_id: registry}
+        else:
+            self._catalogues = registry
 
     def resolve_media_record(
         self, catalogue_id: str, item_id: str
     ) -> dict[Any, Any]:
-        """Return normalized record v1 for an item in the loaded v3 catalogue."""
+        """Return normalized record v1 for an item in an active catalogue."""
         catalogue_id = validate_lookup_identifier(catalogue_id, "catalogue_id")
         item_id = validate_lookup_identifier(item_id, "item_id")
 
-        if self._catalogue.catalogue_id != catalogue_id:
+        catalogue = self._catalogues.get(catalogue_id)
+        if catalogue is None:
             raise CatalogueNotFoundError(
                 f"MediaCat catalogue {catalogue_id!r} was not found"
             )
 
-        item = self._catalogue.items.get(item_id)
+        item = catalogue.items.get(item_id)
         if item is None:
             raise CatalogueItemNotFoundError(
                 f"MediaCat item {item_id!r} was not found in catalogue "

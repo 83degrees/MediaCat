@@ -51,14 +51,23 @@ if not hasattr(media_player, "SearchMedia"):
     media_source_component.BrowseMediaSource = BrowseMediaSource
 
 from custom_components import mediacat
-from custom_components.mediacat.catalogue import _load_catalogue
-from custom_components.mediacat.const import CATALOGUE_DIRECTORY, DOMAIN
+from custom_components.mediacat.catalogue import (
+    CatalogueRegistry,
+    _load_catalogue,
+)
+from custom_components.mediacat.const import (
+    CATALOGUE_DIRECTORY,
+    CATALOGUES_DIRECTORY,
+    DOMAIN,
+)
 from custom_components.mediacat.media_source import MediaCatSource
 
 
 ROOT = Path(__file__).parents[1]
 SOURCE_CONFIG = ROOT / "04_Source" / "config"
-CATALOGUE = SOURCE_CONFIG / "mediacat" / "catalogue.yaml"
+CATALOGUE = (
+    SOURCE_CONFIG / "mediacat" / "catalogues" / "curated-media.yaml"
+)
 MANIFEST = SOURCE_CONFIG / "custom_components" / "mediacat" / "manifest.json"
 SERVICES = SOURCE_CONFIG / "custom_components" / "mediacat" / "services.yaml"
 LEGACY_COMPONENT = SOURCE_CONFIG / "custom_components" / "curated_media"
@@ -97,7 +106,12 @@ def test_source_contains_only_the_mediacat_runtime_namespace() -> None:
     assert DOMAIN == CATALOGUE_DIRECTORY == "mediacat"
     assert manifest["domain"] == "mediacat"
     assert manifest["name"] == "MediaCat"
-    assert set(load_yaml(SERVICES)) == {"resolve_media_record"}
+    assert set(load_yaml(SERVICES)) == {
+        "resolve_media_record",
+        "get_admin_capabilities",
+        "validate_catalogue",
+        "reload_catalogue",
+    }
     assert CATALOGUE.is_file()
     assert not LEGACY_COMPONENT.exists()
     assert not LEGACY_CATALOGUE.exists()
@@ -108,15 +122,28 @@ def test_only_mediacat_registers_actions_and_domain_state() -> None:
     """Register only normalized lookup in the sole active runtime domain."""
     catalogue = _load_catalogue(CATALOGUE)
     hass = FakeHass()
-    loader = AsyncMock(return_value=catalogue)
+    loader = AsyncMock(
+        return_value=CatalogueRegistry(
+            catalogues={catalogue.catalogue_id: catalogue},
+            source_paths={catalogue.catalogue_id: str(CATALOGUE)},
+        )
+    )
 
-    with patch("custom_components.mediacat.async_load_catalogue", new=loader):
+    with patch(
+        "custom_components.mediacat.async_load_catalogue_directory",
+        new=loader,
+    ):
         assert asyncio.run(mediacat.async_setup(hass, {})) is True
 
-    loader.assert_awaited_once_with(hass, str(Path("mediacat", "catalogue.yaml")))
+    loader.assert_awaited_once_with(
+        hass, str(Path(CATALOGUE_DIRECTORY, CATALOGUES_DIRECTORY))
+    )
     assert set(hass.data) == {"mediacat"}
     assert set(hass.services.registrations) == {
         ("mediacat", "resolve_media_record"),
+        ("mediacat", "get_admin_capabilities"),
+        ("mediacat", "validate_catalogue"),
+        ("mediacat", "reload_catalogue"),
     }
 
     response = _call(

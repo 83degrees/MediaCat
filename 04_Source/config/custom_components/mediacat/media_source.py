@@ -23,11 +23,15 @@ from homeassistant.components.media_source import (
 )
 from homeassistant.core import HomeAssistant
 
-from .catalogue import CatalogueV4
-from .const import DATA_CATALOGUE, DOMAIN, SUPPORTED_ITEM_TYPE
+from .catalogue import CatalogueRegistry, CatalogueV4
+from .const import DATA_CATALOGUES, DOMAIN, SUPPORTED_ITEM_TYPE
 
 CATEGORY_PREFIX = "category/"
 ITEM_PREFIX = "item/"
+CATALOGUE_PREFIX = "catalogue/"
+LEGACY_CATALOGUE_ID = "curated_media"
+
+
 async def async_get_media_source(hass: HomeAssistant) -> MediaCatSource:
     """Set up the MediaCat media source."""
     return MediaCatSource(hass)
@@ -43,61 +47,138 @@ class MediaCatSource(MediaSource):
         super().__init__(DOMAIN)
         self.hass = hass
 
-    def _catalogue(self) -> CatalogueV4 | None:
-        """Return the loaded catalogue, if integration setup succeeded."""
+    def _registry(self) -> CatalogueRegistry | None:
+        """Return the active registry, if integration setup succeeded."""
         domain_data = self.hass.data.get(DOMAIN)
         if not isinstance(domain_data, dict):
             return None
-        catalogue = domain_data.get(DATA_CATALOGUE)
-        return catalogue if isinstance(catalogue, CatalogueV4) else None
+        registry = domain_data.get(DATA_CATALOGUES)
+        return registry if isinstance(registry, CatalogueRegistry) else None
+
+    @staticmethod
+    def _catalogue(
+        registry: CatalogueRegistry, catalogue_id: str
+    ) -> CatalogueV4:
+        """Return one active catalogue or fail at the Media Source boundary."""
+        catalogue = registry.get(catalogue_id)
+        if catalogue is None:
+            raise BrowseError(f"Unknown MediaCat catalogue: {catalogue_id}")
+        return catalogue
+
+    def _route(
+        self, registry: CatalogueRegistry, identifier: str
+    ) -> tuple[CatalogueV4, str, str]:
+        """Resolve a scoped or retained curated_media identifier."""
+        if identifier.startswith(CATALOGUE_PREFIX):
+            remainder = identifier.removeprefix(CATALOGUE_PREFIX)
+            catalogue_id, separator, child = remainder.partition("/")
+            if not catalogue_id:
+                raise BrowseError("MediaCat catalogue identifier is missing")
+            catalogue = self._catalogue(registry, catalogue_id)
+            return catalogue, child if separator else "", (
+                f"{CATALOGUE_PREFIX}{catalogue_id}/"
+            )
+
+        catalogue = registry.get(LEGACY_CATALOGUE_ID)
+        if catalogue is None:
+            raise BrowseError(
+                "A catalogue-scoped MediaCat identifier is required"
+            )
+        return catalogue, identifier, ""
 
     async def async_browse_media(
         self, item: MediaSourceItem
     ) -> BrowseMediaSource:
         """Browse the catalogue root, a category, or a playable item."""
-        catalogue = self._catalogue()
-        if catalogue is None:
-            raise BrowseError("MediaCat catalogue is unavailable")
+        registry = self._registry()
+        if registry is None:
+            raise BrowseError("MediaCat catalogue registry is unavailable")
 
         identifier = item.identifier or ""
-        return self._browse_v4(catalogue, identifier)
+        if not identifier:
+            if (
+                len(registry.catalogues) == 1
+                and LEGACY_CATALOGUE_ID in registry.catalogues
+            ):
+                return self._root_node_v4(
+                    registry.catalogues[LEGACY_CATALOGUE_ID]
+                )
+            return self._registry_root(registry)
+        catalogue, child_identifier, prefix = self._route(
+            registry, identifier
+        )
+        return self._browse_v4(catalogue, child_identifier, prefix)
 
     async def async_resolve_media(self, item: MediaSourceItem) -> PlayMedia:
         """Resolve a playable catalogue item to its stream URL."""
-        catalogue = self._catalogue()
-        if catalogue is None:
-            raise Unresolvable("MediaCat catalogue is unavailable")
+        registry = self._registry()
+        if registry is None:
+            raise Unresolvable("MediaCat catalogue registry is unavailable")
 
         identifier = item.identifier or ""
-        return await self._resolve_v4(catalogue, item, identifier)
+        try:
+            catalogue, child_identifier, _ = self._route(
+                registry, identifier
+            )
+        except BrowseError as err:
+            raise Unresolvable(str(err)) from err
+        return await self._resolve_v4(catalogue, item, child_identifier)
 
     async def async_search_media(
         self, item: MediaSourceItem, query: SearchMediaQuery
     ) -> SearchMedia:
         """Search canonical catalogue items from the root or a category."""
-        catalogue = self._catalogue()
-        if catalogue is None:
-            raise BrowseError("MediaCat catalogue is unavailable")
+        registry = self._registry()
+        if registry is None:
+            raise BrowseError("MediaCat catalogue registry is unavailable")
 
         search_text = query.search_query.strip().casefold()
         if not search_text:
             return SearchMedia(result=[])
 
         identifier = item.identifier or ""
-        return self._search_v4(catalogue, identifier, search_text)
+        if not identifier:
+            if (
+                len(registry.catalogues) == 1
+                and LEGACY_CATALOGUE_ID in registry.catalogues
+            ):
+                return self._search_v4(
+                    registry.catalogues[LEGACY_CATALOGUE_ID],
+                    "",
+                    search_text,
+                )
+            results = []
+            for catalogue_id, catalogue in registry.catalogues.items():
+                prefix = f"{CATALOGUE_PREFIX}{catalogue_id}/"
+                results.extend(
+                    self._search_v4(
+                        catalogue, "", search_text, prefix
+                    ).result
+                )
+            return SearchMedia(result=results)
+        catalogue, child_identifier, prefix = self._route(
+            registry, identifier
+        )
+        return self._search_v4(
+            catalogue, child_identifier, search_text, prefix
+        )
 
     def _browse_v4(
-        self, catalogue: CatalogueV4, identifier: str
+        self, catalogue: CatalogueV4, identifier: str, prefix: str = ""
     ) -> BrowseMediaSource:
         """Browse a schema-v4 category or playable radio item."""
         if not identifier:
-            return self._root_node_v4(catalogue)
+            return self._catalogue_node_v4(catalogue, prefix)
 
         if identifier.startswith(CATEGORY_PREFIX):
             category_id = identifier.removeprefix(CATEGORY_PREFIX)
             category = self._category_v4(catalogue, category_id)
             return self._category_node_v4(
-                catalogue, category_id, category, include_children=True
+                catalogue,
+                category_id,
+                category,
+                include_children=True,
+                prefix=prefix,
             )
 
         if identifier.startswith(ITEM_PREFIX):
@@ -108,7 +189,7 @@ class MediaCatSource(MediaSource):
             source = self._playable_source_v4(record)
             if source is None:
                 raise BrowseError(f"Unplayable MediaCat item: {item_id}")
-            return self._item_node_v4(item_id, record, source)
+            return self._item_node_v4(item_id, record, source, prefix=prefix)
 
         raise BrowseError(f"Unknown MediaCat identifier: {identifier}")
 
@@ -152,7 +233,11 @@ class MediaCatSource(MediaSource):
         return resolved
 
     def _search_v4(
-        self, catalogue: CatalogueV4, identifier: str, search_text: str
+        self,
+        catalogue: CatalogueV4,
+        identifier: str,
+        search_text: str,
+        prefix: str = "",
     ) -> SearchMedia:
         """Search playable schema-v4 radio items in stored order."""
         candidates: list[tuple[str, Mapping[Any, Any]]] = []
@@ -182,11 +267,48 @@ class MediaCatSource(MediaSource):
         for item_id, record in candidates:
             source = self._playable_source_v4(record)
             if source is not None and self._item_matches_v4(record, search_text):
-                results.append(self._item_node_v4(item_id, record, source))
+                results.append(
+                    self._item_node_v4(
+                        item_id, record, source, prefix=prefix
+                    )
+                )
         return SearchMedia(result=results)
+
+    def _registry_root(
+        self, registry: CatalogueRegistry
+    ) -> BrowseMediaSource:
+        """Build a root containing every active catalogue."""
+        children = [
+            self._catalogue_node_v4(
+                catalogue, f"{CATALOGUE_PREFIX}{catalogue_id}/"
+            )
+            for catalogue_id, catalogue in registry.catalogues.items()
+        ]
+        return BrowseMediaSource(
+            domain=DOMAIN,
+            identifier=None,
+            media_class=MediaClass.APP,
+            media_content_type="",
+            title=self.name,
+            can_play=False,
+            can_expand=True,
+            can_search=True,
+            children_media_class=MediaClass.DIRECTORY,
+            children=children,
+        )
 
     def _root_node_v4(self, catalogue: CatalogueV4) -> BrowseMediaSource:
         """Build a schema-v4 root preserving category mapping order."""
+        return self._catalogue_node_v4(catalogue, "", root=True)
+
+    def _catalogue_node_v4(
+        self,
+        catalogue: CatalogueV4,
+        prefix: str,
+        *,
+        root: bool = False,
+    ) -> BrowseMediaSource:
+        """Build a catalogue directory preserving category mapping order."""
         children = []
         for category_id in catalogue.categories:
             if not isinstance(category_id, str):
@@ -194,15 +316,19 @@ class MediaCatSource(MediaSource):
             category = self._category_v4(catalogue, category_id)
             children.append(
                 self._category_node_v4(
-                    catalogue, category_id, category, include_children=False
+                    catalogue,
+                    category_id,
+                    category,
+                    include_children=False,
+                    prefix=prefix,
                 )
             )
         return BrowseMediaSource(
             domain=DOMAIN,
-            identifier=None,
+            identifier=None if root else prefix.removesuffix("/"),
             media_class=MediaClass.APP,
             media_content_type="",
-            title=self.name,
+            title=self.name if root else catalogue.catalogue_id,
             can_play=False,
             can_expand=True,
             can_search=True,
@@ -217,6 +343,7 @@ class MediaCatSource(MediaSource):
         category: Mapping[Any, Any],
         *,
         include_children: bool,
+        prefix: str = "",
     ) -> BrowseMediaSource:
         """Build a schema-v4 radio category and filter unplayable members."""
         children = None
@@ -231,11 +358,15 @@ class MediaCatSource(MediaSource):
                     )
                 source = self._playable_source_v4(record)
                 if source is not None:
-                    children.append(self._item_node_v4(item_id, record, source))
+                    children.append(
+                        self._item_node_v4(
+                            item_id, record, source, prefix=prefix
+                        )
+                    )
 
         return BrowseMediaSource(
             domain=DOMAIN,
-            identifier=f"{CATEGORY_PREFIX}{category_id}",
+            identifier=f"{prefix}{CATEGORY_PREFIX}{category_id}",
             media_class=MediaClass.DIRECTORY,
             media_content_type=MediaType.MUSIC,
             title=category["category_label"],
@@ -251,6 +382,8 @@ class MediaCatSource(MediaSource):
         item_id: str,
         record: Mapping[Any, Any],
         source: Mapping[Any, Any],
+        *,
+        prefix: str = "",
     ) -> BrowseMediaSource:
         """Build a playable schema-v4 radio item node."""
         artwork = record.get("artwork")
@@ -266,7 +399,7 @@ class MediaCatSource(MediaSource):
         )
         return BrowseMediaSource(
             domain=DOMAIN,
-            identifier=f"{ITEM_PREFIX}{item_id}",
+            identifier=f"{prefix}{ITEM_PREFIX}{item_id}",
             media_class=MediaClass.MUSIC,
             media_content_type=media_content_type,
             title=record["catalogue_label"],

@@ -57,11 +57,12 @@ if not hasattr(media_player, "SearchMedia"):
 
 from custom_components.mediacat import media_source as media_source_module
 from custom_components.mediacat.catalogue import (
+    CatalogueRegistry,
     CatalogueV4,
     _freeze_mapping,
     _load_catalogue,
 )
-from custom_components.mediacat.const import DATA_CATALOGUE, DOMAIN
+from custom_components.mediacat.const import DATA_CATALOGUES, DOMAIN
 from custom_components.mediacat.media_source import MediaCatSource
 
 V4_CATALOGUE = (
@@ -69,7 +70,8 @@ V4_CATALOGUE = (
     / "04_Source"
     / "config"
     / "mediacat"
-    / "catalogue.yaml"
+    / "catalogues"
+    / "curated-media.yaml"
 )
 
 PLAYABLE_V4_ITEM_IDS = [
@@ -99,7 +101,23 @@ class FakeHass:
 
 
 def _source(catalogue) -> tuple[FakeHass, MediaCatSource]:
-    hass = FakeHass(data={DOMAIN: {DATA_CATALOGUE: catalogue}})
+    registry = CatalogueRegistry(
+        catalogues={catalogue.catalogue_id: catalogue},
+        source_paths={catalogue.catalogue_id: "fixture.yaml"},
+    )
+    hass = FakeHass(data={DOMAIN: {DATA_CATALOGUES: registry}})
+    return hass, MediaCatSource(hass)
+
+
+def _source_registry(*catalogues) -> tuple[FakeHass, MediaCatSource]:
+    registry = CatalogueRegistry(
+        catalogues={catalogue.catalogue_id: catalogue for catalogue in catalogues},
+        source_paths={
+            catalogue.catalogue_id: f"{catalogue.catalogue_id}.yaml"
+            for catalogue in catalogues
+        },
+    )
+    hass = FakeHass(data={DOMAIN: {DATA_CATALOGUES: registry}})
     return hass, MediaCatSource(hass)
 
 
@@ -117,11 +135,13 @@ def _query(search_query: str):
     return media_player.SearchMediaQuery(search_query=search_query)
 
 
-def _v4_catalogue_with_source(source: dict[str, Any]) -> CatalogueV4:
+def _v4_catalogue_with_source(
+    source: dict[str, Any], catalogue_id: str = "curated_media"
+) -> CatalogueV4:
     return CatalogueV4(
         record=_freeze_mapping(
             {
-                "catalogue_id": "curated_media",
+                "catalogue_id": catalogue_id,
                 "catalogue_schema_version": 4,
                 "items": {
                     "test_radio": {
@@ -177,6 +197,52 @@ def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None
     assert classic.title == "Classic FM"
     assert classic.thumbnail == "/local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png"
     assert classic.media_content_type == "station"
+
+
+def test_multi_catalogue_browse_and_search_use_catalogue_scoped_paths() -> None:
+    """Keep item and category identity unambiguous across catalogues."""
+    source_record = {
+        "source_type": "url",
+        "url": "https://example.test/live",
+        "mime_type": "audio/aac",
+    }
+    first = _v4_catalogue_with_source(source_record, "first_catalogue")
+    second = _v4_catalogue_with_source(source_record, "second_catalogue")
+    hass, source = _source_registry(first, second)
+
+    root = _run(source.async_browse_media(_item(hass)))
+    assert [child.identifier for child in root.children] == [
+        "catalogue/first_catalogue",
+        "catalogue/second_catalogue",
+    ]
+
+    second_root = _run(
+        source.async_browse_media(_item(hass, "catalogue/second_catalogue"))
+    )
+    assert [child.identifier for child in second_root.children] == [
+        "catalogue/second_catalogue/category/radio"
+    ]
+    category = _run(
+        source.async_browse_media(
+            _item(hass, "catalogue/second_catalogue/category/radio")
+        )
+    )
+    assert [child.identifier for child in category.children] == [
+        "catalogue/second_catalogue/item/test_radio"
+    ]
+
+    result = _run(source.async_search_media(_item(hass), _query("test")))
+    assert [item.identifier for item in result.result] == [
+        "catalogue/first_catalogue/item/test_radio",
+        "catalogue/second_catalogue/item/test_radio",
+    ]
+
+    played = _run(
+        source.async_resolve_media(
+            _item(hass, "catalogue/second_catalogue/item/test_radio")
+        )
+    )
+    assert played.url == "https://example.test/live"
 
 
 def test_schema_v4_search_uses_only_agreed_fields_and_preserves_order() -> None:

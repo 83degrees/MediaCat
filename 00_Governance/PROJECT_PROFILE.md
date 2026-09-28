@@ -34,6 +34,7 @@ governed consumers.
 - Catalogue structure, metadata, membership, and ordered catalogue content.
 - Available execution methods and route-specific source facts for each item.
 - The normalized complete returned record and its compatibility version.
+- Supported local catalogue capability, validation and transactional reload services.
 - The MediaCat Home Assistant integration, Curated Media catalogue, and Media
   Source surface.
 
@@ -55,6 +56,8 @@ governed consumers.
 | --- | --- | --- | --- |
 | Media identity, catalogue structure, metadata, membership, execution methods, and route-specific facts | owned | MediaCat | MediaCat reports all available methods and does not select one. |
 | Normalized MediaCat item lookup and returned record | owned | MediaCat | Exact request, record, compatibility, and failure promises are defined by `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md`. |
+| Catalogue capability, validation and transactional reload interface | owned | MediaCat | Exact administration promises are defined by `03_Contracts/MEDIACAT_ADMIN_INTERFACE.md`. |
+| Catalogue editor, local file writes, snapshots/history and Ingress UI | external | MediaCat Manager | Separate governed admin/client product; consumes MediaCat's supported admin interface. |
 | MediaCat integration and Curated Media catalogue | owned | MediaCat | `mediacat` is the runtime namespace; `curated_media` remains the separate logical catalogue ID. |
 | ASTV orchestration and selection | external | ASTV | ASTV owns method/endpoint selection and fallback policy. |
 | AdvMedia selected-method/profile processing | external | AdvMedia | AdvMedia operates on caller-selected context and does not acquire MediaCat ownership. |
@@ -85,7 +88,8 @@ define the current architecture.
 
 | Contract | Status/version | Authoritative provider-owned location | Consumers | Notes |
 | --- | --- | --- | --- | --- |
-| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.1.1 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` with returned-record version 1. |
+| `MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | current v2.2.0 | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` | ASTV; AdvMedia standalone gateway; AdvMedia core downstream | `mediacat.resolve_media_record` with returned-record version 1. |
+| `MEDIACAT_ADMIN_INTERFACE.md` | current v1.0.0 | `03_Contracts/MEDIACAT_ADMIN_INTERFACE.md` | MediaCat Manager; operational callers | Capability discovery, side-effect-free validation and transactional complete-registry reload. |
 
 The provider-owned file above is the sole operational interface authority.
 
@@ -102,7 +106,7 @@ create a dependency on another product's undocumented internals.
 | Dependency | Type | Owner | Governed interface/evidence | Required state | Failure boundary |
 | --- | --- | --- | --- | --- | --- |
 | Home Assistant | platform | Home Assistant | Current production evidence and runtime integration surface | MediaCat integration/action and Media Source framework available | Failure stops at the affected MediaCat integration/interface boundary. |
-| Curated Media catalogue data | data | MediaCat | `04_Source/config/mediacat/catalogue.yaml`, schema architecture, and lookup contract | Current schema-v4 catalogue loads successfully | Setup fails explicitly; no partial normalized record is returned. |
+| Local catalogue files | data | MediaCat | `04_Source/config/mediacat/catalogues/`, schema architecture, lookup contract, and admin contract | At least one valid schema-v4 catalogue; unique in-file catalogue IDs | Setup fails explicitly; failed runtime reload retains the prior active registry. |
 | Delegated Home Assistant Media Source providers | external service | Respective provider owners | Opaque provider URI and provider-owned Media Source interface | Selected provider can resolve its URI | Provider failure surfaces without MediaCat route fallback. |
 
 ASTV and AdvMedia are governed consumers of MediaCat, not dependencies required
@@ -131,11 +135,12 @@ The retired `curated_media` runtime namespace remains historical only.
 
 ## Production and evidence route
 
-- Current production route: Home Assistant `starburst`, using
+- Maintained deployment route: Home Assistant `starburst`, using
   `/config/custom_components/mediacat/` and
-  `/config/mediacat/catalogue.yaml`.
+  `/config/mediacat/catalogues/`.
 - Current runtime namespace: `mediacat`.
-- Production truth: approved current production evidence.
+- Production activation truth, including completion of the single-file to
+  directory migration, comes only from approved current production evidence.
 - Validation/workflow truth: Linear records governed work and validation;
   Git/GitHub records exact candidate and accepted repository states.
 - Secrets, mutable Home Assistant state, and production snapshots remain outside

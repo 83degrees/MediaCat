@@ -68,7 +68,7 @@ The root contains the four required fields below and the optional `artwork_sourc
 
 | Field | Presence | Data type | Options | Definition |
 | --- | --- | --- | --- | --- |
-| `catalogue_id` | Required | String | — | Catalogue identifier. The maintained catalogue value is `curated_media`; the identifier rules in section 6.2 apply. |
+| `catalogue_id` | Required | String | — | Authoritative catalogue identifier independent of storage filename; the identifier rules in section 6.2 apply. |
 | `catalogue_schema_version` | Required | Integer | `4` | Stored catalogue schema version. It is not the integration version or returned-record version. |
 | `artwork_sources` | Optional | Object | `ha-assets` | Catalogue-level artwork-source bases. At least one of `local` or `external` is required for each configured source. |
 | `items` | Required | Object | — | Non-empty ordered mapping of item ID to item object, defined in section 4. |
@@ -519,8 +519,9 @@ They are case-sensitive. YAML mapping keys must be unique; duplicate keys are a
 validation error rather than last-value-wins input.
 
 The maintained Curated Media catalogue uses `catalogue_id: curated_media`.
-Future catalogues may use another conforming identifier only through separately
-authorized adapter and catalogue work.
+Additional catalogues use another conforming identifier. The identifier inside
+the document is authoritative; a catalogue filename is only storage
+convenience and need not match it.
 
 ### 6.3 Missing, Empty, and Null Values
 
@@ -573,6 +574,7 @@ No schema field has a generated default.
 | --- | --- | --- |
 | YAML decoding and duplicate-key detection | MediaCat catalogue loading | Reject the complete candidate catalogue with a path-specific error. |
 | Stored schema structure, vocabulary, requiredness, values, references, and ordering retention | MediaCat catalogue loading | Reject the complete candidate catalogue; retain no partial loaded state. |
+| Multi-file discovery and duplicate root `catalogue_id` detection | MediaCat registry loading | Reject the complete candidate registry and retain the previously active registry during reload. |
 | Catalogue and item lookup identity | MediaCat normalized lookup | Fail explicitly for the requested reference and return no record. |
 | Returned-record presence and compatibility | MediaCat lookup contract and producer | Do not emit a successful partial record. Contract implementation gaps require separately authorized MediaCat work. |
 | Method preference and selection | ASTV | Stop according to the ASTV contract when no configured method matches; MediaCat does not substitute. |
@@ -590,7 +592,8 @@ items.example_photo.type_metadata.longitude is required when latitude is present
 The validator must report enough location context to correct authored data. An
 implementation may aggregate independent errors or stop after the first, but it
 must not silently discard, coerce, default, or partially activate invalid data.
-The complete catalogue is accepted or rejected atomically.
+Each complete catalogue is accepted or rejected atomically. Setup and reload
+also accept or reject the complete discovered registry atomically.
 
 ## 8. Relationship to Returned Record Version 1
 
@@ -640,6 +643,8 @@ additive returned fields.
 
 - The maintained 17-item Curated Media catalogue conforms to schema v4 and
   requires no data migration for this policy.
+- Schema-v4 documents are stored as ordinary YAML files under the runtime
+  catalogue directory. Storage filenames do not participate in schema identity.
 - Schema v4 is a closed stored vocabulary. Unknown stored fields are invalid
   unless an approved schema-architecture change defines an explicit extension
   point.

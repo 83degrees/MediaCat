@@ -16,7 +16,14 @@ from custom_components.mediacat.resolver import CatalogueResolver
 
 
 ROOT = Path(__file__).parents[1]
-TARGET = ROOT / "04_Source" / "config" / "mediacat" / "catalogue.yaml"
+TARGET = (
+    ROOT
+    / "04_Source"
+    / "config"
+    / "mediacat"
+    / "catalogues"
+    / "curated-media.yaml"
+)
 ROLLBACK_ROOT = (
     ROOT
     / "0A_Historic"

@@ -92,7 +92,7 @@ PLAYABLE_V4_ITEM_IDS = [
 ]
 ASSISTANT_ONLY_ITEM_IDS = {"smooth_radio", "lbc_radio", "news_briefing"}
 CURATED_ROOT = "catalogue/curated_media"
-CURATED_CATEGORY = f"{CURATED_ROOT}/category/radio"
+CURATED_CATEGORY = "registry/category/radio"
 CURATED_ITEM_PREFIX = f"{CURATED_ROOT}/item/"
 
 
@@ -172,6 +172,44 @@ def _v4_catalogue_with_source(
     )
 
 
+def _projection_catalogue(
+    catalogue_id: str,
+    categories: list[tuple[str, str, list[tuple[str, str]]]],
+) -> CatalogueV4:
+    """Build a catalogue with explicit category and item ordering."""
+    items = {}
+    category_records = {}
+    for category_id, category_label, members in categories:
+        category_records[category_id] = {
+            "category_label": category_label,
+            "items": [item_id for item_id, _ in members],
+        }
+        for item_id, item_label in members:
+            items[item_id] = {
+                "type": "radio",
+                "catalogue_label": item_label,
+                "execution_methods": {
+                    "ha_mplayer": {
+                        "source": {
+                            "source_type": "url",
+                            "url": f"https://example.test/{catalogue_id}/{item_id}",
+                            "mime_type": "audio/aac",
+                        }
+                    }
+                },
+            }
+    return CatalogueV4(
+        record=_freeze_mapping(
+            {
+                "catalogue_id": catalogue_id,
+                "catalogue_schema_version": 4,
+                "items": items,
+                "categories": category_records,
+            }
+        )
+    )
+
+
 def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None:
     """Expose the completed Radio category and its 14 playable members."""
     catalogue = _load_catalogue(V4_CATALOGUE)
@@ -180,13 +218,6 @@ def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None
 
     root = _run(source.async_browse_media(_item(hass)))
     assert [(child.identifier, child.title) for child in root.children] == [
-        (CURATED_ROOT, "curated_media")
-    ]
-
-    catalogue_root = _run(
-        source.async_browse_media(_item(hass, CURATED_ROOT))
-    )
-    assert [(child.identifier, child.title) for child in catalogue_root.children] == [
         (CURATED_CATEGORY, "Radio")
     ]
 
@@ -211,54 +242,86 @@ def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None
     assert classic.media_content_type == "station"
 
 
-def test_multi_catalogue_browse_and_search_use_catalogue_scoped_paths() -> None:
-    """Keep item and category identity unambiguous across catalogues."""
-    source_record = {
-        "source_type": "url",
-        "url": "https://example.test/live",
-        "mime_type": "audio/aac",
-    }
-    first = _v4_catalogue_with_source(source_record, "first_catalogue")
-    second = _v4_catalogue_with_source(source_record, "second_catalogue")
+def test_multi_catalogue_projection_merges_categories_and_scopes_items() -> None:
+    """Hide catalogues while preserving defined category and item ordering."""
+    first = _projection_catalogue(
+        "first_catalogue",
+        [
+            (
+                "radio",
+                "Radio",
+                [("first", "First"), ("shared_one", "Shared")],
+            ),
+            ("podcasts", "Podcasts", [("podcast", "Podcast")]),
+        ],
+    )
+    second = _projection_catalogue(
+        "second_catalogue",
+        [
+            (
+                "radio",
+                "Radio",
+                [("second", "Second"), ("shared_two", "Shared")],
+            ),
+            ("audiobooks", "Audiobooks", [("book", "Book")]),
+        ],
+    )
     hass, source = _source_registry(first, second)
 
     root = _run(source.async_browse_media(_item(hass)))
-    assert [child.identifier for child in root.children] == [
-        "catalogue/first_catalogue",
-        "catalogue/second_catalogue",
+    assert [(child.identifier, child.title) for child in root.children] == [
+        ("registry/category/radio", "Radio"),
+        ("registry/category/podcasts", "Podcasts"),
+        ("registry/category/audiobooks", "Audiobooks"),
     ]
 
-    second_root = _run(
-        source.async_browse_media(_item(hass, "catalogue/second_catalogue"))
-    )
-    assert [child.identifier for child in second_root.children] == [
-        "catalogue/second_catalogue/category/radio"
-    ]
     category = _run(
-        source.async_browse_media(
-            _item(hass, "catalogue/second_catalogue/category/radio")
+        source.async_browse_media(_item(hass, "registry/category/radio"))
+    )
+    assert [(child.identifier, child.title) for child in category.children] == [
+        ("catalogue/first_catalogue/item/first", "First"),
+        ("catalogue/first_catalogue/item/shared_one", "Shared"),
+        ("catalogue/second_catalogue/item/second", "Second"),
+        ("catalogue/second_catalogue/item/shared_two", "Shared"),
+    ]
+
+    result = _run(
+        source.async_search_media(
+            _item(hass, "registry/category/radio"), _query("shared")
         )
     )
-    assert [child.identifier for child in category.children] == [
-        "catalogue/second_catalogue/item/test_radio"
-    ]
-
-    result = _run(source.async_search_media(_item(hass), _query("test")))
     assert [item.identifier for item in result.result] == [
-        "catalogue/first_catalogue/item/test_radio",
-        "catalogue/second_catalogue/item/test_radio",
+        "catalogue/first_catalogue/item/shared_one",
+        "catalogue/second_catalogue/item/shared_two",
+    ]
+    root_result = _run(
+        source.async_search_media(_item(hass), _query("shared"))
+    )
+    assert [item.identifier for item in root_result.result] == [
+        "catalogue/first_catalogue/item/shared_one",
+        "catalogue/second_catalogue/item/shared_two",
     ]
 
     played = _run(
         source.async_resolve_media(
-            _item(hass, "catalogue/second_catalogue/item/test_radio")
+            _item(hass, "catalogue/second_catalogue/item/second")
         )
     )
-    assert played.url == "https://example.test/live"
+    assert played.url == "https://example.test/second_catalogue/second"
 
 
-def test_single_curated_catalogue_rejects_unscoped_media_source_paths() -> None:
-    """Require explicit catalogue scope even when curated_media is the only one."""
+def test_multi_catalogue_projection_rejects_conflicting_category_labels() -> None:
+    """Fail explicitly when one category ID has multiple visible labels."""
+    first = _projection_catalogue("first", [("radio", "Radio", [])])
+    second = _projection_catalogue("second", [("radio", "Wireless", [])])
+    hass, source = _source_registry(first, second)
+
+    with pytest.raises(BrowseError, match="conflicting labels"):
+        _run(source.async_browse_media(_item(hass)))
+
+
+def test_single_curated_catalogue_rejects_legacy_media_source_paths() -> None:
+    """Reject legacy unscoped paths and catalogue directories."""
     catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
 
@@ -269,6 +332,10 @@ def test_single_curated_catalogue_rejects_unscoped_media_source_paths() -> None:
         ):
             _run(source.async_browse_media(_item(hass, identifier)))
 
+    for identifier in (CURATED_ROOT, f"{CURATED_ROOT}/category/radio"):
+        with pytest.raises(BrowseError, match="Unknown MediaCat identifier"):
+            _run(source.async_browse_media(_item(hass, identifier)))
+
     with pytest.raises(
         BrowseError,
         match="catalogue-scoped MediaCat identifier is required",
@@ -276,6 +343,14 @@ def test_single_curated_catalogue_rejects_unscoped_media_source_paths() -> None:
         _run(
             source.async_search_media(
                 _item(hass, "category/radio"), _query("radio")
+            )
+        )
+
+    with pytest.raises(BrowseError, match="search is unavailable"):
+        _run(
+            source.async_search_media(
+                _item(hass, f"{CURATED_ROOT}/category/radio"),
+                _query("radio"),
             )
         )
 
@@ -454,7 +529,7 @@ def test_schema_v4_unplayable_items_have_no_method_fallback() -> None:
 
     root = _run(source.async_browse_media(_item(hass)))
     assert [(child.identifier, child.title) for child in root.children] == [
-        (CURATED_ROOT, "curated_media")
+        (CURATED_CATEGORY, "Radio")
     ]
     category = _run(source.async_browse_media(_item(hass, CURATED_CATEGORY)))
     assert category.children == []
@@ -506,7 +581,7 @@ def test_schema_v4_unknown_and_assistant_only_items_fail_explicitly() -> None:
     with pytest.raises(BrowseError, match="Unknown MediaCat category"):
         _run(
             source.async_browse_media(
-                _item(hass, f"{CURATED_ROOT}/category/missing")
+                _item(hass, "registry/category/missing")
             )
         )
     with pytest.raises(Unresolvable, match="Unknown MediaCat item"):

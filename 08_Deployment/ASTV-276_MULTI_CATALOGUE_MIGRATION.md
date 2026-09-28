@@ -47,14 +47,19 @@ not deploy MediaCat Manager or modify the read-only `ha-assets` mirror.
 1. Resolve representative `curated_media` items through
    `mediacat.resolve_media_record` and compare their normalized returned-record
    content with the pre-migration baseline.
-2. Browse, search and play representative Curated Media entries through the
-   `mediacat` Media Source using required
-   `catalogue/curated_media/...` identifiers. Confirm former unscoped
-   `category/...` and `item/...` identifiers are rejected.
+2. Browse the `mediacat` Media Source and confirm the visible hierarchy is
+   `MediaCat → Category → Item`, with no catalogue directory. Search and play
+   representative Curated Media entries, confirming projected items resolve
+   through their retained `catalogue/curated_media/item/...` identity. Confirm
+   former unscoped `category/...` and `item/...` routes are rejected.
 3. Validate a known-good YAML document and a deliberately invalid in-memory
    document; confirm neither validation call changes active catalogue state.
 4. Add a second valid test catalogue whose filename differs from its in-file
-   ID, reload, and confirm lookup and catalogue-scoped Media Browser paths.
+   ID, reload, and confirm lookup plus catalogue-blind Media Browser projection.
+   Verify categories merge by exact ID in first-seen order, merged items append
+   in registry/authored order, and equal visible item labels remain distinct.
+   Deliberately give one shared category ID a different label and confirm an
+   explicit projection error, then restore the matching label.
 5. Introduce a duplicate-ID or invalid candidate, call reload, and confirm the
    response reports failure while lookups against the previously active
    registry still succeed unchanged.

@@ -129,13 +129,19 @@ Media Source does not select an alternative execution method when an item is not
 representable through its supported playback path. Assistant-command-only items
 therefore remain outside the Media Source browse/search projection.
 
-With multiple active catalogues, Media Browser identifiers are catalogue-scoped
-as `catalogue/<catalogue_id>/category/<category_id>` and
-`catalogue/<catalogue_id>/item/<item_id>`. Root search spans every catalogue in
-registry order. Catalogue scope is required even when `curated_media` is the
-only active catalogue; unscoped `category/<category_id>` and `item/<item_id>`
-identifiers are rejected. This retires the former implicit single-catalogue
-routing assumption without changing the logical `curated_media` identity.
+The Media Browser hides catalogue identity from visible navigation and presents
+`MediaCat → Category → Item`. Categories are merged by exact `category_id` in
+first-seen registry discovery order while preserving each catalogue's authored
+category order. Repeated category IDs must have the same exact
+`category_label`; a differing label is an explicit projection error. Within a
+merged category, items append catalogue-by-catalogue in registry order and keep
+their authored order. Duplicate visible item labels are allowed.
+
+Projected items retain their `(catalogue_id, item_id)` identity internally and
+use `catalogue/<catalogue_id>/item/<item_id>` for browse, search and play
+resolution. Catalogue directories are not visible. Root search spans every
+catalogue in registry order. Legacy unscoped `category/<category_id>` and
+`item/<item_id>` routes are rejected.
 
 ## MediaCat-owned runtime behaviour
 
@@ -145,7 +151,8 @@ runtime interfaces:
 1. setup loads, validates and freezes every discovered schema-v4 catalogue;
 2. normalized lookup resolves a catalogue-scoped item and emits the complete
    consumer-facing record;
-3. Media Source projects playable subsets through catalogue-scoped paths; and
+3. Media Source projects a catalogue-blind category hierarchy while retaining
+   catalogue-scoped item identity; and
 4. admin actions report capabilities, validate candidates without mutation and
    transactionally replace the registry after complete revalidation.
 

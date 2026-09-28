@@ -175,7 +175,7 @@ def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None
         if child.identifier == "item/classic_fm"
     )
     assert classic.title == "Classic FM"
-    assert classic.thumbnail == "/local/radio-logos/Classic-FM.png"
+    assert classic.thumbnail == "/local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png"
     assert classic.media_content_type == "station"
 
 

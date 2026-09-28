@@ -1,0 +1,202 @@
+catalogue_id: curated_media
+catalogue_schema_version: 4
+items:
+  station_alpha:
+    catalogue_label: Station Alpha
+    type: radio
+    description: Representative live radio station
+    tags:
+      - radio
+      - live
+    artwork:
+      source_type: direct
+      local: /local/curated_media/station_alpha.png
+      external: https://images.example.test/station_alpha.png
+    content_rating: general
+    type_metadata:
+      station_name: Station Alpha
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://streams.example.test/station_alpha.m3u8
+          mime_type: application/vnd.apple.mpegurl
+          provider: example_streams
+      g_home_device:
+        source:
+          source_type: assistant_command
+          provider: google_assistant
+          command: Play Station Alpha
+          append_target: true
+  example_track:
+    catalogue_label: Example Track — studio recording
+    type: music_track
+    description: Representative music track
+    tags:
+      - music
+      - studio
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_track.png
+      external: https://images.example.test/example_track.png
+    content_rating: general
+    type_metadata:
+      track_title: Example Track
+      artist: Example Artist
+      album_artist: Example Album Artist
+      album_title: Example Album
+      composer: Example Composer
+      disc_number: 1
+      track_number: 3
+      release_date: "2026-01-02"
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: ha_media_source
+          provider: radio_browser
+          uri: media-source://radio_browser/example-track
+          media_type: music
+  example_podcast:
+    catalogue_label: Example Podcast — episode 12
+    type: podcast_episode
+    description: Representative podcast episode
+    tags:
+      - podcast
+      - technology
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_podcast.png
+      external: https://images.example.test/example_podcast.png
+    content_rating: general
+    type_metadata:
+      episode_title: A Representative Episode
+      podcast_title: The Example Podcast
+      creator: Example Presenter
+      publisher: Example Network
+      publication_date: "2026-02-03"
+      episode_number: 12
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://media.example.test/podcast-12.mp3
+          mime_type: audio/mpeg
+          provider: example_podcasts
+  example_live_tv:
+    catalogue_label: Example TV — live channel
+    type: live_tv
+    description: Representative live television channel
+    tags:
+      - television
+      - live
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_live_tv.png
+      external: https://images.example.test/example_live_tv.png
+    content_rating: general
+    type_metadata:
+      channel_name: Example TV
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://streams.example.test/example-tv.m3u8
+          mime_type: application/vnd.apple.mpegurl
+          provider: example_broadcaster
+  example_tv_episode:
+    catalogue_label: Example Series — S02E04
+    type: tv_episode
+    description: Representative television episode
+    tags:
+      - television
+      - drama
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_tv_episode.png
+      external: https://images.example.test/example_tv_episode.png
+    content_rating: pg
+    type_metadata:
+      episode_title: A Representative Story
+      series_title: Example Series
+      season_number: 2
+      episode_number: 4
+      first_broadcast_date: "2025-11-12"
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://media.example.test/example-series-s02e04.mp4
+          mime_type: video/mp4
+          provider: example_catchup
+  example_movie:
+    catalogue_label: Example Movie — restored edition
+    type: movie
+    description: Representative feature film
+    tags:
+      - movie
+      - drama
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_movie.png
+      external: https://images.example.test/example_movie.png
+    content_rating: "12"
+    type_metadata:
+      movie_title: Example Movie
+      secondary_title: The Restored Edition
+      studio: Example Studios
+      release_date: "2024-06-07"
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://media.example.test/example-movie.mp4
+          mime_type: video/mp4
+          provider: example_movies
+  example_photo:
+    catalogue_label: Example Photograph — London
+    type: photo
+    description: Representative photograph
+    tags:
+      - photo
+      - london
+    artwork:
+      source_type: direct
+      local: /local/curated_media/example_photo.png
+      external: https://images.example.test/example_photo.png
+    content_rating: general
+    type_metadata:
+      image_title: Example Photograph
+      creator: Example Photographer
+      creation_datetime: "2025-08-09T10:11:12Z"
+      location: London
+      latitude: 51.5072
+      longitude: -0.1276
+      width_pixels: 3840
+      height_pixels: 2160
+    execution_methods:
+      ha_mplayer:
+        source:
+          source_type: url
+          url: https://images.example.test/example-photo.jpg
+          mime_type: image/jpeg
+          provider: example_photos
+categories:
+  featured:
+    category_label: Featured
+    items:
+      - example_movie
+      - station_alpha
+      - example_photo
+  audio:
+    category_label: Audio
+    items:
+      - example_podcast
+      - example_track
+      - station_alpha
+  visual:
+    category_label: Visual
+    items:
+      - example_live_tv
+      - example_tv_episode
+      - example_movie
+      - example_photo

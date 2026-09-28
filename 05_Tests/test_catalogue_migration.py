@@ -55,7 +55,11 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "Classic FM",
         "type_metadata": {"station_name": "Classic FM"},
-        "artwork": {"source_type": "direct", "local": "/local/radio-logos/Classic-FM.png"},
+        "artwork": {
+            "source_type": "direct",
+            "local": "/local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png",
+            "external": "https://83degrees.github.io/ha-assets/media-assets/radio/images/128x128/Classic-FM.png",
+        },
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -74,7 +78,10 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "LBC News",
         "type_metadata": {"station_name": "LBC News"},
-        "artwork": {"source_type": "direct", "local": "/local/radio-logos/LBC-News.png"},
+        "artwork": {
+            "source_type": "ha-assets",
+            "path": "media-assets/radio/images/128x128/LBC-News.png",
+        },
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -93,7 +100,10 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "Gold Radio",
         "type_metadata": {"station_name": "Gold Radio"},
-        "artwork": {"source_type": "direct", "local": "/local/radio-logos/Gold-Radio.png"},
+        "artwork": {
+            "source_type": "ha-assets",
+            "path": "media-assets/radio/images/128x128/Gold-Radio.png",
+        },
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -165,11 +175,18 @@ def test_complete_v4_catalogue_loads_with_exact_root_population_and_order() -> N
     assert list(raw) == [
         "catalogue_id",
         "catalogue_schema_version",
+        "artwork_sources",
         "items",
         "categories",
     ]
     assert raw["catalogue_id"] == "curated_media"
     assert raw["catalogue_schema_version"] == 4
+    assert raw["artwork_sources"] == {
+        "ha-assets": {
+            "local": "/local/ha-assets/",
+            "external": "https://83degrees.github.io/ha-assets/",
+        }
+    }
     assert list(raw["items"]) == EXPECTED_ITEM_IDS
     assert len(raw["items"]) == len(set(raw["items"])) == 17
     assert list(raw["categories"]) == ["radio"]
@@ -205,17 +222,26 @@ def test_existing_items_preserve_v2_data_with_only_approved_changes() -> None:
         assert new["type_metadata"] == {"station_name": old["title"]}
         assert new["description"] == old["description"]
         assert new["tags"] == old["tags"]
-        if item_id == "bbc_radio_4":
-            assert new["artwork"] == {
-                "source_type": "direct",
-                "local": "/local/curated_media/artwork/radio/BBC-Radio-4.png",
-                "external": (
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/"
-                    "BBC_Radio_4_2022.svg/960px-BBC_Radio_4_2022.svg.png"
-                ),
-            }
-        else:
-            assert new["artwork"] == {"source_type": "direct", **old["artwork"]}
+        expected_artwork_files = {
+            "bbc_radio_1": "BBC-Radio-1.png",
+            "bbc_radio_1xtra": "BBC-Radio-1Xtra.png",
+            "bbc_radio_2": "BBC-Radio-2.png",
+            "bbc_radio_3": "BBC-Radio-3.png",
+            "bbc_radio_4": "BBC-Radio-4.png",
+            "bbc_radio_4_extra": "BBC-Radio-4Extra.png",
+            "bbc_radio_5_live": "BBC-Radio-5-Live.png",
+            "bbc_radio_5_sports_extra": "BBC-R5SportExtra.png",
+            "bbc_radio_6_music": "BBC-6-Music.png",
+            "bbc_world_service": "BBC-WorldService.png",
+            "bbc_radio_scotland": "BBC-R-Scotland.png",
+        }
+        assert new["artwork"] == {
+            "source_type": "ha-assets",
+            "path": (
+                "media-assets/radio/images/128x128/"
+                + expected_artwork_files[item_id]
+            ),
+        }
 
         migrated_source = new["execution_methods"]["ha_mplayer"]["source"]
         assert set(new["execution_methods"]) == {"ha_mplayer"}

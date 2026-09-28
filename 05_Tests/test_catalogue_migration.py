@@ -55,7 +55,7 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "Classic FM",
         "type_metadata": {"station_name": "Classic FM"},
-        "artwork": {"local": "/local/radio-logos/Classic-FM.png"},
+        "artwork": {"source_type": "direct", "local": "/local/radio-logos/Classic-FM.png"},
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -74,7 +74,7 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "LBC News",
         "type_metadata": {"station_name": "LBC News"},
-        "artwork": {"local": "/local/radio-logos/LBC-News.png"},
+        "artwork": {"source_type": "direct", "local": "/local/radio-logos/LBC-News.png"},
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -93,7 +93,7 @@ EXPECTED_NEW_ITEMS = {
         "type": "radio",
         "catalogue_label": "Gold Radio",
         "type_metadata": {"station_name": "Gold Radio"},
-        "artwork": {"local": "/local/radio-logos/Gold-Radio.png"},
+        "artwork": {"source_type": "direct", "local": "/local/radio-logos/Gold-Radio.png"},
         "execution_methods": {
             "ha_mplayer": {
                 "source": {
@@ -156,7 +156,7 @@ EXPECTED_NEW_ITEMS = {
 }
 
 
-def test_complete_v3_catalogue_loads_with_exact_root_population_and_order() -> None:
+def test_complete_v4_catalogue_loads_with_exact_root_population_and_order() -> None:
     """Load the cutover artifact and prove its exact identity and membership."""
     raw = load_yaml(TARGET)
     loaded = _load_catalogue(TARGET)
@@ -169,7 +169,7 @@ def test_complete_v3_catalogue_loads_with_exact_root_population_and_order() -> N
         "categories",
     ]
     assert raw["catalogue_id"] == "curated_media"
-    assert raw["catalogue_schema_version"] == 3
+    assert raw["catalogue_schema_version"] == 4
     assert list(raw["items"]) == EXPECTED_ITEM_IDS
     assert len(raw["items"]) == len(set(raw["items"])) == 17
     assert list(raw["categories"]) == ["radio"]
@@ -207,6 +207,7 @@ def test_existing_items_preserve_v2_data_with_only_approved_changes() -> None:
         assert new["tags"] == old["tags"]
         if item_id == "bbc_radio_4":
             assert new["artwork"] == {
+                "source_type": "direct",
                 "local": "/local/curated_media/artwork/radio/BBC-Radio-4.png",
                 "external": (
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/"
@@ -214,7 +215,7 @@ def test_existing_items_preserve_v2_data_with_only_approved_changes() -> None:
                 ),
             }
         else:
-            assert new["artwork"] == old["artwork"]
+            assert new["artwork"] == {"source_type": "direct", **old["artwork"]}
 
         migrated_source = new["execution_methods"]["ha_mplayer"]["source"]
         assert set(new["execution_methods"]) == {"ha_mplayer"}

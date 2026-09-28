@@ -261,9 +261,8 @@ items:
     type_metadata:
       station_name: Classic FM
     artwork:
-      source_type: direct
-      local: /local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png
-      external: https://83degrees.github.io/ha-assets/media-assets/radio/images/128x128/Classic-FM.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/Classic-FM.png
     execution_methods:
       ha_mplayer:
         source:

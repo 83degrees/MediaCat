@@ -373,3 +373,62 @@ def test_schema_v4_unknown_and_assistant_only_items_fail_explicitly() -> None:
             _run(source.async_browse_media(_item(hass, f"item/{item_id}")))
         with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
             _run(source.async_resolve_media(_item(hass, f"item/{item_id}")))
+
+
+def _v4_catalogue_with_resolved_artwork(artwork: dict[str, str]) -> CatalogueV4:
+    return CatalogueV4(
+        record=_freeze_mapping(
+            {
+                "catalogue_id": "curated_media",
+                "catalogue_schema_version": 4,
+                "items": {
+                    "test_radio": {
+                        "type": "radio",
+                        "catalogue_label": "Test Radio",
+                        "artwork": artwork,
+                        "execution_methods": {
+                            "ha_mplayer": {
+                                "source": {
+                                    "source_type": "url",
+                                    "url": "https://streams.example.test/live",
+                                    "mime_type": "audio/aac",
+                                }
+                            }
+                        },
+                    }
+                },
+                "categories": {
+                    "radio": {
+                        "category_label": "Radio",
+                        "items": ["test_radio"],
+                    }
+                },
+            }
+        )
+    )
+
+
+def test_schema_v4_thumbnail_prefers_local_then_external_then_none() -> None:
+    cases = [
+        (
+            {
+                "local": "/local/ha-assets/media-assets/radio/local.png",
+                "external": "https://example.test/external.png",
+            },
+            "/local/ha-assets/media-assets/radio/local.png",
+        ),
+        (
+            {"external": "https://example.test/external.png"},
+            "https://example.test/external.png",
+        ),
+        ({}, None),
+    ]
+
+    for artwork, expected in cases:
+        catalogue = _v4_catalogue_with_resolved_artwork(artwork)
+        hass, source = _source(catalogue)
+        category = _run(
+            source.async_browse_media(_item(hass, "category/radio"))
+        )
+        assert len(category.children) == 1
+        assert category.children[0].thumbnail == expected

@@ -25,8 +25,12 @@ DATETIME_PATTERN = re.compile(
 MIME_TYPE_PATTERN = re.compile(r"^[^\s/]+/[^\s/]+$")
 
 ROOT_FIELDS = frozenset(
+    {"catalogue_id", "catalogue_schema_version", "artwork_sources", "items", "categories"}
+)
+ROOT_REQUIRED_FIELDS = frozenset(
     {"catalogue_id", "catalogue_schema_version", "items", "categories"}
 )
+ARTWORK_SOURCE_FIELDS = frozenset({"local", "external"})
 ITEM_FIELDS = frozenset(
     {
         "catalogue_label",
@@ -42,7 +46,16 @@ ITEM_FIELDS = frozenset(
 ITEM_REQUIRED_FIELDS = frozenset(
     {"catalogue_label", "type", "type_metadata", "execution_methods"}
 )
-ARTWORK_FIELDS = frozenset({"local", "external"})
+ARTWORK_FIELDS = {
+    "ha-assets": (
+        frozenset({"source_type", "path"}),
+        frozenset({"source_type", "path"}),
+    ),
+    "direct": (
+        frozenset({"source_type", "local", "external"}),
+        frozenset({"source_type"}),
+    ),
+}
 EXECUTION_METHOD_SOURCE_TYPES = {
     "ha_mplayer": frozenset({"url", "ha_media_source"}),
     "g_home_device": frozenset({"assistant_command"}),
@@ -131,8 +144,8 @@ class CatalogueError(Exception):
 
 
 @dataclass(frozen=True, slots=True)
-class CatalogueV3:
-    """An immutable schema-v3 stored catalogue."""
+class CatalogueV4:
+    """An immutable schema-v4 stored catalogue."""
 
     record: Mapping[Any, Any]
 
@@ -157,12 +170,12 @@ class CatalogueV3:
         return cast(Mapping[str, Any], self.record["categories"])
 
 
-async def async_load_catalogue(hass: HomeAssistant, path: str) -> CatalogueV3:
+async def async_load_catalogue(hass: HomeAssistant, path: str) -> CatalogueV4:
     """Read and validate a catalogue without blocking Home Assistant's event loop."""
     return await hass.async_add_executor_job(_load_catalogue, Path(path))
 
 
-def _load_catalogue(path: Path) -> CatalogueV3:
+def _load_catalogue(path: Path) -> CatalogueV4:
     """Read and validate a catalogue from disk."""
     try:
         text = path.read_text(encoding="utf-8")
@@ -209,38 +222,75 @@ def _reject_duplicate_keys(text: str, path: Path) -> None:
         walk(root, "")
 
 
-def _parse_catalogue(raw: Any, path: Path) -> CatalogueV3:
+def _parse_catalogue(raw: Any, path: Path) -> CatalogueV4:
     """Parse the sole active stored catalogue schema."""
     if not isinstance(raw, Mapping):
         raise CatalogueError(f"catalogue {path} must be a mapping")
     if (
         type(raw.get("catalogue_schema_version")) is not int
-        or raw.get("catalogue_schema_version") != 3
+        or raw.get("catalogue_schema_version") != 4
     ):
         raise CatalogueError(
-            "unsupported catalogue schema; expected catalogue_schema_version: 3"
+            "unsupported catalogue schema; expected catalogue_schema_version: 4"
         )
-    return _parse_catalogue_v3(raw)
+    return _parse_catalogue_v4(raw)
 
 
-def _parse_catalogue_v3(root: Mapping[Any, Any]) -> CatalogueV3:
-    """Validate and recursively freeze one complete schema-v3 catalogue."""
+def _parse_catalogue_v4(root: Mapping[Any, Any]) -> CatalogueV4:
+    """Validate, resolve artwork, and freeze one complete schema-v4 catalogue."""
     _closed_mapping(root, "root", ROOT_FIELDS)
-    _required_fields(root, "root", ROOT_FIELDS)
+    _required_fields(root, "root", ROOT_REQUIRED_FIELDS)
     _identifier(root["catalogue_id"], "catalogue_id")
+
+    artwork_sources: Mapping[Any, Any] = {}
+    if "artwork_sources" in root:
+        artwork_sources = _validate_artwork_sources(root["artwork_sources"])
+
     items = _mapping(root["items"], "items", allow_empty=False)
     categories = _mapping(root["categories"], "categories", allow_empty=True)
 
+    resolved_items: dict[Any, Any] = {}
     for item_id, item in items.items():
         _identifier(item_id, "items key")
-        _validate_item(item, f"items.{item_id}")
+        resolved_items[item_id] = _validate_item(
+            item, f"items.{item_id}", artwork_sources
+        )
     for category_id, category in categories.items():
         _identifier(category_id, "categories key")
         _validate_category(category, f"categories.{category_id}", items)
-    return CatalogueV3(record=_freeze_mapping(root))
+
+    resolved_root = dict(root)
+    resolved_root["items"] = resolved_items
+    return CatalogueV4(record=_freeze_mapping(resolved_root))
 
 
-def _validate_item(value: Any, path: str) -> None:
+def _validate_artwork_sources(value: Any) -> Mapping[Any, Any]:
+    sources = _mapping(value, "artwork_sources", allow_empty=False)
+    for source_name, source_value in sources.items():
+        if source_name != "ha-assets":
+            raise CatalogueError(
+                f"artwork_sources.{source_name} is not a supported artwork source"
+            )
+        source_path = f"artwork_sources.{source_name}"
+        source = _mapping(source_value, source_path, allow_empty=False)
+        _closed_mapping(source, source_path, ARTWORK_SOURCE_FIELDS)
+        _reject_nulls(source, source_path)
+        if not source:
+            raise CatalogueError(f"{source_path} must not be empty")
+        if "local" in source:
+            local = _text(source["local"], f"{source_path}.local")
+            if not local.startswith("/local/") or not local[len("/local/") :].strip():
+                raise CatalogueError(
+                    f"{source_path}.local must be a non-empty /local/... reference"
+                )
+        if "external" in source:
+            _http_url(source["external"], f"{source_path}.external")
+    return sources
+
+
+def _validate_item(
+    value: Any, path: str, artwork_sources: Mapping[Any, Any]
+) -> Mapping[Any, Any]:
     item = _mapping(value, path, allow_empty=False)
     _closed_mapping(item, path, ITEM_FIELDS)
     _required_fields(item, path, ITEM_REQUIRED_FIELDS)
@@ -253,24 +303,80 @@ def _validate_item(value: Any, path: str) -> None:
             _text(item[field], f"{path}.{field}")
     if "tags" in item:
         _string_list(item["tags"], f"{path}.tags", identifiers=False)
+    resolved = dict(item)
     if "artwork" in item:
-        _validate_artwork(item["artwork"], f"{path}.artwork")
+        resolved["artwork"] = _validate_artwork(
+            item["artwork"], f"{path}.artwork", artwork_sources
+        )
     _validate_type_metadata(item["type_metadata"], item_type, f"{path}.type_metadata")
     _validate_execution_methods(item["execution_methods"], f"{path}.execution_methods")
+    return resolved
 
 
-def _validate_artwork(value: Any, path: str) -> None:
+def _validate_artwork(
+    value: Any, path: str, artwork_sources: Mapping[Any, Any]
+) -> Mapping[str, str]:
     artwork = _mapping(value, path, allow_empty=False)
-    _closed_mapping(artwork, path, ARTWORK_FIELDS)
-    _reject_nulls(artwork, path)
-    if "local" in artwork:
-        local = _text(artwork["local"], f"{path}.local")
-        if not local.startswith("/local/") or not local[len("/local/") :].strip():
-            raise CatalogueError(
-                f"{path}.local must be a non-empty /local/... reference"
+    if "source_type" not in artwork:
+        raise CatalogueError(f"{path}.source_type is required")
+    source_type = _text(artwork["source_type"], f"{path}.source_type")
+    if source_type not in ARTWORK_FIELDS:
+        raise CatalogueError(
+            f"{path}.source_type has unsupported value {source_type!r}"
+        )
+    allowed, required = ARTWORK_FIELDS[source_type]
+    _closed_mapping(artwork, path, allowed)
+    _required_fields(artwork, path, required)
+
+    if source_type == "direct":
+        resolved: dict[str, str] = {}
+        if "local" in artwork:
+            local = _text(artwork["local"], f"{path}.local")
+            if not local.startswith("/local/") or not local[len("/local/") :].strip():
+                raise CatalogueError(
+                    f"{path}.local must be a non-empty /local/... reference"
+                )
+            resolved["local"] = local
+        if "external" in artwork:
+            resolved["external"] = _http_url(
+                artwork["external"], f"{path}.external"
             )
-    if "external" in artwork:
-        _http_url(artwork["external"], f"{path}.external")
+        if not resolved:
+            raise CatalogueError(
+                f"{path} direct artwork requires local and/or external"
+            )
+        return resolved
+
+    relative_path = _artwork_relative_path(artwork["path"], f"{path}.path")
+    source = artwork_sources.get("ha-assets")
+    if not isinstance(source, Mapping):
+        raise CatalogueError(
+            f"{path} references source_type 'ha-assets' but "
+            "artwork_sources.ha-assets is missing"
+        )
+    resolved = {}
+    for route in ("local", "external"):
+        base = source.get(route)
+        if isinstance(base, str):
+            resolved[route] = f"{base.rstrip('/')}/{relative_path}"
+    return resolved
+
+
+def _artwork_relative_path(value: Any, path: str) -> str:
+    relative = _text(value, path)
+    if relative.startswith("/") or "\\" in relative:
+        raise CatalogueError(
+            f"{path} must be a relative forward-slash path"
+        )
+    parsed = urlsplit(relative)
+    if parsed.scheme or parsed.netloc:
+        raise CatalogueError(f"{path} must not be an absolute URL")
+    segments = relative.split("/")
+    if any(segment in {"", ".", ".."} for segment in segments):
+        raise CatalogueError(
+            f"{path} must not contain empty, current-directory, or traversal segments"
+        )
+    return relative
 
 
 def _validate_type_metadata(value: Any, item_type: str, path: str) -> None:

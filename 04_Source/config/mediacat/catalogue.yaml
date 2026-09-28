@@ -1,5 +1,9 @@
 catalogue_id: curated_media
 catalogue_schema_version: 4
+artwork_sources:
+  ha-assets:
+    local: /local/ha-assets/
+    external: https://83degrees.github.io/ha-assets/
 items:
   bbc_radio_1:
     type: radio
@@ -7,9 +11,8 @@ items:
     type_metadata:
       station_name: BBC Radio 1
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-1.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_1_2021.svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-1.png
     description: BBC national radio station focused on contemporary music, entertainment and youth culture
     tags:
       - bbc
@@ -30,9 +33,8 @@ items:
     type_metadata:
       station_name: BBC Radio 1Xtra
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-1Xtra.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_1Xtra_2021.svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-1Xtra.png
     description: BBC radio station specialising in urban music, hip hop, R&B and new artists
     tags:
       - bbc
@@ -54,9 +56,8 @@ items:
     type_metadata:
       station_name: BBC Radio 2
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-2.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_2_2022.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-2.png
     description: BBC national radio station featuring popular music, live performances and entertainment
     tags:
       - bbc
@@ -78,9 +79,8 @@ items:
     type_metadata:
       station_name: BBC Radio 3
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-3.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_3_2022.svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-3.png
     description: BBC national radio station featuring classical music, jazz, arts and culture
     tags:
       - bbc
@@ -102,9 +102,8 @@ items:
     type_metadata:
       station_name: BBC Radio 4
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-4.png
-      external: https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/BBC_Radio_4_2022.svg/960px-BBC_Radio_4_2022.svg.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-4.png
     description: BBC national radio station featuring news, documentaries, drama and spoken-word programmes
     tags:
       - bbc
@@ -126,9 +125,8 @@ items:
     type_metadata:
       station_name: BBC Radio 4 Extra
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-4Extra.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_4Xtra_2022.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-4Extra.png
     description: BBC radio station featuring archive comedy, drama and spoken-word programmes
     tags:
       - bbc
@@ -150,9 +148,8 @@ items:
     type_metadata:
       station_name: BBC Radio 5 Live
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-Radio-5-Live.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_5_Live_2022.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-Radio-5-Live.png
     description: BBC national radio station covering live sport, news and current affairs
     tags:
       - bbc
@@ -174,9 +171,8 @@ items:
     type_metadata:
       station_name: BBC Radio 5 Sports Extra
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-R5SportExtra.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_5_Sports_Extra_2022.svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-R5SportExtra.png
     description: BBC radio station providing additional live sports coverage and commentary
     tags:
       - bbc
@@ -197,9 +193,8 @@ items:
     type_metadata:
       station_name: BBC Radio 6 Music
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-6-Music.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_6_Music_2022.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-6-Music.png
     description: BBC radio station featuring alternative music, indie, classic tracks and live sessions
     tags:
       - bbc
@@ -221,9 +216,8 @@ items:
     type_metadata:
       station_name: BBC World Service
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-WorldService.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_World_Service_2022_(Boxed).svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-WorldService.png
     description: BBC international radio service providing global news, documentaries and programmes
     tags:
       - bbc
@@ -244,9 +238,8 @@ items:
     type_metadata:
       station_name: BBC Radio Scotland
     artwork:
-      source_type: direct
-      local: /local/curated_media/artwork/radio/BBC-R-Scotland.png
-      external: https://commons.wikimedia.org/wiki/Special:Redirect/file/BBC_Radio_Scotland_2022.svg
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/BBC-R-Scotland.png
     description: BBC national radio station serving Scotland with music, news and Scottish programming
     tags:
       - bbc
@@ -269,7 +262,8 @@ items:
       station_name: Classic FM
     artwork:
       source_type: direct
-      local: /local/radio-logos/Classic-FM.png
+      local: /local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png
+      external: https://83degrees.github.io/ha-assets/media-assets/radio/images/128x128/Classic-FM.png
     execution_methods:
       ha_mplayer:
         source:
@@ -284,8 +278,8 @@ items:
     type_metadata:
       station_name: LBC News
     artwork:
-      source_type: direct
-      local: /local/radio-logos/LBC-News.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/LBC-News.png
     execution_methods:
       ha_mplayer:
         source:
@@ -300,8 +294,8 @@ items:
     type_metadata:
       station_name: Gold Radio
     artwork:
-      source_type: direct
-      local: /local/radio-logos/Gold-Radio.png
+      source_type: ha-assets
+      path: media-assets/radio/images/128x128/Gold-Radio.png
     execution_methods:
       ha_mplayer:
         source:

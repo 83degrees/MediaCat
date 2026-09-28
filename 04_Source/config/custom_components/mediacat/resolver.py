@@ -6,7 +6,7 @@ from collections.abc import Mapping
 import re
 from typing import Any
 
-from .catalogue import CatalogueV3
+from .catalogue import CatalogueV4
 
 
 RETURNED_RECORD_VERSION = 1
@@ -22,11 +22,11 @@ class CatalogueItemNotFoundError(LookupError):
 
 
 class InvalidIdentifierError(ValueError):
-    """Raised when a lookup identifier violates schema-v3 policy."""
+    """Raised when a lookup identifier violates schema-v4 policy."""
 
 
 def validate_lookup_identifier(identifier: str, field_name: str) -> str:
-    """Return an identifier after applying the schema-v3 lexical rule."""
+    """Return an identifier after applying the schema-v4 lexical rule."""
     if (
         not isinstance(identifier, str)
         or IDENTIFIER_PATTERN.fullmatch(identifier) is None
@@ -41,7 +41,7 @@ def validate_lookup_identifier(identifier: str, field_name: str) -> str:
 class CatalogueResolver:
     """Resolve canonical item IDs from a loaded catalogue snapshot."""
 
-    def __init__(self, catalogue: CatalogueV3) -> None:
+    def __init__(self, catalogue: CatalogueV4) -> None:
         """Initialize the resolver with an existing loaded catalogue."""
         self._catalogue = catalogue
 

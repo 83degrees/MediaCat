@@ -23,7 +23,7 @@ from homeassistant.components.media_source import (
 )
 from homeassistant.core import HomeAssistant
 
-from .catalogue import CatalogueV3
+from .catalogue import CatalogueV4
 from .const import DATA_CATALOGUE, DOMAIN, SUPPORTED_ITEM_TYPE
 
 CATEGORY_PREFIX = "category/"
@@ -43,13 +43,13 @@ class MediaCatSource(MediaSource):
         super().__init__(DOMAIN)
         self.hass = hass
 
-    def _catalogue(self) -> CatalogueV3 | None:
+    def _catalogue(self) -> CatalogueV4 | None:
         """Return the loaded catalogue, if integration setup succeeded."""
         domain_data = self.hass.data.get(DOMAIN)
         if not isinstance(domain_data, dict):
             return None
         catalogue = domain_data.get(DATA_CATALOGUE)
-        return catalogue if isinstance(catalogue, CatalogueV3) else None
+        return catalogue if isinstance(catalogue, CatalogueV4) else None
 
     async def async_browse_media(
         self, item: MediaSourceItem
@@ -60,7 +60,7 @@ class MediaCatSource(MediaSource):
             raise BrowseError("MediaCat catalogue is unavailable")
 
         identifier = item.identifier or ""
-        return self._browse_v3(catalogue, identifier)
+        return self._browse_v4(catalogue, identifier)
 
     async def async_resolve_media(self, item: MediaSourceItem) -> PlayMedia:
         """Resolve a playable catalogue item to its stream URL."""
@@ -69,7 +69,7 @@ class MediaCatSource(MediaSource):
             raise Unresolvable("MediaCat catalogue is unavailable")
 
         identifier = item.identifier or ""
-        return await self._resolve_v3(catalogue, item, identifier)
+        return await self._resolve_v4(catalogue, item, identifier)
 
     async def async_search_media(
         self, item: MediaSourceItem, query: SearchMediaQuery
@@ -84,19 +84,19 @@ class MediaCatSource(MediaSource):
             return SearchMedia(result=[])
 
         identifier = item.identifier or ""
-        return self._search_v3(catalogue, identifier, search_text)
+        return self._search_v4(catalogue, identifier, search_text)
 
-    def _browse_v3(
-        self, catalogue: CatalogueV3, identifier: str
+    def _browse_v4(
+        self, catalogue: CatalogueV4, identifier: str
     ) -> BrowseMediaSource:
-        """Browse a schema-v3 category or playable radio item."""
+        """Browse a schema-v4 category or playable radio item."""
         if not identifier:
-            return self._root_node_v3(catalogue)
+            return self._root_node_v4(catalogue)
 
         if identifier.startswith(CATEGORY_PREFIX):
             category_id = identifier.removeprefix(CATEGORY_PREFIX)
-            category = self._category_v3(catalogue, category_id)
-            return self._category_node_v3(
+            category = self._category_v4(catalogue, category_id)
+            return self._category_node_v4(
                 catalogue, category_id, category, include_children=True
             )
 
@@ -105,20 +105,20 @@ class MediaCatSource(MediaSource):
             record = catalogue.items.get(item_id)
             if not isinstance(record, Mapping):
                 raise BrowseError(f"Unknown MediaCat item: {item_id}")
-            source = self._playable_source_v3(record)
+            source = self._playable_source_v4(record)
             if source is None:
                 raise BrowseError(f"Unplayable MediaCat item: {item_id}")
-            return self._item_node_v3(item_id, record, source)
+            return self._item_node_v4(item_id, record, source)
 
         raise BrowseError(f"Unknown MediaCat identifier: {identifier}")
 
-    async def _resolve_v3(
+    async def _resolve_v4(
         self,
-        catalogue: CatalogueV3,
+        catalogue: CatalogueV4,
         item: MediaSourceItem,
         identifier: str,
     ) -> PlayMedia:
-        """Resolve a schema-v3 radio source without method fallback."""
+        """Resolve a schema-v4 radio source without method fallback."""
         if not identifier.startswith(ITEM_PREFIX):
             raise Unresolvable(f"Not a playable MediaCat item: {identifier}")
 
@@ -127,7 +127,7 @@ class MediaCatSource(MediaSource):
         if not isinstance(record, Mapping):
             raise Unresolvable(f"Unknown MediaCat item: {item_id}")
 
-        source = self._playable_source_v3(record)
+        source = self._playable_source_v4(record)
         if source is None:
             raise Unresolvable(f"Unresolvable MediaCat item: {item_id}")
 
@@ -151,10 +151,10 @@ class MediaCatSource(MediaSource):
             )
         return resolved
 
-    def _search_v3(
-        self, catalogue: CatalogueV3, identifier: str, search_text: str
+    def _search_v4(
+        self, catalogue: CatalogueV4, identifier: str, search_text: str
     ) -> SearchMedia:
-        """Search playable schema-v3 radio items in stored order."""
+        """Search playable schema-v4 radio items in stored order."""
         candidates: list[tuple[str, Mapping[Any, Any]]] = []
         if not identifier:
             candidates.extend(
@@ -164,7 +164,7 @@ class MediaCatSource(MediaSource):
             )
         elif identifier.startswith(CATEGORY_PREFIX):
             category_id = identifier.removeprefix(CATEGORY_PREFIX)
-            category = self._category_v3(catalogue, category_id)
+            category = self._category_v4(catalogue, category_id)
             for item_id in category["items"]:
                 record = catalogue.items.get(item_id)
                 if not isinstance(record, Mapping):
@@ -180,20 +180,20 @@ class MediaCatSource(MediaSource):
 
         results = []
         for item_id, record in candidates:
-            source = self._playable_source_v3(record)
-            if source is not None and self._item_matches_v3(record, search_text):
-                results.append(self._item_node_v3(item_id, record, source))
+            source = self._playable_source_v4(record)
+            if source is not None and self._item_matches_v4(record, search_text):
+                results.append(self._item_node_v4(item_id, record, source))
         return SearchMedia(result=results)
 
-    def _root_node_v3(self, catalogue: CatalogueV3) -> BrowseMediaSource:
-        """Build a schema-v3 root preserving category mapping order."""
+    def _root_node_v4(self, catalogue: CatalogueV4) -> BrowseMediaSource:
+        """Build a schema-v4 root preserving category mapping order."""
         children = []
         for category_id in catalogue.categories:
             if not isinstance(category_id, str):
                 raise BrowseError("MediaCat category ID is unusable")
-            category = self._category_v3(catalogue, category_id)
+            category = self._category_v4(catalogue, category_id)
             children.append(
-                self._category_node_v3(
+                self._category_node_v4(
                     catalogue, category_id, category, include_children=False
                 )
             )
@@ -210,15 +210,15 @@ class MediaCatSource(MediaSource):
             children=children,
         )
 
-    def _category_node_v3(
+    def _category_node_v4(
         self,
-        catalogue: CatalogueV3,
+        catalogue: CatalogueV4,
         category_id: str,
         category: Mapping[Any, Any],
         *,
         include_children: bool,
     ) -> BrowseMediaSource:
-        """Build a schema-v3 radio category and filter unplayable members."""
+        """Build a schema-v4 radio category and filter unplayable members."""
         children = None
         if include_children:
             children = []
@@ -229,9 +229,9 @@ class MediaCatSource(MediaSource):
                         f"MediaCat category {category_id!r} references "
                         f"unavailable item {item_id!r}"
                     )
-                source = self._playable_source_v3(record)
+                source = self._playable_source_v4(record)
                 if source is not None:
-                    children.append(self._item_node_v3(item_id, record, source))
+                    children.append(self._item_node_v4(item_id, record, source))
 
         return BrowseMediaSource(
             domain=DOMAIN,
@@ -246,19 +246,19 @@ class MediaCatSource(MediaSource):
             children=children,
         )
 
-    def _item_node_v3(
+    def _item_node_v4(
         self,
         item_id: str,
         record: Mapping[Any, Any],
         source: Mapping[Any, Any],
     ) -> BrowseMediaSource:
-        """Build a playable schema-v3 radio item node."""
+        """Build a playable schema-v4 radio item node."""
         artwork = record.get("artwork")
-        thumbnail = (
-            self._non_empty_string(artwork.get("local"))
-            if isinstance(artwork, Mapping)
-            else None
-        )
+        thumbnail = None
+        if isinstance(artwork, Mapping):
+            thumbnail = self._non_empty_string(artwork.get("local"))
+            if thumbnail is None:
+                thumbnail = self._non_empty_string(artwork.get("external"))
         media_content_type = (
             source["mime_type"]
             if source["source_type"] == "url"
@@ -275,10 +275,10 @@ class MediaCatSource(MediaSource):
             thumbnail=thumbnail,
         )
 
-    def _category_v3(
-        self, catalogue: CatalogueV3, category_id: str
+    def _category_v4(
+        self, catalogue: CatalogueV4, category_id: str
     ) -> Mapping[Any, Any]:
-        """Return the interface fields of a usable schema-v3 category."""
+        """Return the interface fields of a usable schema-v4 category."""
         category = catalogue.categories.get(category_id)
         if category is None:
             raise BrowseError(f"Unknown MediaCat category: {category_id}")
@@ -294,10 +294,10 @@ class MediaCatSource(MediaSource):
         return category
 
     @classmethod
-    def _playable_source_v3(
+    def _playable_source_v4(
         cls, record: Mapping[Any, Any]
     ) -> Mapping[Any, Any] | None:
-        """Return only a usable ha_mplayer source for a schema-v3 radio item."""
+        """Return only a usable ha_mplayer source for a schema-v4 radio item."""
         if record.get("type") != SUPPORTED_ITEM_TYPE:
             return None
         if cls._non_empty_string(record.get("catalogue_label")) is None:
@@ -331,10 +331,10 @@ class MediaCatSource(MediaSource):
         return None
 
     @staticmethod
-    def _item_matches_v3(
+    def _item_matches_v4(
         record: Mapping[Any, Any], search_text: str
     ) -> bool:
-        """Match only the agreed schema-v3 catalogue search fields."""
+        """Match only the agreed schema-v4 catalogue search fields."""
         label = record["catalogue_label"]
         if search_text in label.casefold():
             return True

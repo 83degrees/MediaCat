@@ -4,7 +4,7 @@
 
 ### 1.1 Document Authority and Control
 
-This document is the definitive stored-catalogue schema-v3 architecture and
+This document is the definitive stored-catalogue schema-v4 architecture and
 authoring/validation reference established by `ASTV-52`. It governs every
 MediaCat catalogue declaring `catalogue_schema_version: 3`. Its governed
 authority takes effect with acceptance and merge of `ASTV-52`; runtime
@@ -14,7 +14,7 @@ This document has no independent document-version number. Git and pull-request
 history provide its revision trail. Stored `catalogue_schema_version` and
 consumer-facing `returned_record_version` remain the compatibility controls.
 
-The current implemented loader enforces this complete closed schema-v3
+The current implemented loader enforces this complete closed schema-v4
 vocabulary during catalogue loading, including duplicate-key detection,
 requiredness, value constraints, method/source pairings, references, and
 ordering preservation. Invalid input rejects the complete candidate catalogue
@@ -23,7 +23,7 @@ before runtime surfaces are registered.
 ### 1.2 Authority Boundary
 
 This document owns the stored MediaCat catalogue schema, authoring semantics,
-and preventative-validation policy for schema version 3. A maintainer must be
+and preventative-validation policy for schema version 4. A maintainer must be
 able to author, review, and modify a catalogue from this document without
 inspecting Python source.
 
@@ -55,21 +55,28 @@ provider ownership to MediaCat.
 
 ```yaml
 catalogue_id: curated_media
-catalogue_schema_version: 3
+catalogue_schema_version: 4
+artwork_sources:                 # optional
+  ha-assets:
+    local: /local/ha-assets/     # optional
+    external: https://83degrees.github.io/ha-assets/  # optional
 items: {...}
 categories: {...}
 ```
 
-The root has exactly four fields. `{...}` defers a nested mapping to the section
-that owns it; `[...]` similarly summarizes a list. Optional example fields are
-marked with `# optional`.
+The root contains the four required fields below and the optional `artwork_sources` mapping. `{...}` defers a nested mapping to the section that owns it.
 
 | Field | Presence | Data type | Options | Definition |
 | --- | --- | --- | --- | --- |
 | `catalogue_id` | Required | String | — | Catalogue identifier. The maintained catalogue value is `curated_media`; the identifier rules in section 6.2 apply. |
-| `catalogue_schema_version` | Required | Integer | `3` | Stored catalogue schema version. It is not the integration version or returned-record version. |
+| `catalogue_schema_version` | Required | Integer | `4` | Stored catalogue schema version. It is not the integration version or returned-record version. |
+| `artwork_sources` | Optional | Object | `ha-assets` | Catalogue-level artwork-source bases. At least one of `local` or `external` is required for each configured source. |
 | `items` | Required | Object | — | Non-empty ordered mapping of item ID to item object, defined in section 4. |
 | `categories` | Required | Object | — | Ordered mapping of category ID to category object, defined in section 5; it may be empty. |
+
+`artwork_sources.ha-assets.local`, when present, is a non-empty `/local/...` Home Assistant base. `artwork_sources.ha-assets.external`, when present, is an absolute HTTP(S) URL. MediaCat normalises the separator between a configured base and an item path; authors do not need to depend on a trailing slash.
+
+The source mapping defines resolution bases only. MediaCat does not probe either route during catalogue load.
 
 ### 3.2 Catalogue-Scoped Identity
 
@@ -128,39 +135,66 @@ than stored as null, blank, or empty placeholders.
 
 ### 4.2 `<item_id>.artwork`
 
-```yaml
-artwork:
-  local: /local/mediacat/example-station.png                 # optional
-  external: https://images.example.test/example-station.png  # optional
-```
+Artwork is optional. When present, schema v4 requires an explicit `source_type`. Supported values are exactly `ha-assets` and `direct`; any other value is invalid.
 
-`artwork` contains only `local` and `external`. Each child is optional, but at
-least one must be present when `artwork` exists.
-
-| Field | Presence | Data type | Options | Definition |
-| --- | --- | --- | --- | --- |
-| `local` | Optional | String | — | Non-blank `/local/...` Home Assistant reference. |
-| `external` | Optional | String | — | Absolute HTTP(S) URL with a non-empty host. |
-
-A local-only object is valid:
+#### 4.2.1 `ha-assets`
 
 ```yaml
 artwork:
-  local: /local/mediacat/example-station.png  # optional
+  source_type: ha-assets
+  path: media-assets/radio/images/128x128/classic-fm.png
 ```
 
-An external-only object is also valid:
+The stored object contains exactly `source_type` and `path`.
+
+`path` is a non-blank relative forward-slash path. It must not:
+
+- start with `/`;
+- be an absolute URL;
+- contain backslashes;
+- contain empty, `.`, or `..` path segments.
+
+The remaining path is opaque to MediaCat. MediaCat does not encode assumptions about domain, image size, filename or folder taxonomy.
+
+An item using `source_type: ha-assets` requires `artwork_sources.ha-assets` at catalogue level. At catalogue load, MediaCat joins the relative path to each configured source route and resolves the item to the common runtime artwork object:
 
 ```yaml
 artwork:
-  external: https://images.example.test/example-station.png  # optional
+  source_type: direct
+  local: /local/ha-assets/media-assets/radio/images/128x128/classic-fm.png
+  external: https://83degrees.github.io/ha-assets/media-assets/radio/images/128x128/classic-fm.png
 ```
 
-Missing artwork is valid. MediaCat does not synthesize a placeholder or copy
-one artwork field into the other. Stored order does not express preference.
-Known consumers retain their governed behavior: the Media Source projection
-uses `local`, while the current Google Cast mapping prefers `external` and then
-uses `local`. Those consumer behaviors do not make artwork required here.
+Only routes configured on the source are present in the resolved object.
+
+#### 4.2.2 `direct`
+
+```yaml
+artwork:
+  source_type: direct
+  local: /local/custom/icon.png       # optional
+  external: https://example.com/icon.png  # optional
+```
+
+`local` and `external` are individually optional but at least one is required. `local` must be a non-empty `/local/...` reference and `external` must be an absolute HTTP(S) URL.
+
+At catalogue load, `source_type` is removed from the runtime representation and the authored routes become the same common resolved artwork object containing only `local` and/or `external`.
+
+#### 4.2.3 Resolution and runtime semantics
+
+Artwork resolution occurs once while loading the catalogue, before the immutable runtime snapshot is stored. Stored authoring details such as `source_type` and `path` are not exposed by item-returning runtime interfaces.
+
+A normal catalogue reload re-resolves all artwork from the current `artwork_sources` configuration.
+
+MediaCat validates structure only. It does not probe local files or public URLs for existence or liveness.
+
+Media Browser thumbnail selection is:
+
+1. resolved `artwork.local` when present;
+2. otherwise resolved `artwork.external`;
+3. otherwise no thumbnail.
+
+A broken selected local route is surfaced operationally; MediaCat does not probe and silently switch to the external route.
 
 ### 4.3 `<item_id>.type_metadata`
 
@@ -459,9 +493,9 @@ documented playable-item rules.
 
 ### 6.1 Closed Vocabulary
 
-1. Schema v3 is a closed authoring vocabulary. Every field must be defined by
+1. Schema v4 is a closed authoring vocabulary. Every field must be defined by
    this document at its exact structural location.
-2. There are no arbitrary additive-field extension points in schema v3.
+2. There are no arbitrary additive-field extension points in schema v4.
    Unknown root, item, metadata, category, execution-method, or source fields
    are validation errors. Dynamic mapping keys explicitly defined in this
    document are not unknown fields.
@@ -560,7 +594,7 @@ The complete catalogue is accepted or rejected atomically.
 
 ## 8. Relationship to Returned Record Version 1
 
-For a successful lookup of a schema-v3 stored item, MediaCat copies the complete
+For a successful lookup of a schema-v4 stored item, MediaCat copies the complete
 defined item record into a new flat response and adds:
 
 - `returned_record_version: 1`;
@@ -596,7 +630,7 @@ schema change does not automatically change the returned-record version; a
 returned-record breaking change requires its own contract versioning and
 coordinated consumer work.
 
-Because schema v3 has no stored additive extension point, arbitrary unknown
+Because schema v4 has no stored additive extension point, arbitrary unknown
 stored fields must never reach lookup. Separately, a future producer or
 returned-record version may add a contract-compatible returned field through
 governed work, and version-1 consumers remain required to ignore unknown
@@ -604,9 +638,9 @@ additive returned fields.
 
 ## 9. Compatibility and Schema Evolution
 
-- The maintained 17-item Curated Media catalogue conforms to schema v3 and
+- The maintained 17-item Curated Media catalogue conforms to schema v4 and
   requires no data migration for this policy.
-- Schema v3 is a closed stored vocabulary. Unknown stored fields are invalid
+- Schema v4 is a closed stored vocabulary. Unknown stored fields are invalid
   unless an approved schema-architecture change defines an explicit extension
   point.
 - Stored `catalogue_schema_version` and consumer-facing
@@ -658,7 +692,8 @@ items:
     tags:                                 # optional
       - radio
       - london
-    artwork:                              # optional
+    artwork:
+      source_type: direct
       local: /local/mediacat/station-alpha.png                 # optional
       external: https://images.example.test/station-alpha.png  # optional
     content_rating: general              # optional
@@ -680,7 +715,8 @@ items:
   station_beta:
     catalogue_label: Station Beta
     type: radio
-    artwork:  # optional
+    artwork:
+      source_type: direct
       local: /local/mediacat/station-beta.png  # optional
     type_metadata:
       station_name: Station Beta

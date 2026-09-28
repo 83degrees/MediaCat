@@ -33,6 +33,7 @@ def valid_root() -> dict[str, Any]:
                 "type": "radio",
                 "tags": ["radio", "live"],
                 "artwork": {
+                    "source_type": "direct",
                     "local": "/local/mediacat/station-alpha.png",
                     "external": "https://images.example.test/station-alpha.png",
                 },
@@ -60,7 +61,7 @@ def valid_root() -> dict[str, Any]:
 
 def parse(root: dict[str, Any]) -> CatalogueV4:
     """Parse a synthetic catalogue through the production validator."""
-    return _parse_catalogue(root, Path("non-live-v3.yaml"))
+    return _parse_catalogue(root, Path("non-live-v4.yaml"))
 
 
 def delete_path(root: dict[str, Any], path: tuple[str, ...]) -> None:

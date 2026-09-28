@@ -5,9 +5,9 @@
 ### 1.1 Document Authority and Control
 
 This document is the definitive stored-catalogue schema-v4 architecture and
-authoring/validation reference established by `ASTV-52`. It governs every
-MediaCat catalogue declaring `catalogue_schema_version: 3`. Its governed
-authority takes effect with acceptance and merge of `ASTV-52`; runtime
+authoring/validation reference updated and accepted by `ASTV-267`. It governs every
+MediaCat catalogue declaring `catalogue_schema_version: 4`. Its governed
+authority takes effect with acceptance and merge of `ASTV-267`; runtime
 enforcement status does not qualify or weaken the rules defined here.
 
 This document has no independent document-version number. Git and pull-request
@@ -660,7 +660,7 @@ additive returned fields.
 
 ```yaml
 catalogue_id: curated_media
-catalogue_schema_version: 3
+catalogue_schema_version: 4
 items:
   example_station:
     catalogue_label: Example Station
@@ -683,7 +683,7 @@ all three source types, and an item with multiple execution methods.
 
 ```yaml
 catalogue_id: curated_media
-catalogue_schema_version: 3
+catalogue_schema_version: 4
 items:
   station_alpha:
     catalogue_label: Station Alpha — London

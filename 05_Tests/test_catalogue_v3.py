@@ -1,4 +1,4 @@
-"""Closed-vocabulary validation coverage for stored MediaCat schema v3."""
+"""Closed-vocabulary validation coverage for stored MediaCat schema v4."""
 
 from __future__ import annotations
 
@@ -10,23 +10,23 @@ import pytest
 
 from custom_components.mediacat.catalogue import (
     CatalogueError,
-    CatalogueV3,
+    CatalogueV4,
     _load_catalogue,
     _parse_catalogue,
 )
 
 ROOT = Path(__file__).parents[1]
-FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v3.yaml"
+FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v4.yaml"
 MAINTAINED_CATALOGUE = (
     ROOT / "04_Source" / "config" / "mediacat" / "catalogue.yaml"
 )
 
 
 def valid_root() -> dict[str, Any]:
-    """Return a small complete schema-v3 catalogue."""
+    """Return a small complete schema-v4 catalogue."""
     return {
         "catalogue_id": "curated_media",
-        "catalogue_schema_version": 3,
+        "catalogue_schema_version": 4,
         "items": {
             "station_alpha": {
                 "catalogue_label": "Station Alpha",
@@ -58,7 +58,7 @@ def valid_root() -> dict[str, Any]:
     }
 
 
-def parse(root: dict[str, Any]) -> CatalogueV3:
+def parse(root: dict[str, Any]) -> CatalogueV4:
     """Parse a synthetic catalogue through the production validator."""
     return _parse_catalogue(root, Path("non-live-v3.yaml"))
 
@@ -72,8 +72,8 @@ def delete_path(root: dict[str, Any], path: tuple[str, ...]) -> None:
 
 
 @pytest.fixture
-def catalogue() -> CatalogueV3:
-    """Load the complete representative schema-v3 fixture."""
+def catalogue() -> CatalogueV4:
+    """Load the complete representative schema-v4 fixture."""
     return _load_catalogue(FIXTURE)
 
 
@@ -193,7 +193,7 @@ def test_rejects_duplicate_yaml_key_before_overwrite(tmp_path: Path) -> None:
     candidate = tmp_path / "duplicate.yaml"
     candidate.write_text(
         """catalogue_id: curated_media
-catalogue_schema_version: 3
+catalogue_schema_version: 4
 items:
   station_alpha:
     catalogue_label: Station Alpha
@@ -378,7 +378,7 @@ def test_method_source_pairing_and_source_value_rules(
 
 def test_schema_dispatch_remains_v3_only() -> None:
     """Do not reintroduce executable schema-v2 compatibility."""
-    with pytest.raises(CatalogueError, match="expected catalogue_schema_version: 3"):
+    with pytest.raises(CatalogueError, match="expected catalogue_schema_version: 4"):
         _parse_catalogue(
             {"catalogue_schema_version": 2, "items": {}, "categories": {}},
             Path("historical-v2.yaml"),

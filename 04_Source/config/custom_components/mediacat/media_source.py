@@ -29,7 +29,6 @@ from .const import DATA_CATALOGUES, DOMAIN, SUPPORTED_ITEM_TYPE
 CATEGORY_PREFIX = "category/"
 ITEM_PREFIX = "item/"
 CATALOGUE_PREFIX = "catalogue/"
-LEGACY_CATALOGUE_ID = "curated_media"
 
 
 async def async_get_media_source(hass: HomeAssistant) -> MediaCatSource:
@@ -68,23 +67,19 @@ class MediaCatSource(MediaSource):
     def _route(
         self, registry: CatalogueRegistry, identifier: str
     ) -> tuple[CatalogueV4, str, str]:
-        """Resolve a scoped or retained curated_media identifier."""
-        if identifier.startswith(CATALOGUE_PREFIX):
-            remainder = identifier.removeprefix(CATALOGUE_PREFIX)
-            catalogue_id, separator, child = remainder.partition("/")
-            if not catalogue_id:
-                raise BrowseError("MediaCat catalogue identifier is missing")
-            catalogue = self._catalogue(registry, catalogue_id)
-            return catalogue, child if separator else "", (
-                f"{CATALOGUE_PREFIX}{catalogue_id}/"
-            )
-
-        catalogue = registry.get(LEGACY_CATALOGUE_ID)
-        if catalogue is None:
+        """Resolve an explicitly catalogue-scoped identifier."""
+        if not identifier.startswith(CATALOGUE_PREFIX):
             raise BrowseError(
                 "A catalogue-scoped MediaCat identifier is required"
             )
-        return catalogue, identifier, ""
+        remainder = identifier.removeprefix(CATALOGUE_PREFIX)
+        catalogue_id, separator, child = remainder.partition("/")
+        if not catalogue_id:
+            raise BrowseError("MediaCat catalogue identifier is missing")
+        catalogue = self._catalogue(registry, catalogue_id)
+        return catalogue, child if separator else "", (
+            f"{CATALOGUE_PREFIX}{catalogue_id}/"
+        )
 
     async def async_browse_media(
         self, item: MediaSourceItem
@@ -96,13 +91,6 @@ class MediaCatSource(MediaSource):
 
         identifier = item.identifier or ""
         if not identifier:
-            if (
-                len(registry.catalogues) == 1
-                and LEGACY_CATALOGUE_ID in registry.catalogues
-            ):
-                return self._root_node_v4(
-                    registry.catalogues[LEGACY_CATALOGUE_ID]
-                )
             return self._registry_root(registry)
         catalogue, child_identifier, prefix = self._route(
             registry, identifier
@@ -138,15 +126,6 @@ class MediaCatSource(MediaSource):
 
         identifier = item.identifier or ""
         if not identifier:
-            if (
-                len(registry.catalogues) == 1
-                and LEGACY_CATALOGUE_ID in registry.catalogues
-            ):
-                return self._search_v4(
-                    registry.catalogues[LEGACY_CATALOGUE_ID],
-                    "",
-                    search_text,
-                )
             results = []
             for catalogue_id, catalogue in registry.catalogues.items():
                 prefix = f"{CATALOGUE_PREFIX}{catalogue_id}/"

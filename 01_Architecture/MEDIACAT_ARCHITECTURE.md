@@ -132,9 +132,10 @@ therefore remain outside the Media Source browse/search projection.
 With multiple active catalogues, Media Browser identifiers are catalogue-scoped
 as `catalogue/<catalogue_id>/category/<category_id>` and
 `catalogue/<catalogue_id>/item/<item_id>`. Root search spans every catalogue in
-registry order. While `curated_media` is the sole active catalogue, retained
-`category/<category_id>` and `item/<item_id>` identifiers preserve its existing
-single-catalogue browse/play behaviour.
+registry order. Catalogue scope is required even when `curated_media` is the
+only active catalogue; unscoped `category/<category_id>` and `item/<item_id>`
+identifiers are rejected. This retires the former implicit single-catalogue
+routing assumption without changing the logical `curated_media` identity.
 
 ## MediaCat-owned runtime behaviour
 

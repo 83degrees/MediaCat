@@ -91,6 +91,9 @@ PLAYABLE_V4_ITEM_IDS = [
     "gold_radio",
 ]
 ASSISTANT_ONLY_ITEM_IDS = {"smooth_radio", "lbc_radio", "news_briefing"}
+CURATED_ROOT = "catalogue/curated_media"
+CURATED_CATEGORY = f"{CURATED_ROOT}/category/radio"
+CURATED_ITEM_PREFIX = f"{CURATED_ROOT}/item/"
 
 
 @dataclass
@@ -177,22 +180,31 @@ def test_schema_v4_browse_filters_assistant_only_items_in_stored_order() -> None
 
     root = _run(source.async_browse_media(_item(hass)))
     assert [(child.identifier, child.title) for child in root.children] == [
-        ("category/radio", "Radio")
+        (CURATED_ROOT, "curated_media")
     ]
 
-    category = _run(source.async_browse_media(_item(hass, "category/radio")))
-    assert [child.identifier.removeprefix("item/") for child in category.children] == (
-        PLAYABLE_V4_ITEM_IDS
+    catalogue_root = _run(
+        source.async_browse_media(_item(hass, CURATED_ROOT))
     )
+    assert [(child.identifier, child.title) for child in catalogue_root.children] == [
+        (CURATED_CATEGORY, "Radio")
+    ]
+
+    category = _run(source.async_browse_media(_item(hass, CURATED_CATEGORY)))
+    assert [
+        child.identifier.removeprefix(CURATED_ITEM_PREFIX)
+        for child in category.children
+    ] == PLAYABLE_V4_ITEM_IDS
     assert len(category.children) == 14
     assert not ASSISTANT_ONLY_ITEM_IDS.intersection(
-        child.identifier.removeprefix("item/") for child in category.children
+        child.identifier.removeprefix(CURATED_ITEM_PREFIX)
+        for child in category.children
     )
 
     classic = next(
         child
         for child in category.children
-        if child.identifier == "item/classic_fm"
+        if child.identifier == f"{CURATED_ITEM_PREFIX}classic_fm"
     )
     assert classic.title == "Classic FM"
     assert classic.thumbnail == "/local/ha-assets/media-assets/radio/images/128x128/Classic-FM.png"
@@ -245,26 +257,58 @@ def test_multi_catalogue_browse_and_search_use_catalogue_scoped_paths() -> None:
     assert played.url == "https://example.test/live"
 
 
+def test_single_curated_catalogue_rejects_unscoped_media_source_paths() -> None:
+    """Require explicit catalogue scope even when curated_media is the only one."""
+    catalogue = _load_catalogue(V4_CATALOGUE)
+    hass, source = _source(catalogue)
+
+    for identifier in ("category/radio", "item/bbc_radio_1"):
+        with pytest.raises(
+            BrowseError,
+            match="catalogue-scoped MediaCat identifier is required",
+        ):
+            _run(source.async_browse_media(_item(hass, identifier)))
+
+    with pytest.raises(
+        BrowseError,
+        match="catalogue-scoped MediaCat identifier is required",
+    ):
+        _run(
+            source.async_search_media(
+                _item(hass, "category/radio"), _query("radio")
+            )
+        )
+
+    with pytest.raises(
+        Unresolvable,
+        match="catalogue-scoped MediaCat identifier is required",
+    ):
+        _run(source.async_resolve_media(_item(hass, "item/bbc_radio_1")))
+
+
 def test_schema_v4_search_uses_only_agreed_fields_and_preserves_order() -> None:
     """Search labels, descriptions, and tags while excluding unplayable items."""
     catalogue = _load_catalogue(V4_CATALOGUE)
     hass, source = _source(catalogue)
 
     cases = {
-        "classic fm": ["item/classic_fm"],
-        "contemporary music": ["item/bbc_radio_1"],
-        "hiphop": ["item/bbc_radio_1xtra"],
+        "classic fm": [f"{CURATED_ITEM_PREFIX}classic_fm"],
+        "contemporary music": [f"{CURATED_ITEM_PREFIX}bbc_radio_1"],
+        "hiphop": [f"{CURATED_ITEM_PREFIX}bbc_radio_1xtra"],
     }
     for query, expected in cases.items():
         root_result = _run(source.async_search_media(_item(hass), _query(query)))
         category_result = _run(
-            source.async_search_media(_item(hass, "category/radio"), _query(query))
+            source.async_search_media(_item(hass, CURATED_CATEGORY), _query(query))
         )
         assert [item.identifier for item in root_result.result] == expected
         assert [item.identifier for item in category_result.result] == expected
 
     ordered = _run(source.async_search_media(_item(hass), _query("radio")))
-    assert [item.identifier.removeprefix("item/") for item in ordered.result] == (
+    assert [
+        item.identifier.removeprefix(CURATED_ITEM_PREFIX)
+        for item in ordered.result
+    ] == (
         [
             item_id
             for item_id in PLAYABLE_V4_ITEM_IDS
@@ -280,7 +324,8 @@ def test_schema_v4_search_uses_only_agreed_fields_and_preserves_order() -> None:
     with pytest.raises(BrowseError, match="search is unavailable"):
         _run(
             source.async_search_media(
-                _item(hass, "item/bbc_radio_1"), _query("bbc")
+                _item(hass, f"{CURATED_ITEM_PREFIX}bbc_radio_1"),
+                _query("bbc"),
             )
         )
 
@@ -291,7 +336,9 @@ def test_schema_v4_direct_url_returns_exact_stored_values() -> None:
     hass, source = _source(catalogue)
 
     resolved = _run(
-        source.async_resolve_media(_item(hass, "item/bbc_radio_1"))
+        source.async_resolve_media(
+            _item(hass, f"{CURATED_ITEM_PREFIX}bbc_radio_1")
+        )
     )
     stored = catalogue.items["bbc_radio_1"]["execution_methods"]["ha_mplayer"][
         "source"
@@ -313,7 +360,11 @@ def test_schema_v4_media_source_delegates_exactly_once(monkeypatch) -> None:
     monkeypatch.setattr(media_source_module, "async_resolve_media_source", delegate)
     resolved = _run(
         source.async_resolve_media(
-            _item(hass, "item/classic_fm", "media_player.kitchen")
+            _item(
+                hass,
+                f"{CURATED_ITEM_PREFIX}classic_fm",
+                "media_player.kitchen",
+            )
         )
     )
 
@@ -336,7 +387,11 @@ def test_schema_v4_delegated_failure_is_surfaced(monkeypatch) -> None:
 
     monkeypatch.setattr(media_source_module, "async_resolve_media_source", delegate)
     with pytest.raises(Unresolvable, match="Owning Media Source failed"):
-        _run(source.async_resolve_media(_item(hass, "item/classic_fm")))
+        _run(
+            source.async_resolve_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}classic_fm")
+            )
+        )
     assert len(calls) == 1
 
 
@@ -346,7 +401,7 @@ def test_schema_v4_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
         {
             "source_type": "ha_media_source",
             "provider": "mediacat",
-            "uri": "media-source://mediacat/item/test_radio",
+            "uri": "media-source://mediacat/catalogue/curated_media/item/test_radio",
             "media_type": "station",
         }
     )
@@ -359,7 +414,11 @@ def test_schema_v4_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
 
     monkeypatch.setattr(media_source_module, "async_resolve_media_source", delegate)
     with pytest.raises(Unresolvable, match="refers back to MediaCat"):
-        _run(source.async_resolve_media(_item(hass, "item/test_radio")))
+        _run(
+            source.async_resolve_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}test_radio")
+            )
+        )
     assert calls == []
 
     delegated_catalogue = _v4_catalogue_with_source(
@@ -374,7 +433,10 @@ def test_schema_v4_recursion_boundaries_stop_explicitly(monkeypatch) -> None:
     with pytest.raises(Unresolvable, match="resolved to another Media Source URI"):
         _run(
             delegated_source.async_resolve_media(
-                _item(delegated_hass, "item/test_radio")
+                _item(
+                    delegated_hass,
+                    f"{CURATED_ITEM_PREFIX}test_radio",
+                )
             )
         )
     assert len(calls) == 1
@@ -392,14 +454,22 @@ def test_schema_v4_unplayable_items_have_no_method_fallback() -> None:
 
     root = _run(source.async_browse_media(_item(hass)))
     assert [(child.identifier, child.title) for child in root.children] == [
-        ("category/radio", "Radio")
+        (CURATED_ROOT, "curated_media")
     ]
-    category = _run(source.async_browse_media(_item(hass, "category/radio")))
+    category = _run(source.async_browse_media(_item(hass, CURATED_CATEGORY)))
     assert category.children == []
     with pytest.raises(BrowseError, match="Unplayable MediaCat item"):
-        _run(source.async_browse_media(_item(hass, "item/test_radio")))
+        _run(
+            source.async_browse_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}test_radio")
+            )
+        )
     with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
-        _run(source.async_resolve_media(_item(hass, "item/test_radio")))
+        _run(
+            source.async_resolve_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}test_radio")
+            )
+        )
 
 
 @pytest.mark.parametrize(
@@ -421,7 +491,11 @@ def test_schema_v4_unusable_sources_are_explicitly_unresolvable(
     hass, source = _source(catalogue)
 
     with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
-        _run(source.async_resolve_media(_item(hass, "item/test_radio")))
+        _run(
+            source.async_resolve_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}test_radio")
+            )
+        )
 
 
 def test_schema_v4_unknown_and_assistant_only_items_fail_explicitly() -> None:
@@ -430,15 +504,31 @@ def test_schema_v4_unknown_and_assistant_only_items_fail_explicitly() -> None:
     hass, source = _source(catalogue)
 
     with pytest.raises(BrowseError, match="Unknown MediaCat category"):
-        _run(source.async_browse_media(_item(hass, "category/missing")))
+        _run(
+            source.async_browse_media(
+                _item(hass, f"{CURATED_ROOT}/category/missing")
+            )
+        )
     with pytest.raises(Unresolvable, match="Unknown MediaCat item"):
-        _run(source.async_resolve_media(_item(hass, "item/missing")))
+        _run(
+            source.async_resolve_media(
+                _item(hass, f"{CURATED_ITEM_PREFIX}missing")
+            )
+        )
 
     for item_id in ASSISTANT_ONLY_ITEM_IDS:
         with pytest.raises(BrowseError, match="Unplayable MediaCat item"):
-            _run(source.async_browse_media(_item(hass, f"item/{item_id}")))
+            _run(
+                source.async_browse_media(
+                    _item(hass, f"{CURATED_ITEM_PREFIX}{item_id}")
+                )
+            )
         with pytest.raises(Unresolvable, match="Unresolvable MediaCat item"):
-            _run(source.async_resolve_media(_item(hass, f"item/{item_id}")))
+            _run(
+                source.async_resolve_media(
+                    _item(hass, f"{CURATED_ITEM_PREFIX}{item_id}")
+                )
+            )
 
 
 def _v4_catalogue_with_resolved_artwork(artwork: dict[str, str]) -> CatalogueV4:
@@ -494,7 +584,7 @@ def test_schema_v4_thumbnail_prefers_local_then_external_then_none() -> None:
         catalogue = _v4_catalogue_with_resolved_artwork(artwork)
         hass, source = _source(catalogue)
         category = _run(
-            source.async_browse_media(_item(hass, "category/radio"))
+            source.async_browse_media(_item(hass, CURATED_CATEGORY))
         )
         assert len(category.children) == 1
         assert category.children[0].thumbnail == expected

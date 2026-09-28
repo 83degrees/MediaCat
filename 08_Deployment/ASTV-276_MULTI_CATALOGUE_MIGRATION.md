@@ -48,7 +48,9 @@ not deploy MediaCat Manager or modify the read-only `ha-assets` mirror.
    `mediacat.resolve_media_record` and compare their normalized returned-record
    content with the pre-migration baseline.
 2. Browse, search and play representative Curated Media entries through the
-   `mediacat` Media Source.
+   `mediacat` Media Source using required
+   `catalogue/curated_media/...` identifiers. Confirm former unscoped
+   `category/...` and `item/...` identifiers are rejected.
 3. Validate a known-good YAML document and a deliberately invalid in-memory
    document; confirm neither validation call changes active catalogue state.
 4. Add a second valid test catalogue whose filename differs from its in-file

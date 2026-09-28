@@ -122,3 +122,24 @@ def test_unknown_artwork_source_type_is_rejected():
     }
     with pytest.raises(CatalogueError, match="unsupported value"):
         parse(root)
+
+
+def test_reparse_rebuilds_resolved_urls_from_current_source_bases():
+    root = base_root()
+    root["artwork_sources"] = {
+        "ha-assets": {"local": "/local/ha-assets/"}
+    }
+    root["items"]["station"]["artwork"] = {
+        "source_type": "ha-assets",
+        "path": "media-assets/radio/image.png",
+    }
+    first = parse(root)
+    assert first.items["station"]["artwork"]["local"] == (
+        "/local/ha-assets/media-assets/radio/image.png"
+    )
+
+    root["artwork_sources"]["ha-assets"]["local"] = "/local/repointed-assets"
+    second = parse(root)
+    assert second.items["station"]["artwork"]["local"] == (
+        "/local/repointed-assets/media-assets/radio/image.png"
+    )

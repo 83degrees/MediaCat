@@ -156,7 +156,7 @@ The following are separate governed compatibility concerns:
 - historical schema-v2 / retired-action recovery evidence — preserved outside
   the maintained runtime.
 
-DDR-03-001 records the rationale for the schema-v4 transition and the preserved
+DDR-03-001 records the rationale for the schema-v3 transition and the preserved
 historical schema-v2 rollback package.
 
 A material change to MediaCat responsibilities, ownership boundaries or current
@@ -170,5 +170,5 @@ through this document.
 - `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` — stored schema-v4 authoring and preventative-validation architecture.
 - `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio` — governed visual representation of this architecture.
 - `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` — normalized lookup interface.
-- `02_Decisions/DDR-03-001.md` — schema-v4 transition and historical rollback rationale.
+- `02_Decisions/DDR-03-001.md` — schema-v3 transition and historical rollback rationale.
 - `02_Decisions/DDR-03-002.md` — runtime namespace and catalogue-identity separation rationale.

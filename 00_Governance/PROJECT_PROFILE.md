@@ -66,10 +66,10 @@ governed consumers.
 | Scope | Authoritative location | State |
 | --- | --- | --- |
 | General MediaCat product and runtime architecture | `01_Architecture/MEDIACAT_ARCHITECTURE.md` | Current approved |
-| Stored catalogue schema-v4 authoring, artwork-source resolution and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Proposed under ASTV-267 |
+| Stored catalogue schema-v4 authoring, artwork-source resolution and preventative-validation architecture | `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` | Current approved |
 
 - Governed diagram: `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio`
-- Material DDRs: `DDR-03-001`; `DDR-03-002`; `DDR-03-003` (Proposed under ASTV-267)
+- Material DDRs: `DDR-03-001`; `DDR-03-002`; `DDR-03-003`
 
 `MEDIACAT_ARCHITECTURE.md` owns general product responsibilities, runtime
 boundaries, interfaces and current architectural meaning. The catalogue schema

@@ -19,7 +19,7 @@ from custom_components.mediacat import (
 )
 from custom_components.mediacat.catalogue import (
     CatalogueError,
-    CatalogueV3,
+    CatalogueV4,
     _load_catalogue,
     _parse_catalogue,
 )
@@ -72,7 +72,7 @@ def test_schema_v2_is_rejected_as_an_active_catalogue() -> None:
     """Reject the historical schema rather than loading a compatibility model."""
     with pytest.raises(
         CatalogueError,
-        match="expected catalogue_schema_version: 3",
+        match="expected catalogue_schema_version: 4",
     ):
         _parse_catalogue(
             {"version": 2, "items": {}, "categories": {}},
@@ -93,10 +93,10 @@ def test_rejected_schema_prevents_setup_and_action_registration() -> None:
     assert hass.services.registrations == {}
 
 
-def test_schema_v3_registers_only_normalized_action() -> None:
+def test_schema_v4_registers_only_normalized_action() -> None:
     """Expose only the normalized catalogue-scoped lookup action."""
-    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
-    assert isinstance(catalogue, CatalogueV3)
+    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v4.yaml")
+    assert isinstance(catalogue, CatalogueV4)
     hass = _setup_with_catalogue(catalogue)
 
     assert set(hass.services.registrations) == {"resolve_media_record"}
@@ -217,7 +217,7 @@ def test_normalized_action_preserves_complete_items_and_sources(
     item_id, method, expected_source
 ) -> None:
     """Copy complete items without selecting or translating a method."""
-    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
+    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v4.yaml")
     hass = _setup_with_catalogue(catalogue)
     handler = hass.services.registrations["resolve_media_record"]["handler"]
 
@@ -248,7 +248,7 @@ def test_response_copy_is_independent_from_validated_catalogue() -> None:
     catalogue = _parse_catalogue(
         {
             "catalogue_id": "curated_media",
-            "catalogue_schema_version": 3,
+            "catalogue_schema_version": 4,
             "items": {
                 "station_alpha": {
                     "catalogue_label": "Station Alpha",
@@ -275,7 +275,7 @@ def test_response_copy_is_independent_from_validated_catalogue() -> None:
         },
         Path("non-live-v3.yaml"),
     )
-    assert isinstance(catalogue, CatalogueV3)
+    assert isinstance(catalogue, CatalogueV4)
     resolver = CatalogueResolver(catalogue)
 
     response = resolver.resolve_media_record("curated_media", "station_alpha")
@@ -308,7 +308,7 @@ def test_normalized_action_reports_lookup_failures_without_a_record(
     request_data, message
 ) -> None:
     """Translate exact lookup failures to Home Assistant validation errors."""
-    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
+    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v4.yaml")
     hass = _setup_with_catalogue(catalogue)
     handler = hass.services.registrations["resolve_media_record"]["handler"]
 
@@ -333,7 +333,7 @@ def test_normalized_action_distinguishes_malformed_identifiers(
     request_data, message
 ) -> None:
     """Report malformed input separately from a valid identifier not found."""
-    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v3.yaml")
+    catalogue = _load_catalogue(FIXTURE_DIRECTORY / "catalogue_v4.yaml")
     hass = _setup_with_catalogue(catalogue)
     handler = hass.services.registrations["resolve_media_record"]["handler"]
 

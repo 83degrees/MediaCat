@@ -34,7 +34,7 @@ SERVICE_RESOLVE_MEDIA_RECORD = "resolve_media_record"
 
 
 def _identifier(value: Any) -> str:
-    """Validate a lookup identifier against schema-v3 policy."""
+    """Validate a lookup identifier against schema-v4 policy."""
     if not isinstance(value, str):
         raise vol.Invalid("value must be a string")
     if IDENTIFIER_PATTERN.fullmatch(value) is None:

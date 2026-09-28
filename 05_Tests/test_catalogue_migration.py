@@ -11,7 +11,7 @@ import sys
 
 from homeassistant.util.yaml import load_yaml
 
-from custom_components.mediacat.catalogue import CatalogueV3, _load_catalogue
+from custom_components.mediacat.catalogue import CatalogueV4, _load_catalogue
 from custom_components.mediacat.resolver import CatalogueResolver
 
 
@@ -161,7 +161,7 @@ def test_complete_v3_catalogue_loads_with_exact_root_population_and_order() -> N
     raw = load_yaml(TARGET)
     loaded = _load_catalogue(TARGET)
 
-    assert isinstance(loaded, CatalogueV3)
+    assert isinstance(loaded, CatalogueV4)
     assert list(raw) == [
         "catalogue_id",
         "catalogue_schema_version",
@@ -257,7 +257,7 @@ def test_execution_methods_are_complete_without_legacy_or_inferred_fields() -> N
 def test_normalized_lookup_preserves_all_three_representative_source_shapes() -> None:
     """Return complete normalized records for the three migrated source types."""
     loaded = _load_catalogue(TARGET)
-    assert isinstance(loaded, CatalogueV3)
+    assert isinstance(loaded, CatalogueV4)
     resolver = CatalogueResolver(loaded)
 
     representatives = {

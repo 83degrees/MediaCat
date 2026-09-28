@@ -593,7 +593,7 @@ def _datetime(value: Any, path: str) -> None:
         ) from err
 
 
-def _http_url(value: Any, path: str) -> None:
+def _http_url(value: Any, path: str) -> str:
     text = _text(value, path)
     try:
         parsed = urlsplit(text)
@@ -606,6 +606,7 @@ def _http_url(value: Any, path: str) -> None:
         or any(character.isspace() for character in text)
     ):
         raise CatalogueError(f"{path} must be an absolute HTTP(S) URL")
+    return text
 
 
 def _paired_fields(

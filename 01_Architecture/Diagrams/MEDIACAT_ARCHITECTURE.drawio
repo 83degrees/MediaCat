@@ -1,14 +1,14 @@
-<mxfile host="Electron" modified="2026-09-18T22:28:00.000Z" agent="ChatGPT" version="26.0.0" type="device">
+<mxfile host="Electron" modified="2026-09-28T22:30:00.000Z" agent="ChatGPT" version="26.0.0" type="device">
   <diagram id="mediacat-approved-target" name="Current Architecture">
     <mxGraphModel dx="1900" dy="1240" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1240" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
 
-        <mxCell id="title" value="&lt;b&gt;MediaCat — Single-Domain Runtime Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
+        <mxCell id="title" value="&lt;b&gt;MediaCat — Multi-Catalogue Runtime Architecture&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=28;fontColor=#1f2937;" vertex="1" parent="1">
           <mxGeometry x="40" y="24" width="980" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="subtitle" value="Authoritative visual companion • mediacat runtime namespace • schema-v3 current architecture" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
+        <mxCell id="subtitle" value="Authoritative visual companion • mediacat runtime namespace • schema-v4 current architecture" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#4b5563;" vertex="1" parent="1">
           <mxGeometry x="42" y="66" width="940" height="28" as="geometry" />
         </mxCell>
         <mxCell id="scope-note" value="&lt;b&gt;Scope:&lt;/b&gt; Current implemented MediaCat architecture. ASTV and AdvMedia appear only at their MediaCat-facing caller boundaries. Historical and rollback material sits outside this map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f4f6;strokeColor=#9ca3af;fontColor=#374151;fontSize=12;align=left;spacingLeft=12;" vertex="1" parent="1">
@@ -47,12 +47,15 @@
         <mxCell id="ha-browser" value="&lt;b&gt;Home Assistant Media Browser / Search&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;media-source://mediacat&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="75" y="700" width="245" height="85" as="geometry" />
         </mxCell>
+        <mxCell id="manager-caller" value="&lt;b&gt;MediaCat Manager boundary&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;External admin/client product owns UI, file writes and local history.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+          <mxGeometry x="75" y="840" width="245" height="95" as="geometry" />
+        </mxCell>
 
-        <mxCell id="runtime-boundary" value="MEDIACAT IMPLEMENTATION • sole Home Assistant domain: mediacat • logical catalogue_id remains curated_media" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+        <mxCell id="runtime-boundary" value="MEDIACAT IMPLEMENTATION • Home Assistant domain: mediacat • in-file catalogue_id is authoritative" style="swimlane;html=1;horizontal=1;startSize=30;rounded=1;collapsible=0;recursiveResize=0;fillColor=#ffffff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontStyle=1;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="420" y="190" width="1045" height="805" as="geometry" />
         </mxCell>
 
-        <mxCell id="phase-data" value="CATALOGUE LOAD AND STORAGE" style="swimlane;html=1;horizontal=1;startSize=27;rounded=1;collapsible=0;recursiveResize=0;fillColor=#fffbeb;strokeColor=#d6b656;fontColor=#713f12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="phase-data" value="CATALOGUE REGISTRY AND ADMIN" style="swimlane;html=1;horizontal=1;startSize=27;rounded=1;collapsible=0;recursiveResize=0;fillColor=#fffbeb;strokeColor=#d6b656;fontColor=#713f12;fontStyle=1;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="770" y="240" width="315" height="710" as="geometry" />
         </mxCell>
         <mxCell id="phase-lookup" value="NORMALIZED LOOKUP ACTION" style="swimlane;html=1;horizontal=1;startSize=27;rounded=1;collapsible=0;recursiveResize=0;fillColor=#f0fdf4;strokeColor=#82b366;fontColor=#14532d;fontStyle=1;fontSize=12;" vertex="1" parent="1">
@@ -62,17 +65,20 @@
           <mxGeometry x="1110" y="240" width="330" height="710" as="geometry" />
         </mxCell>
 
-        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v3 catalogue source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat/catalogue.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: curated_media&lt;br&gt;catalogue_schema_version: 3&lt;/span&gt;&lt;br&gt;Current schema-v3 catalogue" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="catalogue-file" value="&lt;b&gt;Schema-v4 catalogue directory&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat/catalogues/*.yaml&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id: &amp;lt;in-file identity&amp;gt;&lt;br&gt;catalogue_schema_version: 4&lt;/span&gt;&lt;br&gt;Filename does not define identity" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="315" width="245" height="145" as="geometry" />
         </mxCell>
-        <mxCell id="loader" value="&lt;b&gt;Integration setup and loader&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_setup&lt;br&gt;async_load_catalogue&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;read • validate • recursively freeze&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="loader" value="&lt;b&gt;Registry discovery and loader&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_setup&lt;br&gt;async_load_catalogue_directory&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;discover • validate all • reject duplicate IDs • freeze&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffaf0;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="530" width="245" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="snapshot" value="&lt;b&gt;Immutable loaded catalogue snapshot&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;hass.data[&amp;quot;mediacat&amp;quot;][&amp;quot;catalogue&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;shared by action and Media Source surfaces&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="snapshot" value="&lt;b&gt;Immutable active catalogue registry&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;hass.data[&amp;quot;mediacat&amp;quot;][&amp;quot;catalogues&amp;quot;]&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;one atomic reference shared by lookup and Media Source&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="805" y="715" width="245" height="130" as="geometry" />
         </mxCell>
+        <mxCell id="admin-actions" value="&lt;b&gt;Supported admin actions&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;get_admin_capabilities • validate_catalogue • reload_catalogue&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;validate without mutation • full-registry transactional swap&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#1f2937;fontSize=11;spacing=6;" vertex="1" parent="1">
+          <mxGeometry x="805" y="650" width="245" height="60" as="geometry" />
+        </mxCell>
 
-        <mxCell id="lookup-action" value="&lt;b&gt;Normalized cross-product action&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat.resolve_media_record&lt;/span&gt;&lt;br&gt;&lt;br&gt;Required inputs:&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id&lt;br&gt;item_id&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;Registered only when CatalogueV3 is loaded.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="lookup-action" value="&lt;b&gt;Normalized cross-product action&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;mediacat.resolve_media_record&lt;/span&gt;&lt;br&gt;&lt;br&gt;Required inputs:&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue_id&lt;br&gt;item_id&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;Resolves against the active registry.&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="480" y="315" width="230" height="180" as="geometry" />
         </mxCell>
         <mxCell id="normalized-record" value="&lt;b&gt;Unwrapped normalized returned record&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;returned_record_version: 1&lt;br&gt;catalogue_id • item_id&lt;br&gt;catalogue_label • type&lt;br&gt;type_metadata&lt;br&gt;execution_methods (all available)&lt;/span&gt;&lt;br&gt;&lt;font color=&quot;#475569&quot;&gt;No selected method, endpoint, fallback, or profile.&lt;/font&gt;" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#eaf7e8;strokeColor=#82b366;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
@@ -82,10 +88,10 @@
         <mxCell id="media-source-surface" value="&lt;b&gt;MediaCat Media Source&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;async_browse_media&lt;br&gt;async_search_media&lt;br&gt;async_resolve_media&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="315" width="260" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="browse-projection" value="&lt;b&gt;Browse / search projection&lt;/b&gt;&lt;br&gt;Radio records with usable&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;execution_methods.ha_mplayer.source&lt;/span&gt;&lt;br&gt;&lt;br&gt;Stored order&lt;br&gt;label / description / tags search" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="browse-projection" value="&lt;b&gt;Catalogue-blind browse / search&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;MediaCat → Category → Item&lt;/span&gt;&lt;br&gt;Merge exact category IDs; reject label conflicts&lt;br&gt;Retain catalogue-scoped item identity&lt;br&gt;Radio records with usable&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;execution_methods.ha_mplayer.source&lt;/span&gt;&lt;br&gt;Registry and authored order" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="505" width="260" height="145" as="geometry" />
         </mxCell>
-        <mxCell id="resolution" value="&lt;b&gt;Playable item resolution&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;item/&amp;lt;item_id&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;url&lt;/b&gt; — return stored URL + MIME type unchanged&lt;br&gt;&lt;b&gt;ha_media_source&lt;/b&gt; — delegate once; reject self-reference or recursive result" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
+        <mxCell id="resolution" value="&lt;b&gt;Playable item resolution&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;catalogue/&amp;lt;catalogue_id&amp;gt;/item/&amp;lt;item_id&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;url&lt;/b&gt; — return stored URL + MIME type unchanged&lt;br&gt;&lt;b&gt;ha_media_source&lt;/b&gt; — delegate once; reject self-reference or recursive result" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8ff;strokeColor=#9673a6;fontColor=#1f2937;fontSize=12;spacing=8;" vertex="1" parent="1">
           <mxGeometry x="1145" y="710" width="260" height="160" as="geometry" />
         </mxCell>
 
@@ -96,10 +102,10 @@
           <mxGeometry x="1575" y="805" width="240" height="140" as="geometry" />
         </mxCell>
 
-        <mxCell id="edge-file-loader" value="read &amp;lt;config&amp;gt;/mediacat/catalogue.yaml" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="catalogue-file" target="loader">
+        <mxCell id="edge-file-loader" value="discover &amp;lt;config&amp;gt;/mediacat/catalogues/*.yaml" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="catalogue-file" target="loader">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge-loader-snapshot" value="validate + recursively freeze + store" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="loader" target="snapshot">
+        <mxCell id="edge-loader-snapshot" value="validate all + freeze + atomic registry store" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#b7791f;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="loader" target="snapshot">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="edge-action-snapshot-call" value="catalogue-scoped lookup" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#4b5563;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1;exitY=0.65;entryX=0;entryY=0.35;" edge="1" parent="1" source="lookup-action" target="snapshot">
@@ -111,7 +117,7 @@
         <mxCell id="edge-action-record" value="copy item + add version and catalogue identity" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82b366;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="lookup-action" target="normalized-record">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="edge-snapshot-source" value="shared loaded snapshot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.9;entryX=0;entryY=0.85;" edge="1" parent="1" source="snapshot" target="media-source-surface">
+        <mxCell id="edge-snapshot-source" value="shared active registry" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.9;entryX=0;entryY=0.85;" edge="1" parent="1" source="snapshot" target="media-source-surface">
           <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1095" y="832" /><mxPoint x="1095" y="426" /></Array></mxGeometry>
         </mxCell>
         <mxCell id="edge-source-browse" value="browse / search" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#9673a6;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="media-source-surface" target="browse-projection"><mxGeometry relative="1" as="geometry" /></mxCell>
@@ -124,6 +130,8 @@
         </mxCell>
         <mxCell id="edge-record-advmedia" value="complete normalized record v1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#4b5563;strokeWidth=2;dashed=1;dashPattern=8 6;fontSize=11;labelBackgroundColor=#ffffff;exitX=0;exitY=0.65;entryX=1;entryY=0.75;" edge="1" parent="1" source="normalized-record" target="advmedia-caller"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="405" y="767" /><mxPoint x="405" y="509" /></Array></mxGeometry>
         </mxCell>
+        <mxCell id="edge-manager-admin" value="supported admin action" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;labelBorderColor=#6c8ebf;exitX=1;exitY=0.7;entryX=0;entryY=0.7;" edge="1" parent="1" source="manager-caller" target="admin-actions"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="370" y="907" /><mxPoint x="370" y="692" /><mxPoint x="790" y="692" /></Array></mxGeometry></mxCell>
+        <mxCell id="edge-admin-manager" value="structured outcome" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2;dashed=1;dashPattern=8 6;fontSize=10;labelBackgroundColor=#ffffff;labelBorderColor=#6c8ebf;exitX=0;exitY=0.3;entryX=1;entryY=0.3;" edge="1" parent="1" source="admin-actions" target="manager-caller"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="785" y="668" /><mxPoint x="355" y="668" /><mxPoint x="355" y="869" /></Array></mxGeometry></mxCell>
 
         <mxCell id="edge-browser-source" value="browse / search / resolve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#4b5563;strokeWidth=2;fontSize=11;labelBackgroundColor=#ffffff;exitX=1;exitY=0.35;entryX=1;entryY=0.35;" edge="1" parent="1" source="ha-browser" target="media-source-surface"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="365" y="730" /><mxPoint x="365" y="905" /><mxPoint x="1425" y="905" /><mxPoint x="1425" y="360" /></Array></mxGeometry>
         </mxCell>
@@ -135,10 +143,10 @@
         <mxCell id="edge-resolution-radio" value="delegate URI once" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;strokeWidth=2;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.72;entryX=0;entryY=0.35;" edge="1" parent="1" source="resolution" target="radio-browser"><mxGeometry relative="1" x="0.1" y="0" as="geometry"><mxPoint x="0" y="-9" as="offset" /></mxGeometry></mxCell>
         <mxCell id="edge-radio-resolution" value="PlayMedia" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#666666;strokeWidth=2;dashed=1;dashPattern=8 6;fontFamily=Courier New;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.75;entryX=1;entryY=0.9;" edge="1" parent="1" source="radio-browser" target="resolution"><mxGeometry relative="1" x="0.15" y="0" as="geometry"><Array as="points"><mxPoint x="1515" y="915" /><mxPoint x="1515" y="854" /></Array><mxPoint x="0" y="9" as="offset" /></mxGeometry></mxCell>
 
-        <mxCell id="contracts-note" value="&lt;b&gt;Authoritative interfaces&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;MEDIACAT_ITEM_LOOKUP_INTERFACE.md&lt;br&gt;ASTV_EXECUTION_DISPATCH_INTERFACE.md&lt;br&gt;ASTV_ADVMEDIA_INTERFACE.md&lt;br&gt;ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
+        <mxCell id="contracts-note" value="&lt;b&gt;Authoritative interfaces&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-family:Courier New&quot;&gt;MEDIACAT_ITEM_LOOKUP_INTERFACE.md&lt;br&gt;MEDIACAT_ADMIN_INTERFACE.md&lt;br&gt;ASTV_EXECUTION_DISPATCH_INTERFACE.md&lt;br&gt;ASTV_ADVMEDIA_INTERFACE.md&lt;br&gt;ADVMEDIA_MEDIACAT_GATEWAY_INTERFACE.md&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#60a5fa;fontColor=#1e3a8a;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="40" y="1060" width="555" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="ownership-note" value="&lt;b&gt;Ownership guardrail&lt;/b&gt;&lt;br&gt;MediaCat reports identity, metadata, membership, and available execution-method source facts. ASTV owns selection and fallback policy. AdvMedia owns selected-method/profile processing. This map does not transfer those responsibilities." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#82b366;fontColor=#14532d;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
+        <mxCell id="ownership-note" value="&lt;b&gt;Ownership guardrail&lt;/b&gt;&lt;br&gt;MediaCat owns schema, validation, active registry and reload. Manager owns editing, file writes and history. ASTV owns method/fallback selection. AdvMedia owns selected-method/profile processing." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#82b366;fontColor=#14532d;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">
           <mxGeometry x="620" y="1060" width="630" height="105" as="geometry" />
         </mxCell>
         <mxCell id="evidence-note" value="&lt;b&gt;Current-state guardrail&lt;/b&gt;&lt;br&gt;Historical migration, deployment and rollback evidence is retained outside this current architecture map." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#f59e0b;fontColor=#7c2d12;fontSize=11;spacing=8;align=left;" vertex="1" parent="1">

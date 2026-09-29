@@ -10,6 +10,8 @@ The stored catalogue schema and preventative-validation policy are owned by
 [MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md](MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md).
 The precise cross-product lookup interface is owned by
 [MEDIACAT_ITEM_LOOKUP_INTERFACE.md](../03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md).
+The supported local-management boundary is owned by
+[MEDIACAT_ADMIN_INTERFACE.md](../03_Contracts/MEDIACAT_ADMIN_INTERFACE.md).
 
 Where exact interface semantics matter, the provider-owned contract is
 authoritative. Historical migration, deployment and rollback evidence remains
@@ -21,8 +23,10 @@ MediaCat is the media-catalogue and route-registry product. It owns:
 
 - catalogue-scoped media identity;
 - catalogue structure, membership, metadata and ordering;
+- local multi-catalogue discovery and immutable active registry state;
 - the execution methods available for each item and their route-specific source facts;
 - the normalized item-lookup producer boundary; and
+- catalogue capability, validation and transactional reload services; and
 - the Home Assistant Media Source view over the playable subset of the catalogue.
 
 MediaCat does **not** own consumer orchestration, execution-method preference or
@@ -42,7 +46,7 @@ MediaCat runs as the Home Assistant custom integration domain `mediacat`.
 The maintained runtime uses:
 
 - integration directory `/config/custom_components/mediacat/`;
-- catalogue path `/config/mediacat/catalogue.yaml`;
+- catalogue directory `/config/mediacat/catalogues/` with one YAML document per catalogue;
 - Home Assistant action namespace `mediacat`;
 - Media Source domain `mediacat`; and
 - logical catalogue identity `catalogue_id: curated_media`.
@@ -50,14 +54,21 @@ The maintained runtime uses:
 Runtime namespace and logical catalogue identity are deliberately separate.
 DDR-03-002 records the durable rationale for that decision.
 
-During setup, MediaCat loads the schema-v4 catalogue, rejects duplicate YAML
-mapping keys, validates the complete closed vocabulary and all governed
-structural, value, pairing and reference rules, resolves authored artwork
-sources into the common runtime `artwork.local` / `artwork.external` shape,
-recursively freezes the resulting mapping, and stores the immutable snapshot
-under `hass.data["mediacat"]["catalogue"]`. Authored mapping and category-membership
-order are preserved. Setup failure is atomic: if the catalogue cannot be loaded
-or accepted, MediaCat does not expose a partially initialized lookup surface.
+During setup, MediaCat discovers `.yaml` and `.yml` files in filename order,
+loads every schema-v4 catalogue, and keys the resulting registry by the
+authoritative in-file `catalogue_id`. Filenames are storage convenience and do
+not define identity. Duplicate `catalogue_id` values across files reject the
+complete candidate registry.
+
+For each file MediaCat rejects duplicate YAML mapping keys, validates the
+complete closed vocabulary and all governed structural, value, pairing and
+reference rules, resolves authored artwork sources into the common runtime
+`artwork.local` / `artwork.external` shape, and recursively freezes the result.
+The immutable registry is stored under
+`hass.data["mediacat"]["catalogues"]`. Authored mapping and category-membership
+order are preserved. Setup failure is atomic: if any discovered catalogue
+cannot be loaded or accepted, MediaCat does not expose a partially initialized
+runtime surface.
 
 The maintained runtime accepts only `catalogue_schema_version: 4`.
 Schema-v2 runtime compatibility and the raw `mediacat.resolve_item` action are
@@ -84,10 +95,24 @@ not attach endpoint, fallback or playback-profile context.
 Exact request, response, presence, failure and compatibility semantics are
 defined by the provider-owned item lookup contract.
 
+### Local catalogue administration
+
+MediaCat exposes response-only Home Assistant actions for supported schema and
+capability discovery, side-effect-free validation of a supplied YAML document,
+and transactional reload of the complete local registry. Validation does not
+write files or change active state. Reload discovers and validates the full
+directory before one active-registry replacement; any failure retains the
+previous immutable registry.
+
+The separate MediaCat Manager product owns editing, atomic filesystem writes,
+backups/history and user workflow. It consumes the supported admin interface
+and does not duplicate MediaCat schema validation. Exact request, response and
+failure semantics are defined by the provider-owned admin contract.
+
 ### Home Assistant Media Source
 
 The `mediacat` Media Source is a separate Home Assistant browse/search/play
-surface over the same loaded catalogue snapshot.
+surface over the same active catalogue registry.
 
 It preserves stored category and item order and currently exposes records that
 the Media Source adapter can represent through a usable
@@ -104,16 +129,32 @@ Media Source does not select an alternative execution method when an item is not
 representable through its supported playback path. Assistant-command-only items
 therefore remain outside the Media Source browse/search projection.
 
+The Media Browser hides catalogue identity from visible navigation and presents
+`MediaCat → Category → Item`. Categories are merged by exact `category_id` in
+first-seen registry discovery order while preserving each catalogue's authored
+category order. Repeated category IDs must have the same exact
+`category_label`; a differing label is an explicit projection error. Within a
+merged category, items append catalogue-by-catalogue in registry order and keep
+their authored order. Duplicate visible item labels are allowed.
+
+Projected items retain their `(catalogue_id, item_id)` identity internally and
+use `catalogue/<catalogue_id>/item/<item_id>` for browse, search and play
+resolution. Catalogue directories are not visible. Root search spans every
+catalogue in registry order. Legacy unscoped `category/<category_id>` and
+`item/<item_id>` routes are rejected.
+
 ## MediaCat-owned runtime behaviour
 
-The loaded catalogue snapshot is the common source for both current MediaCat
-interfaces:
+The active immutable catalogue registry is the common source for MediaCat
+runtime interfaces:
 
-1. setup loads and freezes the current schema-v4 catalogue;
+1. setup loads, validates and freezes every discovered schema-v4 catalogue;
 2. normalized lookup resolves a catalogue-scoped item and emits the complete
    consumer-facing record;
-3. Media Source projects the playable subset for Home Assistant browse/search
-   and resolves the selected playable item.
+3. Media Source projects a catalogue-blind category hierarchy while retaining
+   catalogue-scoped item identity; and
+4. admin actions report capabilities, validate candidates without mutation and
+   transactionally replace the registry after complete revalidation.
 
 The normalized lookup and Media Source are related surfaces over the same
 catalogue, but they serve different purposes. The lookup contract exposes all
@@ -130,8 +171,11 @@ record compatibility is governed by the lookup contract.
 | Capability | Owner | MediaCat boundary |
 | --- | --- | --- |
 | Catalogue identity, structure, metadata, membership and order | MediaCat | Owned |
+| Catalogue directory discovery and active immutable registry | MediaCat | Owned; identity comes from in-file `catalogue_id` |
 | Available execution methods and source facts | MediaCat | Owned; reported without selection |
 | Normalized lookup producer | MediaCat | Owned through `mediacat.resolve_media_record` |
+| Capability, candidate validation and transactional reload | MediaCat | Owned through the provider admin contract |
+| Catalogue editing, file replacement and local history | MediaCat Manager | External client/admin product |
 | Media Source browse/search/play projection | MediaCat | Owned adapter over the loaded catalogue |
 | Method preference and selection | ASTV | External |
 | Endpoint selection and fallback policy | ASTV | External |
@@ -152,6 +196,7 @@ The following are separate governed compatibility concerns:
 
 - stored catalogue evolution — owned by the catalogue schema architecture, including artwork-source authoring and load-time resolution;
 - normalized consumer-record evolution — owned by the item lookup contract;
+- local administration interface evolution — owned by the admin contract;
 - runtime namespace identity — durable rationale recorded in DDR-03-002; and
 - historical schema-v2 / retired-action recovery evidence — preserved outside
   the maintained runtime.
@@ -170,5 +215,7 @@ through this document.
 - `01_Architecture/MEDIACAT_CATALOGUE_SCHEMA_ARCHITECTURE.md` — stored schema-v4 authoring and preventative-validation architecture.
 - `01_Architecture/Diagrams/MEDIACAT_ARCHITECTURE.drawio` — governed visual representation of this architecture.
 - `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` — normalized lookup interface.
+- `03_Contracts/MEDIACAT_ADMIN_INTERFACE.md` — capability, validation and transactional reload interface.
 - `02_Decisions/DDR-03-001.md` — schema-v3 transition and historical rollback rationale.
 - `02_Decisions/DDR-03-002.md` — runtime namespace and catalogue-identity separation rationale.
+- `02_Decisions/DDR-03-004.md` — multi-catalogue registry and admin-boundary rationale.

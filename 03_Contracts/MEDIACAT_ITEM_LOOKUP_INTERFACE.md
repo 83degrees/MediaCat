@@ -7,9 +7,9 @@
 | Owner | MediaCat |
 | Current producer | Home Assistant action `mediacat.resolve_media_record` |
 | Consumers | ASTV; AdvMedia standalone gateway `script.advmedia_prepare_playback`; AdvMedia core as a downstream consumer of the complete normalized record supplied by ASTV or the standalone gateway |
-| Contract version | `2.1.1` |
+| Contract version | `2.2.0` |
 | Returned-record version | `1` |
-| Status | Current producer, returned-record v1, and backward-compatible presence and identifier-validation clarifications |
+| Status | Current multi-catalogue producer with returned-record v1 |
 | Source path | `03_Contracts/MEDIACAT_ITEM_LOOKUP_INTERFACE.md` |
 
 Under Governance 2.0, this provider-owned document is the single authoritative
@@ -92,9 +92,10 @@ granting it current contract status.
 
 ## Purpose and Scope
 
-The current lookup retrieves one known logical media item using its
-catalogue-scoped identity. MediaCat returns one complete, flat, player-independent
-record containing every execution method available for that item.
+The current lookup retrieves one known logical media item from the active
+multi-catalogue registry using its catalogue-scoped identity. MediaCat returns
+one complete, flat, player-independent record containing every execution method
+available for that item.
 
 The sole current producer is the Home Assistant action
 `mediacat.resolve_media_record`.
@@ -265,7 +266,7 @@ execution_methods:
       <fields selected by source_type>
 ```
 
-For stored Curated Media items, MediaCat copies the complete selected item mapping
+For stored MediaCat items, MediaCat copies the complete selected item mapping
 into this flat record and adds `returned_record_version`, `catalogue_id`, and
 `item_id`. It does not return `catalogue_schema_version`, `categories`, the full
 `items` mapping, lookup context, ASTV selection context, or player-specific
@@ -299,7 +300,7 @@ The separate ASTV-owned media and Google Home paths are defined in
 
 ## Failure Contract
 
-MediaCat validates `catalogue_id` and `item_id` against the schema-v3 identifier
+MediaCat validates `catalogue_id` and `item_id` against the schema-v4 identifier
 rule before lookup. A malformed identifier produces an explicit validation
 failure distinct from a well-formed identifier that is not found.
 
@@ -351,7 +352,7 @@ Consumers of returned-record version `1` must ignore unknown additive fields.
 Adding such a field without changing existing meaning is compatible.
 
 This additive compatibility rule applies to the consumer-facing returned record
-only. It does not permit arbitrary unknown fields in a stored schema-v3
+only. It does not permit arbitrary unknown fields in a stored schema-v4
 catalogue; stored vocabulary and extension policy are owned by the schema
 architecture.
 
@@ -378,6 +379,21 @@ so no consumer migration is required. Previously accepted malformed input now
 fails validation before lookup instead of being reported as an unknown
 catalogue or item; such input could not identify a valid schema-v3 record.
 
+### Multi-catalogue registry compatibility
+
+Contract version `2.2.0` makes the existing catalogue-scoped request operational
+across every catalogue in MediaCat's active registry. This is a backward-
+compatible capability expansion: request fields, identifier rules, successful
+response fields, failure semantics and `returned_record_version: 1` are
+unchanged. Existing consumers using `catalogue_id: curated_media` continue to
+resolve the same logical catalogue after its storage file moves into the
+multi-catalogue directory.
+
+The catalogue filename is not part of this interface. Consumers address only
+the authoritative in-file `catalogue_id` and must not infer or depend on storage
+paths. A well-formed catalogue ID absent from the active registry continues to
+fail explicitly with no fallback to another catalogue.
+
 ## Implementation and Cutover History
 
 This contract did not authorize runtime or catalogue-data change by itself.
@@ -396,6 +412,7 @@ Separate work instructions owned implementation and proof:
 - [ASTV-223](https://linear.app/83degrees/issue/ASTV-223/migrate-advmedia-mediacat-lookup-from-curated-media-to-mediacat) and [ASTV-224](https://linear.app/83degrees/issue/ASTV-224/migrate-astv-mediacat-references-from-curated-media-to-mediacat) — migrated and validated the active consumers.
 - [ASTV-225](https://linear.app/83degrees/issue/ASTV-225/retire-legacy-curated-media-compatibility-surface) — recorded the production-first legacy-producer retirement and aligned repository source and governed knowledge with the resulting single-domain state.
 - [ASTV-30](https://linear.app/83degrees/issue/ASTV-30/implement-mediacat-lookup-identifier-validation-from-schema-v3-policy) — enforces the approved schema-v3 identifier rule at the lookup boundary and distinguishes malformed input from a well-formed identifier that is not found.
+- [ASTV-276](https://linear.app/83degrees/issue/ASTV-276/implement-mediacat-multi-catalogue-runtime-and-admin-services) — expands the producer to the active multi-catalogue registry without changing returned-record version 1.
 
 ## Design Provenance
 

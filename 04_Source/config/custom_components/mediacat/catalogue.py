@@ -23,6 +23,8 @@ DATETIME_PATTERN = re.compile(
     r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
 )
 MIME_TYPE_PATTERN = re.compile(r"^[^\s/]+/[^\s/]+$")
+SUPPORTED_CATALOGUE_SCHEMA_VERSIONS = (4,)
+CURRENT_CATALOGUE_SCHEMA_VERSION = 4
 
 ROOT_FIELDS = frozenset(
     {"catalogue_id", "catalogue_schema_version", "artwork_sources", "items", "categories"}
@@ -170,6 +172,32 @@ class CatalogueV4:
         return cast(Mapping[str, Any], self.record["categories"])
 
 
+@dataclass(frozen=True, slots=True)
+class CatalogueRegistry:
+    """An immutable set of catalogues keyed by their in-file identity."""
+
+    catalogues: Mapping[str, CatalogueV4]
+    source_paths: Mapping[str, str]
+
+    @property
+    def catalogue_ids(self) -> tuple[str, ...]:
+        """Return catalogue identities in deterministic discovery order."""
+        return tuple(self.catalogues)
+
+    def get(self, catalogue_id: str) -> CatalogueV4 | None:
+        """Return one catalogue by its authoritative in-file identity."""
+        return self.catalogues.get(catalogue_id)
+
+
+async def async_load_catalogue_directory(
+    hass: HomeAssistant, path: str
+) -> CatalogueRegistry:
+    """Load and validate a catalogue directory off the event loop."""
+    return await hass.async_add_executor_job(
+        _load_catalogue_directory, Path(path)
+    )
+
+
 async def async_load_catalogue(hass: HomeAssistant, path: str) -> CatalogueV4:
     """Read and validate a catalogue without blocking Home Assistant's event loop."""
     return await hass.async_add_executor_job(_load_catalogue, Path(path))
@@ -179,6 +207,16 @@ def _load_catalogue(path: Path) -> CatalogueV4:
     """Read and validate a catalogue from disk."""
     try:
         text = path.read_text(encoding="utf-8")
+    except CatalogueError:
+        raise
+    except Exception as err:
+        raise CatalogueError(f"could not read {path}: {err}") from err
+    return _load_catalogue_text(text, path)
+
+
+def _load_catalogue_text(text: str, path: Path) -> CatalogueV4:
+    """Validate catalogue YAML supplied by a supported administrative caller."""
+    try:
         _reject_duplicate_keys(text, path)
         raw = parse_yaml(StringIO(text))
     except CatalogueError:
@@ -186,6 +224,47 @@ def _load_catalogue(path: Path) -> CatalogueV4:
     except Exception as err:
         raise CatalogueError(f"could not read {path}: {err}") from err
     return _parse_catalogue(raw, path)
+
+
+def _load_catalogue_directory(path: Path) -> CatalogueRegistry:
+    """Discover and atomically validate every YAML catalogue in a directory."""
+    if not path.is_dir():
+        raise CatalogueError(f"catalogue directory {path} does not exist")
+
+    try:
+        files = sorted(
+            (
+                child
+                for child in path.iterdir()
+                if child.is_file()
+                and child.suffix.casefold() in {".yaml", ".yml"}
+            ),
+            key=lambda child: (child.name.casefold(), child.name),
+        )
+    except OSError as err:
+        raise CatalogueError(
+            f"could not discover catalogue directory {path}: {err}"
+        ) from err
+    if not files:
+        raise CatalogueError(f"catalogue directory {path} contains no YAML files")
+
+    catalogues: dict[str, CatalogueV4] = {}
+    source_paths: dict[str, str] = {}
+    for source_path in files:
+        catalogue = _load_catalogue(source_path)
+        catalogue_id = catalogue.catalogue_id
+        if catalogue_id in catalogues:
+            raise CatalogueError(
+                f"duplicate catalogue_id {catalogue_id!r} in "
+                f"{source_paths[catalogue_id]} and {source_path}"
+            )
+        catalogues[catalogue_id] = catalogue
+        source_paths[catalogue_id] = str(source_path)
+
+    return CatalogueRegistry(
+        catalogues=MappingProxyType(catalogues),
+        source_paths=MappingProxyType(source_paths),
+    )
 
 
 def _reject_duplicate_keys(text: str, path: Path) -> None:
@@ -223,15 +302,16 @@ def _reject_duplicate_keys(text: str, path: Path) -> None:
 
 
 def _parse_catalogue(raw: Any, path: Path) -> CatalogueV4:
-    """Parse the sole active stored catalogue schema."""
+    """Parse the currently supported stored catalogue schema."""
     if not isinstance(raw, Mapping):
         raise CatalogueError(f"catalogue {path} must be a mapping")
     if (
         type(raw.get("catalogue_schema_version")) is not int
-        or raw.get("catalogue_schema_version") != 4
+        or raw.get("catalogue_schema_version") != CURRENT_CATALOGUE_SCHEMA_VERSION
     ):
         raise CatalogueError(
-            "unsupported catalogue schema; expected catalogue_schema_version: 4"
+            "unsupported catalogue schema; expected catalogue_schema_version: "
+            f"{CURRENT_CATALOGUE_SCHEMA_VERSION}"
         )
     return _parse_catalogue_v4(raw)
 

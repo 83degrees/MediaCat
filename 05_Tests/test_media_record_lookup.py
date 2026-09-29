@@ -19,6 +19,7 @@ from custom_components.mediacat import (
 )
 from custom_components.mediacat.catalogue import (
     CatalogueError,
+    CatalogueRegistry,
     CatalogueV4,
     _load_catalogue,
     _parse_catalogue,
@@ -56,8 +57,13 @@ def _setup_with_catalogue(catalogue):
     """Run integration setup against an already loaded non-live catalogue."""
     hass = FakeHass()
     with patch(
-        "custom_components.mediacat.async_load_catalogue",
-        new=AsyncMock(return_value=catalogue),
+        "custom_components.mediacat.async_load_catalogue_directory",
+        new=AsyncMock(
+            return_value=CatalogueRegistry(
+                catalogues={catalogue.catalogue_id: catalogue},
+                source_paths={catalogue.catalogue_id: "fixture.yaml"},
+            )
+        ),
     ):
         assert asyncio.run(async_setup(hass, {})) is True
     return hass
@@ -84,7 +90,7 @@ def test_rejected_schema_prevents_setup_and_action_registration() -> None:
     """Keep catalogue-load failure atomic when the active schema is unsupported."""
     hass = FakeHass()
     with patch(
-        "custom_components.mediacat.async_load_catalogue",
+        "custom_components.mediacat.async_load_catalogue_directory",
         new=AsyncMock(side_effect=CatalogueError("unsupported catalogue schema")),
     ):
         assert asyncio.run(async_setup(hass, {})) is False
@@ -99,7 +105,12 @@ def test_schema_v4_registers_only_normalized_action() -> None:
     assert isinstance(catalogue, CatalogueV4)
     hass = _setup_with_catalogue(catalogue)
 
-    assert set(hass.services.registrations) == {"resolve_media_record"}
+    assert set(hass.services.registrations) == {
+        "resolve_media_record",
+        "get_admin_capabilities",
+        "validate_catalogue",
+        "reload_catalogue",
+    }
 
 
 @pytest.mark.parametrize(

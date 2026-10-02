@@ -280,12 +280,12 @@ preference and endpoint policy. The selected method name remains ASTV context an
 is not added to the MediaCat record.
 
 On ASTV's direct-core path, AdvMedia receives the complete record from ASTV
-together with `selected_execution_method`. On the separately contracted
+together with `execution_engine`. On the separately contracted
 standalone path, the AdvMedia gateway obtains the same complete record directly
 from this lookup and passes it unchanged to the same core. The core reads
 exactly:
 
-`media_record.execution_methods[selected_execution_method].source`
+`media_record.execution_methods[execution_engine].source`
 
 The AdvMedia core does not select another method, perform a MediaCat lookup,
 inspect stored catalogue structure, or reinterpret category and loader data.

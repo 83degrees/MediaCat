@@ -67,7 +67,9 @@ from custom_components.mediacat.media_source import MediaCatSource
 
 V4_CATALOGUE = (
     Path(__file__).parents[1]
-    / "04_Source"
+    / "04_Implementation"
+    / "haos"
+    / "source"
     / "config"
     / "mediacat"
     / "catalogues"

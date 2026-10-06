@@ -64,13 +64,14 @@ from custom_components.mediacat.media_source import MediaCatSource
 
 
 ROOT = Path(__file__).parents[1]
-SOURCE_CONFIG = ROOT / "04_Source" / "config"
+SOURCE_CONFIG = ROOT / "04_Implementation" / "haos" / "source" / "config"
+INTEGRATION_ROOT = ROOT / "custom_components"
 CATALOGUE = (
     SOURCE_CONFIG / "mediacat" / "catalogues" / "curated-media.yaml"
 )
-MANIFEST = SOURCE_CONFIG / "custom_components" / "mediacat" / "manifest.json"
-SERVICES = SOURCE_CONFIG / "custom_components" / "mediacat" / "services.yaml"
-LEGACY_COMPONENT = SOURCE_CONFIG / "custom_components" / "curated_media"
+MANIFEST = INTEGRATION_ROOT / "mediacat" / "manifest.json"
+SERVICES = INTEGRATION_ROOT / "mediacat" / "services.yaml"
+LEGACY_COMPONENT = INTEGRATION_ROOT / "curated_media"
 LEGACY_CATALOGUE = SOURCE_CONFIG / "curated_media" / "catalogue.yaml"
 
 

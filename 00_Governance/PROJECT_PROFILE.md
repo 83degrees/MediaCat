@@ -106,7 +106,7 @@ create a dependency on another product's undocumented internals.
 | Dependency | Type | Owner | Governed interface/evidence | Required state | Failure boundary |
 | --- | --- | --- | --- | --- | --- |
 | Home Assistant | platform | Home Assistant | Current production evidence and runtime integration surface | MediaCat integration/action and Media Source framework available | Failure stops at the affected MediaCat integration/interface boundary. |
-| Local catalogue files | data | MediaCat | `04_Source/config/mediacat/catalogues/`, schema architecture, lookup contract, and admin contract | At least one valid schema-v4 catalogue; unique in-file catalogue IDs | Setup fails explicitly; failed runtime reload retains the prior active registry. |
+| Local catalogue files | data | MediaCat | `04_Implementation/haos/source/config/mediacat/catalogues/`, schema architecture, lookup contract, and admin contract | At least one valid schema-v4 catalogue; unique in-file catalogue IDs | Setup fails explicitly; failed runtime reload retains the prior active registry. |
 | Delegated Home Assistant Media Source providers | external service | Respective provider owners | Opaque provider URI and provider-owned Media Source interface | Selected provider can resolve its URI | Provider failure surfaces without MediaCat route fallback. |
 
 ASTV and AdvMedia are governed consumers of MediaCat, not dependencies required
@@ -135,8 +135,8 @@ The retired `curated_media` runtime namespace remains historical only.
 
 ## Production and evidence route
 
-- Maintained deployment route: Home Assistant `starburst`, using
-  `/config/custom_components/mediacat/` and
+- Maintained target: Home Assistant `starburst`, using
+  `/config/custom_components/mediacat/`, `/config/packages/mediacat/`, and
   `/config/mediacat/catalogues/`.
 - Current runtime namespace: `mediacat`.
 - Production activation truth, including completion of the single-file to
@@ -146,7 +146,26 @@ The retired `curated_media` runtime namespace remains historical only.
 - Secrets, mutable Home Assistant state, and production snapshots remain outside
   this repository.
 
+## Deployable units
+
+| Deployable unit | Type | Authoritative source | Target | Mechanism | Detailed authority |
+| --- | --- | --- | --- | --- | --- |
+| MediaCat custom integration | `haos_integration` | `custom_components/mediacat/**` | `starburst` Home Assistant `/config/custom_components/mediacat/**` | `hacs` | `00_Governance/01_Central/01_Standards/HOME_ASSISTANT_INTEGRATION_DEPLOYMENT_STANDARD.md` and `08_Deployment/MEDIACAT_HACS_DEPLOYMENT_RUNBOOK.md` |
+| MediaCat Home Assistant package configuration | `haos_config` | `04_Implementation/haos/source/config/packages/mediacat/**` | `starburst` Home Assistant `/config/packages/mediacat/**` | `operator_selected` | `00_Governance/01_Central/01_Standards/HOME_ASSISTANT_CONFIG_DEPLOYMENT_STANDARD.md` and `08_Deployment/MEDIACAT_HAOS_CONFIG_DEPLOYMENT_RUNBOOK.md` |
+| MediaCat catalogue data | `haos_managed_data` | `04_Implementation/haos/source/config/mediacat/catalogues/**` | `starburst` Home Assistant `/config/mediacat/catalogues/**` | `tbc` | `00_Governance/01_Central/01_Standards/DEPLOYMENT_ARCHITECTURE_STANDARD.md`; no general deployment mechanism is approved |
+
+The HACS integration uses the approved root-source exception. The pointer at
+`04_Implementation/haos/source/config/custom_components/mediacat/README.md`
+keeps the canonical deployment map navigable without duplicating integration
+implementation. The operator selects the practical transport for each
+authorised package-configuration deployment. Catalogue data remains explicitly
+unresolved as `tbc`; no transfer mechanism is inferred from its target path.
+
 ## Repository source baseline
 
-The current MediaCat implementation baseline is under `04_Source/config/`.
-Maintained tests and fixtures are under `05_Tests/`.
+The authoritative integration source is at root
+`custom_components/mediacat/**` under the approved HACS exception. Other HAOS
+payload is under `04_Implementation/haos/source/config/**`, and HACS packaging
+and release-support machinery is under
+`04_Implementation/haos/packaging/hacs/**`. Maintained tests and fixtures are
+under `05_Tests/`.

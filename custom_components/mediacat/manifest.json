@@ -1,0 +1,11 @@
+{
+  "domain": "mediacat",
+  "name": "MediaCat",
+  "version": "0.6.0",
+  "codeowners": ["@gsheldon"],
+  "dependencies": ["media_source"],
+  "documentation": "https://github.com/83degrees/MediaCat#readme",
+  "integration_type": "service",
+  "issue_tracker": "https://github.com/83degrees/MediaCat/issues",
+  "requirements": []
+}

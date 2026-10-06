@@ -19,7 +19,9 @@ ROOT = Path(__file__).parents[1]
 FIXTURE = Path(__file__).parent / "fixtures" / "catalogue_v4.yaml"
 MAINTAINED_CATALOGUE = (
     ROOT
-    / "04_Source"
+    / "04_Implementation"
+    / "haos"
+    / "source"
     / "config"
     / "mediacat"
     / "catalogues"

@@ -21,9 +21,11 @@ Home Assistant 2024.12.5 is deliberately a pinned test dependency compatible
 with the available Python 3.12 runtime. The production Home Assistant version
 is unknown, so passing results establish source-baseline behaviour only.
 
-Pytest discovers the suite from `05_Tests/` and imports the maintained
-implementation from `04_Source/` using the repository's `pyproject.toml`
-configuration.
+Pytest discovers the suite from `05_Tests/` and imports the maintained HACS
+integration from root `custom_components/` using the repository's
+`pyproject.toml` configuration. HAOS configuration and managed catalogue data
+are read from `04_Implementation/haos/source/config/` where a test needs their
+source-controlled payloads.
 
 From the MediaCat repository root, create an isolated environment and run:
 

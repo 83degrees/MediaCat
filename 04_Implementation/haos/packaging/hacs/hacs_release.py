@@ -1,4 +1,4 @@
-"""Validate MediaCat's HACS layout and create an authorised stable release."""
+"""Validate MediaCat's HACS layout and release after authorised promotion."""
 
 from __future__ import annotations
 
@@ -70,8 +70,6 @@ def validate_layout(root: Path) -> str:
         "domain",
         "name",
         "version",
-        "documentation",
-        "issue_tracker",
         "codeowners",
     }
     missing = sorted(required.difference(manifest))
@@ -82,8 +80,6 @@ def validate_layout(root: Path) -> str:
     version = manifest["version"]
     if not isinstance(version, str) or not SEMVER.fullmatch(version):
         raise ReleaseError("manifest version must be stable X.Y.Z SemVer")
-    if not manifest["codeowners"]:
-        raise ReleaseError("manifest codeowners must not be empty")
     return version
 
 

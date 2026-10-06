@@ -16,7 +16,7 @@ on:
         required: false
         type: string
       authority_confirmed:
-        description: Confirm explicit stable-promotion and release authority exists
+        description: Confirm explicit stable-promotion authority exists
         required: true
         type: boolean
 
@@ -27,7 +27,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Fail closed without release authority
+      - name: Fail closed without stable-promotion authority
         env:
           AUTHORITY_CONFIRMED: ${{ inputs.authority_confirmed }}
         run: test "$AUTHORITY_CONFIRMED" = "true"

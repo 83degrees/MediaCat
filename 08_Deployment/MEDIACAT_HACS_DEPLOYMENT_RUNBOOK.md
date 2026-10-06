@@ -8,8 +8,9 @@ This runbook applies the governed route:
 
 The authoritative integration source is `custom_components/mediacat/**` and its
 stable version is the `version` in `manifest.json`. This runbook does not
-authorise Beta deployment, stable promotion, production deployment, release, or
-rollback.
+authorise Beta deployment, stable promotion, production deployment, or rollback.
+Once explicit stable-promotion authority exists, stable tag and GitHub Release
+creation follow automatically as part of the approved HACS mechanism.
 
 ## Beta preparation and handoff
 
@@ -42,14 +43,14 @@ lookup or Media Source browse check.
 ## Stable release
 
 After successful Beta, unchanged promotion to `main`, required equivalence
-evidence, and explicit stable-promotion/release authority, dispatch
+evidence, and explicit stable-promotion authority, dispatch
 `.github/workflows/hacs-release.yml` with the selected stable SHA, accepted Beta
 tag, and the promotion-equivalence evidence reference when the integrated SHA
 differs. The workflow invokes the authoritative machinery at
 `04_Implementation/haos/packaging/hacs/hacs_release.py`. It validates repository
 metadata and identity, fails on contradictory tags or missing evidence, and
 creates the immutable `vX.Y.Z` tag and GitHub Release. It does not deploy to
-Home Assistant or provide release authority.
+Home Assistant or provide stable-promotion authority.
 
 ## Failure and rollback
 

@@ -18,7 +18,9 @@ from custom_components.mediacat.resolver import CatalogueResolver
 ROOT = Path(__file__).parents[1]
 TARGET = (
     ROOT
-    / "04_Source"
+    / "04_Implementation"
+    / "haos"
+    / "source"
     / "config"
     / "mediacat"
     / "catalogues"
